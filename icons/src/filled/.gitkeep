@@ -1,0 +1,8 @@
+# Place your filled SVG icons from Figma here
+#
+# Requirements:
+# - Use viewBox="0 0 24 24"
+# - Name files in kebab-case (e.g., chevron-right.svg)
+# - Avoid hardcoded colors (SVGO will remove them)
+#
+# Then run: npm run build

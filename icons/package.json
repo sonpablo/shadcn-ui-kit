@@ -1,0 +1,88 @@
+{
+  "name": "@neura/shadcn-ui-kit-icons",
+  "private": false,
+  "version": "0.0.0-use-root-package-json",
+  "license": "MIT",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "./scripts/build.sh"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-react-jsx": "^7.12.12",
+    "@svgr/core": "^5.5.0",
+    "camelcase": "^6.0.0",
+    "svgo": "^3.0.2"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./outline": {
+      "types": "./dist/outline/index.d.ts",
+      "import": "./dist/outline/esm/index.js",
+      "require": "./dist/outline/index.js"
+    },
+    "./outline/index": {
+      "default": "./dist/outline/index.js"
+    },
+    "./outline/index.js": {
+      "default": "./dist/outline/index.js"
+    },
+    "./filled": {
+      "types": "./dist/filled/index.d.ts",
+      "import": "./dist/filled/esm/index.js",
+      "require": "./dist/filled/index.js"
+    },
+    "./filled/index": {
+      "default": "./dist/filled/index.js"
+    },
+    "./filled/index.js": {
+      "default": "./dist/filled/index.js"
+    },
+    "./outline/*": {
+      "types": "./dist/outline/*.d.ts",
+      "import": "./dist/outline/esm/*.js",
+      "require": "./dist/outline/*.js"
+    },
+    "./outline/*.js": {
+      "types": "./dist/outline/*.d.ts",
+      "import": "./dist/outline/esm/*.js",
+      "require": "./dist/outline/*.js"
+    },
+    "./outline/esm/*": {
+      "types": "./dist/outline/*.d.ts",
+      "import": "./dist/outline/esm/*.js"
+    },
+    "./outline/esm/*.js": {
+      "types": "./dist/outline/*.d.ts",
+      "import": "./dist/outline/esm/*.js"
+    },
+    "./filled/*": {
+      "types": "./dist/filled/*.d.ts",
+      "import": "./dist/filled/esm/*.js",
+      "require": "./dist/filled/*.js"
+    },
+    "./filled/*.js": {
+      "types": "./dist/filled/*.d.ts",
+      "import": "./dist/filled/esm/*.js",
+      "require": "./dist/filled/*.js"
+    },
+    "./filled/esm/*": {
+      "types": "./dist/filled/*.d.ts",
+      "import": "./dist/filled/esm/*.js"
+    },
+    "./filled/esm/*.js": {
+      "types": "./dist/filled/*.d.ts",
+      "import": "./dist/filled/esm/*.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
+
