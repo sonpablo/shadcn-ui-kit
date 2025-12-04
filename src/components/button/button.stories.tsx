@@ -104,7 +104,7 @@ export const Icon: Story = {
   args: {
     children: <ChevronRight />,
     size: 'icon',
-    variant: 'outline',
+    variant: 'icon',
   },
 };
 
@@ -112,7 +112,7 @@ export const IconSmall: Story = {
   args: {
     children: <ChevronRight />,
     size: 'icon-sm',
-    variant: 'outline',
+    variant: 'icon',
   },
 };
 
@@ -120,7 +120,7 @@ export const IconLarge: Story = {
   args: {
     children: <ChevronRight />,
     size: 'icon-lg',
-    variant: 'outline',
+    variant: 'icon',
   },
 };
 
