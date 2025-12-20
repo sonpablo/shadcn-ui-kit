@@ -13,7 +13,13 @@ import {
 } from './table';
 import { Badge } from '@/components/badge/badge';
 import { Button } from '@/components/button/button';
-import { MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/tooltip/tooltip';
+import { MoreHorizontal, Edit, Trash2, Eye, Info } from 'lucide-react';
 
 const meta = {
   title: 'Components/Table',
@@ -168,32 +174,62 @@ const invoices = [
 
 /**
  * Default table with 5 columns - basic structure
+ * Includes tooltip on Status column header
  */
 export const Default: Story = {
   render: () => (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Customer</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
-            <TableCell>{invoice.customer}</TableCell>
-            <TableCell>{invoice.status}</TableCell>
-            <TableCell>{invoice.method}</TableCell>
-            <TableCell className="text-right">{invoice.amount}</TableCell>
+    <TooltipProvider>
+      <Table>
+        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Invoice</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>
+              <span className="inline-flex items-center gap-1">
+                Status
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="size-3.5 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Payment status of the invoice
+                  </TooltipContent>
+                </Tooltip>
+              </span>
+            </TableHead>
+            <TableHead>Method</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {invoices.map((invoice) => (
+            <TableRow key={invoice.id}>
+              <TableCell className="font-medium">{invoice.id}</TableCell>
+              <TableCell>{invoice.customer}</TableCell>
+              <TableCell>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-help underline decoration-dotted">
+                      {invoice.status}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {invoice.status === 'Paid' 
+                      ? 'Payment received' 
+                      : invoice.status === 'Pending' 
+                        ? 'Awaiting payment' 
+                        : 'Payment overdue'}
+                  </TooltipContent>
+                </Tooltip>
+              </TableCell>
+              <TableCell>{invoice.method}</TableCell>
+              <TableCell className="text-right">{invoice.amount}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TooltipProvider>
   ),
 };
 
@@ -203,53 +239,11 @@ export const Default: Story = {
  */
 export const NoScroll: Story = {
   render: () => (
-    <Table scrollable={false}>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Department</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead>Salary</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>Manager</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {employees.slice(0, 5).map((emp) => (
-          <TableRow key={emp.id}>
-            <TableCell className="font-medium">{emp.id}</TableCell>
-            <TableCell>{emp.name}</TableCell>
-            <TableCell>{emp.email}</TableCell>
-            <TableCell>{emp.role}</TableCell>
-            <TableCell>{emp.department}</TableCell>
-            <TableCell>{emp.location}</TableCell>
-            <TableCell>{emp.salary}</TableCell>
-            <TableCell>{emp.startDate}</TableCell>
-            <TableCell>{emp.manager}</TableCell>
-            <TableCell>{emp.status}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  ),
-};
-
-/**
- * Table with sticky first column (left) - 10 columns
- */
-export const StickyLeftColumn: Story = {
-  render: () => (
-    <div className="max-w-2xl rounded-lg border">
-      <Table>
+    <TooltipProvider>
+      <Table scrollable={false}>
         <TableHeader>
           <TableRow>
-            <TableHead sticky className="w-[100px]">
-              ID
-            </TableHead>
+            <TableHead>ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
@@ -262,12 +256,17 @@ export const StickyLeftColumn: Story = {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {employees.map((emp) => (
+          {employees.slice(0, 5).map((emp) => (
             <TableRow key={emp.id}>
-              <TableCell sticky className="font-medium">
-                {emp.id}
+              <TableCell className="font-medium">{emp.id}</TableCell>
+              <TableCell>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-help">{emp.name}</span>
+                  </TooltipTrigger>
+                  <TooltipContent>Full name: {emp.name}</TooltipContent>
+                </Tooltip>
               </TableCell>
-              <TableCell>{emp.name}</TableCell>
               <TableCell>{emp.email}</TableCell>
               <TableCell>{emp.role}</TableCell>
               <TableCell>{emp.department}</TableCell>
@@ -280,7 +279,62 @@ export const StickyLeftColumn: Story = {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </TooltipProvider>
+  ),
+};
+
+/**
+ * Table with sticky first column (left) - 10 columns
+ */
+export const StickyLeftColumn: Story = {
+  render: () => (
+    <TooltipProvider>
+      <div className="max-w-2xl rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead sticky className="w-[100px]">
+                ID
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Salary</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead>Manager</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {employees.map((emp) => (
+              <TableRow key={emp.id}>
+                <TableCell sticky className="font-medium">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help">{emp.id}</span>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      Employee ID: {emp.id}
+                    </TooltipContent>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>{emp.name}</TableCell>
+                <TableCell>{emp.email}</TableCell>
+                <TableCell>{emp.role}</TableCell>
+                <TableCell>{emp.department}</TableCell>
+                <TableCell>{emp.location}</TableCell>
+                <TableCell>{emp.salary}</TableCell>
+                <TableCell>{emp.startDate}</TableCell>
+                <TableCell>{emp.manager}</TableCell>
+                <TableCell>{emp.status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </TooltipProvider>
   ),
 };
 
@@ -289,55 +343,62 @@ export const StickyLeftColumn: Story = {
  */
 export const StickyWithCustomBackground: Story = {
   render: () => (
-    <div className="max-w-2xl rounded-lg border bg-red-500 p-4">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-red-400">
-            <TableHead
-              sticky
-              stickyBgClass="bg-red-500"
-              className="w-[100px] text-white"
-            >
-              ID
-            </TableHead>
-            <TableHead className="text-white">Name</TableHead>
-            <TableHead className="text-white">Email</TableHead>
-            <TableHead className="text-white">Role</TableHead>
-            <TableHead className="text-white">Department</TableHead>
-            <TableHead className="text-white">Location</TableHead>
-            <TableHead className="text-white">Salary</TableHead>
-            <TableHead className="text-white">Start Date</TableHead>
-            <TableHead className="text-white">Manager</TableHead>
-            <TableHead className="text-white">Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {employees.map((emp) => (
-            <TableRow
-              key={emp.id}
-              className="border-red-400 text-white hover:bg-red-600"
-            >
-              <TableCell
+    <TooltipProvider>
+      <div className="max-w-2xl rounded-lg border bg-red-500 p-4">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-red-400">
+              <TableHead
                 sticky
                 stickyBgClass="bg-red-500"
-                className="font-medium"
+                className="w-[100px] text-white"
               >
-                {emp.id}
-              </TableCell>
-              <TableCell>{emp.name}</TableCell>
-              <TableCell>{emp.email}</TableCell>
-              <TableCell>{emp.role}</TableCell>
-              <TableCell>{emp.department}</TableCell>
-              <TableCell>{emp.location}</TableCell>
-              <TableCell>{emp.salary}</TableCell>
-              <TableCell>{emp.startDate}</TableCell>
-              <TableCell>{emp.manager}</TableCell>
-              <TableCell>{emp.status}</TableCell>
+                ID
+              </TableHead>
+              <TableHead className="text-white">Name</TableHead>
+              <TableHead className="text-white">Email</TableHead>
+              <TableHead className="text-white">Role</TableHead>
+              <TableHead className="text-white">Department</TableHead>
+              <TableHead className="text-white">Location</TableHead>
+              <TableHead className="text-white">Salary</TableHead>
+              <TableHead className="text-white">Start Date</TableHead>
+              <TableHead className="text-white">Manager</TableHead>
+              <TableHead className="text-white">Status</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {employees.map((emp) => (
+              <TableRow
+                key={emp.id}
+                className="border-red-400 text-white hover:bg-red-600"
+              >
+                <TableCell
+                  sticky
+                  stickyBgClass="bg-red-500"
+                  className="font-medium"
+                >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help">{emp.id}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>Sticky with custom bg: {emp.id}</TooltipContent>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>{emp.name}</TableCell>
+                <TableCell>{emp.email}</TableCell>
+                <TableCell>{emp.role}</TableCell>
+                <TableCell>{emp.department}</TableCell>
+                <TableCell>{emp.location}</TableCell>
+                <TableCell>{emp.salary}</TableCell>
+                <TableCell>{emp.startDate}</TableCell>
+                <TableCell>{emp.manager}</TableCell>
+                <TableCell>{emp.status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </TooltipProvider>
   ),
 };
 
@@ -346,46 +407,55 @@ export const StickyWithCustomBackground: Story = {
  */
 export const StickyRightColumn: Story = {
   render: () => (
-    <div className="max-w-2xl rounded-lg border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Department</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Salary</TableHead>
-            <TableHead>Start Date</TableHead>
-            <TableHead>Manager</TableHead>
-            <TableHead sticky="right" align="center" className="w-[100px]">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {employees.map((emp) => (
-            <TableRow key={emp.id}>
-              <TableCell className="font-medium">{emp.id}</TableCell>
-              <TableCell>{emp.name}</TableCell>
-              <TableCell>{emp.email}</TableCell>
-              <TableCell>{emp.role}</TableCell>
-              <TableCell>{emp.department}</TableCell>
-              <TableCell>{emp.location}</TableCell>
-              <TableCell>{emp.salary}</TableCell>
-              <TableCell>{emp.startDate}</TableCell>
-              <TableCell>{emp.manager}</TableCell>
-              <TableCell sticky="right" align="center">
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </TableCell>
+    <TooltipProvider>
+      <div className="max-w-2xl rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Salary</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead>Manager</TableHead>
+              <TableHead sticky="right" align="center" className="w-[100px]">
+                Actions
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {employees.map((emp) => (
+              <TableRow key={emp.id}>
+                <TableCell className="font-medium">{emp.id}</TableCell>
+                <TableCell>{emp.name}</TableCell>
+                <TableCell>{emp.email}</TableCell>
+                <TableCell>{emp.role}</TableCell>
+                <TableCell>{emp.department}</TableCell>
+                <TableCell>{emp.location}</TableCell>
+                <TableCell>{emp.salary}</TableCell>
+                <TableCell>{emp.startDate}</TableCell>
+                <TableCell>{emp.manager}</TableCell>
+                <TableCell sticky="right" align="center">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      More options for {emp.name}
+                    </TooltipContent>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </TooltipProvider>
   ),
 };
 
@@ -402,57 +472,71 @@ export const StickyRightColumn: Story = {
  */
 export const MultipleStickyColumns: Story = {
   render: () => (
-    <div className="max-w-xl rounded-lg border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {/* First sticky: offset 0, width 80px */}
-            <TableHead sticky stickyOffset="0">
-              ID
-            </TableHead>
-            {/* Second sticky: offset = width of first (80px) */}
-            <TableHead sticky stickyOffset="72px" className="w-[120px]">
-              Name
-            </TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Department</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Salary</TableHead>
-            <TableHead>Start Date</TableHead>
-            <TableHead>Manager</TableHead>
-            <TableHead sticky="right" align="center" className="w-[100px]">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {employees.map((emp) => (
-            <TableRow key={emp.id}>
-              {/* Must match header offsets */}
-              <TableCell sticky stickyOffset="0" className="font-medium">
-                {emp.id}
-              </TableCell>
-              <TableCell sticky stickyOffset="72px">
-                {emp.name}
-              </TableCell>
-              <TableCell>{emp.email}</TableCell>
-              <TableCell>{emp.role}</TableCell>
-              <TableCell>{emp.department}</TableCell>
-              <TableCell>{emp.location}</TableCell>
-              <TableCell>{emp.salary}</TableCell>
-              <TableCell>{emp.startDate}</TableCell>
-              <TableCell>{emp.manager}</TableCell>
-              <TableCell sticky="right" align="center">
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </TableCell>
+    <TooltipProvider>
+      <div className="max-w-xl rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {/* First sticky: offset 0, width 80px */}
+              <TableHead sticky stickyOffset="0">
+                ID
+              </TableHead>
+              {/* Second sticky: offset = width of first (80px) */}
+              <TableHead sticky stickyOffset="72px" className="w-[120px]">
+                Name
+              </TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Salary</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead>Manager</TableHead>
+              <TableHead sticky="right" align="center" className="w-[100px]">
+                Actions
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {employees.map((emp) => (
+              <TableRow key={emp.id}>
+                {/* Must match header offsets */}
+                <TableCell sticky stickyOffset="0" className="font-medium">
+                  {emp.id}
+                </TableCell>
+                <TableCell sticky stickyOffset="72px">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help">{emp.name}</span>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      Second sticky column: {emp.name}
+                    </TooltipContent>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>{emp.email}</TableCell>
+                <TableCell>{emp.role}</TableCell>
+                <TableCell>{emp.department}</TableCell>
+                <TableCell>{emp.location}</TableCell>
+                <TableCell>{emp.salary}</TableCell>
+                <TableCell>{emp.startDate}</TableCell>
+                <TableCell>{emp.manager}</TableCell>
+                <TableCell sticky="right" align="center">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">Actions</TooltipContent>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </TooltipProvider>
   ),
 };
 
@@ -461,48 +545,62 @@ export const MultipleStickyColumns: Story = {
  */
 export const WithTextWrapping: Story = {
   render: () => (
-    <div className="max-w-3xl">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead nowrap={false}>Name</TableHead>
-            <TableHead nowrap={false}>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead nowrap={false}>Department Description</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Salary</TableHead>
-            <TableHead>Start Date</TableHead>
-            <TableHead nowrap={false}>Manager Notes</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {employees.slice(0, 4).map((emp, index) => (
-            <TableRow key={emp.id}>
-              <TableCell className="font-medium">{emp.id}</TableCell>
-              <TableCell nowrap={false}>{emp.name}</TableCell>
-              <TableCell nowrap={false}>{emp.email}</TableCell>
-              <TableCell>{emp.role}</TableCell>
-              <TableCell nowrap={false}>
-                {index % 2 === 0
-                  ? `${emp.department} - Responsible for company-wide initiatives and strategic planning`
-                  : `${emp.department} - Handles day-to-day operations and team coordination`}
-              </TableCell>
-              <TableCell>{emp.location}</TableCell>
-              <TableCell>{emp.salary}</TableCell>
-              <TableCell>{emp.startDate}</TableCell>
-              <TableCell nowrap={false}>
-                {index % 2 === 0
-                  ? `Reports to ${emp.manager} with quarterly reviews`
-                  : `Direct report to ${emp.manager}, weekly 1:1 meetings`}
-              </TableCell>
-              <TableCell>{emp.status}</TableCell>
+    <TooltipProvider>
+      <div className="max-w-3xl">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead nowrap={false}>Name</TableHead>
+              <TableHead nowrap={false}>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead nowrap={false}>
+                <span className="inline-flex items-center gap-1">
+                  Department Description
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="size-3.5 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      This column allows text wrapping
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
+              </TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Salary</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead nowrap={false}>Manager Notes</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {employees.slice(0, 4).map((emp, index) => (
+              <TableRow key={emp.id}>
+                <TableCell className="font-medium">{emp.id}</TableCell>
+                <TableCell nowrap={false}>{emp.name}</TableCell>
+                <TableCell nowrap={false}>{emp.email}</TableCell>
+                <TableCell>{emp.role}</TableCell>
+                <TableCell nowrap={false}>
+                  {index % 2 === 0
+                    ? `${emp.department} - Responsible for company-wide initiatives and strategic planning`
+                    : `${emp.department} - Handles day-to-day operations and team coordination`}
+                </TableCell>
+                <TableCell>{emp.location}</TableCell>
+                <TableCell>{emp.salary}</TableCell>
+                <TableCell>{emp.startDate}</TableCell>
+                <TableCell nowrap={false}>
+                  {index % 2 === 0
+                    ? `Reports to ${emp.manager} with quarterly reviews`
+                    : `Direct report to ${emp.manager}, weekly 1:1 meetings`}
+                </TableCell>
+                <TableCell>{emp.status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </TooltipProvider>
   ),
 };
 
@@ -511,52 +609,75 @@ export const WithTextWrapping: Story = {
  */
 export const WithBadges: Story = {
   render: () => (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Department</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead>Salary</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>Manager</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {employees.map((emp) => (
-          <TableRow key={emp.id}>
-            <TableCell className="font-medium">{emp.id}</TableCell>
-            <TableCell>{emp.name}</TableCell>
-            <TableCell>{emp.email}</TableCell>
-            <TableCell>
-              <Badge variant="outline">{emp.role}</Badge>
-            </TableCell>
-            <TableCell>{emp.department}</TableCell>
-            <TableCell>{emp.location}</TableCell>
-            <TableCell>{emp.salary}</TableCell>
-            <TableCell>{emp.startDate}</TableCell>
-            <TableCell>{emp.manager}</TableCell>
-            <TableCell>
-              <Badge
-                variant={
-                  emp.status === 'Active'
-                    ? 'default'
-                    : emp.status === 'Remote'
-                      ? 'secondary'
-                      : 'destructive'
-                }
-              >
-                {emp.status}
-              </Badge>
-            </TableCell>
+    <TooltipProvider>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Salary</TableHead>
+            <TableHead>Start Date</TableHead>
+            <TableHead>Manager</TableHead>
+            <TableHead>Status</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {employees.map((emp) => (
+            <TableRow key={emp.id}>
+              <TableCell className="font-medium">{emp.id}</TableCell>
+              <TableCell>{emp.name}</TableCell>
+              <TableCell>{emp.email}</TableCell>
+              <TableCell>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="outline" className="cursor-help">
+                      {emp.role}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Job title: {emp.role} in {emp.department}
+                  </TooltipContent>
+                </Tooltip>
+              </TableCell>
+              <TableCell>{emp.department}</TableCell>
+              <TableCell>{emp.location}</TableCell>
+              <TableCell>{emp.salary}</TableCell>
+              <TableCell>{emp.startDate}</TableCell>
+              <TableCell>{emp.manager}</TableCell>
+              <TableCell>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge
+                      variant={
+                        emp.status === 'Active'
+                          ? 'default'
+                          : emp.status === 'Remote'
+                            ? 'secondary'
+                            : 'destructive'
+                      }
+                      className="cursor-help"
+                    >
+                      {emp.status}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {emp.status === 'Active'
+                      ? 'Currently working in office'
+                      : emp.status === 'Remote'
+                        ? 'Working from home'
+                        : 'Currently on leave'}
+                  </TooltipContent>
+                </Tooltip>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TooltipProvider>
   ),
 };
 
@@ -565,56 +686,73 @@ export const WithBadges: Story = {
  */
 export const WithActions: Story = {
   render: () => (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Department</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead>Salary</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {employees.map((emp) => (
-          <TableRow key={emp.id}>
-            <TableCell className="font-medium">{emp.id}</TableCell>
-            <TableCell>{emp.name}</TableCell>
-            <TableCell>{emp.email}</TableCell>
-            <TableCell>{emp.role}</TableCell>
-            <TableCell>{emp.department}</TableCell>
-            <TableCell>{emp.location}</TableCell>
-            <TableCell>{emp.salary}</TableCell>
-            <TableCell>{emp.startDate}</TableCell>
-            <TableCell>
-              <Badge
-                variant={emp.status === 'Active' ? 'default' : 'secondary'}
-              >
-                {emp.status}
-              </Badge>
-            </TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end gap-1">
-                <Button variant="ghost" size="icon">
-                  <Eye className="size-4" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <Edit className="size-4" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
-            </TableCell>
+    <TooltipProvider>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Salary</TableHead>
+            <TableHead>Start Date</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {employees.map((emp) => (
+            <TableRow key={emp.id}>
+              <TableCell className="font-medium">{emp.id}</TableCell>
+              <TableCell>{emp.name}</TableCell>
+              <TableCell>{emp.email}</TableCell>
+              <TableCell>{emp.role}</TableCell>
+              <TableCell>{emp.department}</TableCell>
+              <TableCell>{emp.location}</TableCell>
+              <TableCell>{emp.salary}</TableCell>
+              <TableCell>{emp.startDate}</TableCell>
+              <TableCell>
+                <Badge
+                  variant={emp.status === 'Active' ? 'default' : 'secondary'}
+                >
+                  {emp.status}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <div className="flex justify-end gap-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Eye className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>View details</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Edit className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit employee</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Delete employee</TooltipContent>
+                  </Tooltip>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TooltipProvider>
   ),
 };
 
@@ -623,48 +761,62 @@ export const WithActions: Story = {
  */
 export const WithFooter: Story = {
   render: () => (
-    <Table>
-      <TableCaption>Employee salary summary by department</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Department</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead className="text-right">Salary</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>Manager</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {employees.map((emp) => (
-          <TableRow key={emp.id}>
-            <TableCell className="font-medium">{emp.id}</TableCell>
-            <TableCell>{emp.name}</TableCell>
-            <TableCell>{emp.email}</TableCell>
-            <TableCell>{emp.role}</TableCell>
-            <TableCell>{emp.department}</TableCell>
-            <TableCell>{emp.location}</TableCell>
-            <TableCell className="text-right">{emp.salary}</TableCell>
-            <TableCell>{emp.startDate}</TableCell>
-            <TableCell>{emp.manager}</TableCell>
-            <TableCell>{emp.status}</TableCell>
+    <TooltipProvider>
+      <Table>
+        <TableCaption>Employee salary summary by department</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead className="text-right">Salary</TableHead>
+            <TableHead>Start Date</TableHead>
+            <TableHead>Manager</TableHead>
+            <TableHead>Status</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={6} className="font-bold">
-            Total Payroll
-          </TableCell>
-          <TableCell className="text-right font-bold">$751,000</TableCell>
-          <TableCell colSpan={3}></TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {employees.map((emp) => (
+            <TableRow key={emp.id}>
+              <TableCell className="font-medium">{emp.id}</TableCell>
+              <TableCell>{emp.name}</TableCell>
+              <TableCell>{emp.email}</TableCell>
+              <TableCell>{emp.role}</TableCell>
+              <TableCell>{emp.department}</TableCell>
+              <TableCell>{emp.location}</TableCell>
+              <TableCell className="text-right">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-help">{emp.salary}</span>
+                  </TooltipTrigger>
+                  <TooltipContent>Annual salary</TooltipContent>
+                </Tooltip>
+              </TableCell>
+              <TableCell>{emp.startDate}</TableCell>
+              <TableCell>{emp.manager}</TableCell>
+              <TableCell>{emp.status}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={6} className="font-bold">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="cursor-help">Total Payroll</span>
+                </TooltipTrigger>
+                <TooltipContent>Sum of all employee salaries</TooltipContent>
+              </Tooltip>
+            </TableCell>
+            <TableCell className="text-right font-bold">$751,000</TableCell>
+            <TableCell colSpan={3}></TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TooltipProvider>
   ),
 };
 
@@ -673,41 +825,52 @@ export const WithFooter: Story = {
  */
 export const StripedRows: Story = {
   render: () => (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Department</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead>Salary</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>Manager</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {employees.map((emp, index) => (
-          <TableRow
-            key={emp.id}
-            className={index % 2 === 0 ? 'bg-muted/50' : ''}
-          >
-            <TableCell className="font-medium">{emp.id}</TableCell>
-            <TableCell>{emp.name}</TableCell>
-            <TableCell>{emp.email}</TableCell>
-            <TableCell>{emp.role}</TableCell>
-            <TableCell>{emp.department}</TableCell>
-            <TableCell>{emp.location}</TableCell>
-            <TableCell>{emp.salary}</TableCell>
-            <TableCell>{emp.startDate}</TableCell>
-            <TableCell>{emp.manager}</TableCell>
-            <TableCell>{emp.status}</TableCell>
+    <TooltipProvider>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Salary</TableHead>
+            <TableHead>Start Date</TableHead>
+            <TableHead>Manager</TableHead>
+            <TableHead>Status</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {employees.map((emp, index) => (
+            <TableRow
+              key={emp.id}
+              className={index % 2 === 0 ? 'bg-muted/50' : ''}
+            >
+              <TableCell className="font-medium">{emp.id}</TableCell>
+              <TableCell>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-help">{emp.name}</span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Row {index + 1}: {emp.name}
+                  </TooltipContent>
+                </Tooltip>
+              </TableCell>
+              <TableCell>{emp.email}</TableCell>
+              <TableCell>{emp.role}</TableCell>
+              <TableCell>{emp.department}</TableCell>
+              <TableCell>{emp.location}</TableCell>
+              <TableCell>{emp.salary}</TableCell>
+              <TableCell>{emp.startDate}</TableCell>
+              <TableCell>{emp.manager}</TableCell>
+              <TableCell>{emp.status}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TooltipProvider>
   ),
 };
 
@@ -745,71 +908,87 @@ export const SelectableRows: Story = {
     };
 
     return (
-      <div className="space-y-4">
-        <div className="text-muted-foreground text-sm">
-          Selected: {selectedRows.size} of {employees.length} rows
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]">
-                <input
-                  type="checkbox"
-                  className="size-4"
-                  checked={isAllSelected}
-                  ref={(el) => {
-                    if (el) el.indeterminate = isSomeSelected;
-                  }}
-                  onChange={handleSelectAll}
-                  aria-label="Select all rows"
-                />
-              </TableHead>
-              <TableHead>ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Salary</TableHead>
-              <TableHead>Manager</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {employees.map((emp) => (
-              <TableRow
-                key={emp.id}
-                data-state={selectedRows.has(emp.id) ? 'selected' : undefined}
-              >
-                <TableCell>
-                  <input
-                    type="checkbox"
-                    className="size-4"
-                    checked={selectedRows.has(emp.id)}
-                    onChange={() => handleSelectRow(emp.id)}
-                    aria-label={`Select row ${emp.name}`}
-                  />
-                </TableCell>
-                <TableCell className="font-medium">{emp.id}</TableCell>
-                <TableCell>{emp.name}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>{emp.role}</TableCell>
-                <TableCell>{emp.department}</TableCell>
-                <TableCell>{emp.location}</TableCell>
-                <TableCell>{emp.salary}</TableCell>
-                <TableCell>{emp.manager}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={emp.status === 'Active' ? 'default' : 'secondary'}
-                  >
-                    {emp.status}
-                  </Badge>
-                </TableCell>
+      <TooltipProvider>
+        <div className="space-y-4">
+          <div className="text-muted-foreground text-sm">
+            Selected: {selectedRows.size} of {employees.length} rows
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <input
+                        type="checkbox"
+                        className="size-4 cursor-pointer"
+                        checked={isAllSelected}
+                        ref={(el) => {
+                          if (el) el.indeterminate = isSomeSelected;
+                        }}
+                        onChange={handleSelectAll}
+                        aria-label="Select all rows"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {isAllSelected ? 'Deselect all' : 'Select all'}
+                    </TooltipContent>
+                  </Tooltip>
+                </TableHead>
+                <TableHead>ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Department</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Salary</TableHead>
+                <TableHead>Manager</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {employees.map((emp) => (
+                <TableRow
+                  key={emp.id}
+                  data-state={selectedRows.has(emp.id) ? 'selected' : undefined}
+                >
+                  <TableCell>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <input
+                          type="checkbox"
+                          className="size-4 cursor-pointer"
+                          checked={selectedRows.has(emp.id)}
+                          onChange={() => handleSelectRow(emp.id)}
+                          aria-label={`Select row ${emp.name}`}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {selectedRows.has(emp.id) ? 'Deselect' : 'Select'} {emp.name}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell className="font-medium">{emp.id}</TableCell>
+                  <TableCell>{emp.name}</TableCell>
+                  <TableCell>{emp.email}</TableCell>
+                  <TableCell>{emp.role}</TableCell>
+                  <TableCell>{emp.department}</TableCell>
+                  <TableCell>{emp.location}</TableCell>
+                  <TableCell>{emp.salary}</TableCell>
+                  <TableCell>{emp.manager}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={emp.status === 'Active' ? 'default' : 'secondary'}
+                    >
+                      {emp.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </TooltipProvider>
     );
   },
 };
@@ -855,83 +1034,105 @@ export const SortableColumns: Story = {
     };
 
     return (
-      <div className="space-y-4">
-        <div className="text-muted-foreground text-sm">
-          Current sort:{' '}
-          {sortColumn ? `${sortColumn} (${sortDirection})` : 'None'}
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead
-                sortable
-                sortDirection={getSortDirection('id')}
-                onSort={(dir) => handleSort('id', dir)}
-              >
-                ID
-              </TableHead>
-              <TableHead
-                sortable
-                sortDirection={getSortDirection('name')}
-                onSort={(dir) => handleSort('name', dir)}
-              >
-                Name
-              </TableHead>
-              <TableHead
-                sortable
-                sortDirection={getSortDirection('email')}
-                onSort={(dir) => handleSort('email', dir)}
-              >
-                Email
-              </TableHead>
-              <TableHead
-                sortable
-                sortDirection={getSortDirection('role')}
-                onSort={(dir) => handleSort('role', dir)}
-              >
-                Role
-              </TableHead>
-              <TableHead
-                sortable
-                sortDirection={getSortDirection('department')}
-                onSort={(dir) => handleSort('department', dir)}
-              >
-                Department
-              </TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead
-                sortable
-                sortDirection={getSortDirection('salary')}
-                onSort={(dir) => handleSort('salary', dir)}
-                align="right"
-              >
-                Salary
-              </TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedEmployees.map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell className="font-medium">{emp.id}</TableCell>
-                <TableCell>{emp.name}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>{emp.role}</TableCell>
-                <TableCell>{emp.department}</TableCell>
-                <TableCell>{emp.location}</TableCell>
-                <TableCell align="right">{emp.salary}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={emp.status === 'Active' ? 'default' : 'secondary'}
-                  >
-                    {emp.status}
-                  </Badge>
-                </TableCell>
+      <TooltipProvider>
+        <div className="space-y-4">
+          <div className="text-muted-foreground text-sm">
+            Current sort:{' '}
+            {sortColumn ? `${sortColumn} (${sortDirection})` : 'None'}
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead
+                  sortable
+                  sortDirection={getSortDirection('id')}
+                  onSort={(dir) => handleSort('id', dir)}
+                >
+                  ID
+                </TableHead>
+                <TableHead
+                  sortable
+                  sortDirection={getSortDirection('name')}
+                  onSort={(dir) => handleSort('name', dir)}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    Name
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="size-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>Employee full name</TooltipContent>
+                    </Tooltip>
+                  </span>
+                </TableHead>
+                <TableHead
+                  sortable
+                  sortDirection={getSortDirection('email')}
+                  onSort={(dir) => handleSort('email', dir)}
+                >
+                  Email
+                </TableHead>
+                <TableHead
+                  sortable
+                  sortDirection={getSortDirection('role')}
+                  onSort={(dir) => handleSort('role', dir)}
+                >
+                  Role
+                </TableHead>
+                <TableHead
+                  sortable
+                  sortDirection={getSortDirection('department')}
+                  onSort={(dir) => handleSort('department', dir)}
+                >
+                  Department
+                </TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead
+                  sortable
+                  sortDirection={getSortDirection('salary')}
+                  onSort={(dir) => handleSort('salary', dir)}
+                  align="right"
+                >
+                  Salary
+                </TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {sortedEmployees.map((emp) => (
+                <TableRow key={emp.id}>
+                  <TableCell className="font-medium">{emp.id}</TableCell>
+                  <TableCell>{emp.name}</TableCell>
+                  <TableCell>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={`mailto:${emp.email}`}
+                          className="text-primary underline"
+                        >
+                          {emp.email}
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>Click to send email</TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>{emp.role}</TableCell>
+                  <TableCell>{emp.department}</TableCell>
+                  <TableCell>{emp.location}</TableCell>
+                  <TableCell align="right">{emp.salary}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={emp.status === 'Active' ? 'default' : 'secondary'}
+                    >
+                      {emp.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </TooltipProvider>
     );
   },
 };
