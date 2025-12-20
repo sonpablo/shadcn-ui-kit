@@ -10,6 +10,7 @@ export * from './components/mode-toggle/mode-toggle';
 export * from './components/multi-select/multi-select';
 export * from './components/popover/popover';
 export * from './components/separator/separator';
+export * from './components/table/table';
 export * from './components/textarea/textarea';
 export * from './components/theme-provider/theme-provider';
 export * from './components/tooltip/tooltip';
