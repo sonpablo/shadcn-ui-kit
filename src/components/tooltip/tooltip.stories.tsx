@@ -41,7 +41,7 @@ export const Default: Story = {
  */
 export const Sides: Story = {
   render: () => (
-    <div className="flex gap-4 items-center flex-wrap">
+    <div className="flex flex-wrap items-center gap-4">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="outline">Top</Button>
@@ -89,7 +89,7 @@ export const OnIconButtons: Story = {
     <div className="flex gap-2">
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="icon" size="icon">
             <Edit className="size-4" />
           </Button>
         </TooltipTrigger>
@@ -100,7 +100,7 @@ export const OnIconButtons: Story = {
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="icon" size="icon">
             <Trash2 className="size-4" />
           </Button>
         </TooltipTrigger>
@@ -111,7 +111,7 @@ export const OnIconButtons: Story = {
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="icon" size="icon">
             <Settings className="size-4" />
           </Button>
         </TooltipTrigger>
@@ -122,7 +122,7 @@ export const OnIconButtons: Story = {
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="icon" size="icon">
             <Plus className="size-4" />
           </Button>
         </TooltipTrigger>
@@ -198,48 +198,6 @@ export const WithLongContent: Story = {
 };
 
 /**
- * Tooltip with controlled delay
- */
-export const WithDelay: Story = {
-  render: () => (
-    <div className="flex gap-4">
-      <TooltipProvider delayDuration={0}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline">No delay</Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Appears immediately</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider delayDuration={500}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline">500ms delay</Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Appears after 500ms</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider delayDuration={1000}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline">1000ms delay</Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Appears after 1000ms</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
-  ),
-};
-
-/**
  * Tooltip on disabled button
  */
 export const OnDisabledButton: Story = {
@@ -262,7 +220,7 @@ export const OnDisabledButton: Story = {
  */
 export const OnButtonVariants: Story = {
   render: () => (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex flex-wrap gap-2">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="default">Default</Button>
@@ -354,8 +312,8 @@ export const CompleteShowcase: Story = {
   render: () => (
     <div className="space-y-8 p-8">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Basic Tooltips</h3>
-        <div className="flex gap-2 flex-wrap">
+        <h3 className="mb-4 text-lg font-semibold">Basic Tooltips</h3>
+        <div className="flex flex-wrap gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button>Default</Button>
@@ -377,7 +335,7 @@ export const CompleteShowcase: Story = {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Icon Buttons</h3>
+        <h3 className="mb-4 text-lg font-semibold">Icon Buttons</h3>
         <div className="flex gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -415,7 +373,7 @@ export const CompleteShowcase: Story = {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Different Positions</h3>
+        <h3 className="mb-4 text-lg font-semibold">Different Positions</h3>
         <div className="flex gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -464,15 +422,13 @@ export const CompleteShowcase: Story = {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Info Icons</h3>
+        <h3 className="mb-4 text-lg font-semibold">Info Icons</h3>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-sm">Username</span>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="text-muted-foreground hover:text-foreground">
-                  <Info className="size-4" />
-                </button>
+                <Info className="size-4" />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Must be unique</p>
@@ -510,12 +466,12 @@ export const DarkModeComparison: Story = {
     <div className="grid grid-cols-1 gap-8 p-8">
       {/* Light Mode */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-6">
+        <div className="mb-6 flex items-center gap-2">
           <span className="text-2xl">☀️</span>
           <h3 className="text-lg font-semibold">Light Mode</h3>
         </div>
 
-        <div className="flex gap-4 flex-wrap">
+        <div className="flex flex-wrap gap-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="outline">Hover me</Button>
@@ -539,13 +495,13 @@ export const DarkModeComparison: Story = {
       </div>
 
       {/* Dark Mode */}
-      <div className="dark space-y-4 bg-background p-6 rounded-lg">
-        <div className="flex items-center gap-2 mb-6">
+      <div className="dark bg-background space-y-4 rounded-lg p-6">
+        <div className="mb-6 flex items-center gap-2">
           <span className="text-2xl">🌙</span>
-          <h3 className="text-lg font-semibold text-foreground">Dark Mode</h3>
+          <h3 className="text-foreground text-lg font-semibold">Dark Mode</h3>
         </div>
 
-        <div className="flex gap-4 flex-wrap">
+        <div className="flex flex-wrap gap-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="outline">Hover me</Button>
@@ -573,4 +529,3 @@ export const DarkModeComparison: Story = {
     layout: 'fullscreen',
   },
 };
-
