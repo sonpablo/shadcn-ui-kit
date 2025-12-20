@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
+import { ChevronUp, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -167,8 +167,8 @@ function TableHead({
     return 'none';
   };
 
-  // Sort icon classes
-  const iconClass = 'ml-1 inline-block size-4 shrink-0';
+  // Sort icon classes with animation
+  const iconClass = 'ml-1 inline-block size-4 shrink-0 transition-transform duration-200';
 
   return (
     <th
@@ -202,11 +202,15 @@ function TableHead({
     >
       <span className="inline-flex items-center">
         {children}
-        {sortable && sortDirection === 'asc' && (
-          <ChevronUp className={cn(iconClass, 'text-foreground')} aria-hidden="true" />
-        )}
-        {sortable && sortDirection === 'desc' && (
-          <ChevronDown className={cn(iconClass, 'text-foreground')} aria-hidden="true" />
+        {sortable && (sortDirection === 'asc' || sortDirection === 'desc') && (
+          <ChevronUp 
+            className={cn(
+              iconClass, 
+              'text-foreground',
+              sortDirection === 'desc' && 'rotate-180'
+            )} 
+            aria-hidden="true" 
+          />
         )}
         {sortable && sortDirection !== 'asc' && sortDirection !== 'desc' && (
           <ChevronsUpDown className={cn(iconClass, 'text-muted-foreground')} aria-hidden="true" />

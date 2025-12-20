@@ -190,11 +190,9 @@ export const Default: Story = {
                 Status
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="size-3.5 text-muted-foreground cursor-help" />
+                    <Info className="text-muted-foreground size-3.5 cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent>
-                    Payment status of the invoice
-                  </TooltipContent>
+                  <TooltipContent>Payment status of the invoice</TooltipContent>
                 </Tooltip>
               </span>
             </TableHead>
@@ -215,10 +213,10 @@ export const Default: Story = {
                     </span>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {invoice.status === 'Paid' 
-                      ? 'Payment received' 
-                      : invoice.status === 'Pending' 
-                        ? 'Awaiting payment' 
+                    {invoice.status === 'Paid'
+                      ? 'Payment received'
+                      : invoice.status === 'Pending'
+                        ? 'Awaiting payment'
                         : 'Payment overdue'}
                   </TooltipContent>
                 </Tooltip>
@@ -381,7 +379,9 @@ export const StickyWithCustomBackground: Story = {
                     <TooltipTrigger asChild>
                       <span className="cursor-help">{emp.id}</span>
                     </TooltipTrigger>
-                    <TooltipContent>Sticky with custom bg: {emp.id}</TooltipContent>
+                    <TooltipContent>
+                      Sticky with custom bg: {emp.id}
+                    </TooltipContent>
                   </Tooltip>
                 </TableCell>
                 <TableCell>{emp.name}</TableCell>
@@ -559,7 +559,7 @@ export const WithTextWrapping: Story = {
                   Department Description
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Info className="size-3.5 text-muted-foreground cursor-help" />
+                      <Info className="text-muted-foreground size-3.5 cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
                       This column allows text wrapping
@@ -964,7 +964,8 @@ export const SelectableRows: Story = {
                         />
                       </TooltipTrigger>
                       <TooltipContent>
-                        {selectedRows.has(emp.id) ? 'Deselect' : 'Select'} {emp.name}
+                        {selectedRows.has(emp.id) ? 'Deselect' : 'Select'}{' '}
+                        {emp.name}
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -978,7 +979,9 @@ export const SelectableRows: Story = {
                   <TableCell>{emp.manager}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={emp.status === 'Active' ? 'default' : 'secondary'}
+                      variant={
+                        emp.status === 'Active' ? 'default' : 'secondary'
+                      }
                     >
                       {emp.status}
                     </Badge>
@@ -1059,7 +1062,7 @@ export const SortableColumns: Story = {
                     Name
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Info className="size-3.5 text-muted-foreground cursor-help" />
+                        <Info className="text-muted-foreground size-3.5 cursor-help" />
                       </TooltipTrigger>
                       <TooltipContent>Employee full name</TooltipContent>
                     </Tooltip>
@@ -1122,7 +1125,9 @@ export const SortableColumns: Story = {
                   <TableCell align="right">{emp.salary}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={emp.status === 'Active' ? 'default' : 'secondary'}
+                      variant={
+                        emp.status === 'Active' ? 'default' : 'secondary'
+                      }
                     >
                       {emp.status}
                     </Badge>
@@ -1327,120 +1332,6 @@ export const CompleteShowcase: Story = {
               <TableCell colSpan={3}></TableCell>
             </TableRow>
           </TableFooter>
-        </Table>
-      </div>
-    </div>
-  ),
-  parameters: {
-    layout: 'fullscreen',
-  },
-};
-
-/**
- * Table comparison in light and dark modes - 10 columns
- */
-export const DarkModeComparison: Story = {
-  render: () => (
-    <div className="grid grid-cols-1 gap-8 p-8">
-      {/* Light Mode */}
-      <div className="space-y-4">
-        <div className="mb-6 flex items-center gap-2">
-          <span className="text-2xl">☀️</span>
-          <h3 className="text-lg font-semibold">Light Mode</h3>
-        </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Salary</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {employees.slice(0, 4).map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell className="font-medium">{emp.id}</TableCell>
-                <TableCell>{emp.name}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>{emp.role}</TableCell>
-                <TableCell>{emp.department}</TableCell>
-                <TableCell>{emp.location}</TableCell>
-                <TableCell>{emp.salary}</TableCell>
-                <TableCell>{emp.startDate}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={emp.status === 'Active' ? 'default' : 'secondary'}
-                  >
-                    {emp.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Dark Mode */}
-      <div className="dark bg-background space-y-4 rounded-lg p-6">
-        <div className="mb-6 flex items-center gap-2">
-          <span className="text-2xl">🌙</span>
-          <h3 className="text-foreground text-lg font-semibold">Dark Mode</h3>
-        </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Salary</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {employees.slice(0, 4).map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell className="font-medium">{emp.id}</TableCell>
-                <TableCell>{emp.name}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>{emp.role}</TableCell>
-                <TableCell>{emp.department}</TableCell>
-                <TableCell>{emp.location}</TableCell>
-                <TableCell>{emp.salary}</TableCell>
-                <TableCell>{emp.startDate}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={emp.status === 'Active' ? 'default' : 'secondary'}
-                  >
-                    {emp.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
         </Table>
       </div>
     </div>
