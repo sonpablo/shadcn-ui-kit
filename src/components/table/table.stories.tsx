@@ -133,45 +133,6 @@ const employees = [
   },
 ];
 
-// Simple data for default story (5 columns)
-const invoices = [
-  {
-    id: 'INV001',
-    customer: 'Acme Corp',
-    status: 'Paid',
-    method: 'Credit Card',
-    amount: '$250.00',
-  },
-  {
-    id: 'INV002',
-    customer: 'Globex Inc',
-    status: 'Pending',
-    method: 'PayPal',
-    amount: '$150.00',
-  },
-  {
-    id: 'INV003',
-    customer: 'Stark Industries',
-    status: 'Unpaid',
-    method: 'Bank Transfer',
-    amount: '$350.00',
-  },
-  {
-    id: 'INV004',
-    customer: 'Wayne Enterprises',
-    status: 'Paid',
-    method: 'Credit Card',
-    amount: '$450.00',
-  },
-  {
-    id: 'INV005',
-    customer: 'Umbrella Corp',
-    status: 'Paid',
-    method: 'PayPal',
-    amount: '$550.00',
-  },
-];
-
 /**
  * Default table with 5 columns - basic structure
  * Includes tooltip on Status column header
@@ -180,49 +141,40 @@ export const Default: Story = {
   render: () => (
     <TooltipProvider>
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Customer</TableHead>
-            <TableHead>
-              <span className="inline-flex items-center gap-1">
-                Status
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="text-muted-foreground size-3.5 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>Payment status of the invoice</TooltipContent>
-                </Tooltip>
-              </span>
-            </TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Salary</TableHead>
+            <TableHead>Start Date</TableHead>
+            <TableHead>Manager</TableHead>
+            <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.id}>
-              <TableCell className="font-medium">{invoice.id}</TableCell>
-              <TableCell>{invoice.customer}</TableCell>
+          {employees.slice(0, 5).map((emp) => (
+            <TableRow key={emp.id}>
+              <TableCell className="font-medium">{emp.id}</TableCell>
               <TableCell>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="cursor-help underline decoration-dotted">
-                      {invoice.status}
-                    </span>
+                    <span className="cursor-help">{emp.name}</span>
                   </TooltipTrigger>
-                  <TooltipContent>
-                    {invoice.status === 'Paid'
-                      ? 'Payment received'
-                      : invoice.status === 'Pending'
-                        ? 'Awaiting payment'
-                        : 'Payment overdue'}
-                  </TooltipContent>
+                  <TooltipContent>Full name: {emp.name}</TooltipContent>
                 </Tooltip>
               </TableCell>
-              <TableCell>{invoice.method}</TableCell>
-              <TableCell className="text-right">{invoice.amount}</TableCell>
+              <TableCell>{emp.email}</TableCell>
+              <TableCell>{emp.role}</TableCell>
+              <TableCell>{emp.department}</TableCell>
+              <TableCell>{emp.location}</TableCell>
+              <TableCell>{emp.salary}</TableCell>
+              <TableCell>{emp.startDate}</TableCell>
+              <TableCell>{emp.manager}</TableCell>
+              <TableCell>{emp.status}</TableCell>
             </TableRow>
           ))}
         </TableBody>
