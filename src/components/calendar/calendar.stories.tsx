@@ -1,8 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Calendar } from './calendar';
 import { useState } from 'react';
-import { addDays, addMonths, subMonths } from 'date-fns';
 import type { DateRange as DateRangeType } from 'react-day-picker';
+
+// Date utility functions (private - not exported to avoid Storybook treating them as stories)
+function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function addMonths(date: Date, months: number): Date {
+  const result = new Date(date);
+  result.setMonth(result.getMonth() + months);
+  return result;
+}
 
 const meta = {
   title: 'Components/Calendar',
@@ -48,7 +60,7 @@ export const DateRange: Story = {
       <div className="space-y-4">
         <Calendar mode="range" selected={range} onSelect={setRange} />
         {range?.from && (
-          <div className="text-sm text-muted-foreground text-center">
+          <div className="text-muted-foreground text-center text-sm">
             {range.from.toLocaleDateString()} -{' '}
             {range.to?.toLocaleDateString() || '...'}
           </div>
@@ -111,7 +123,7 @@ export const WithDisabledDates: Story = {
             { before: new Date() }, // Disable past dates
           ]}
         />
-        <p className="text-sm text-muted-foreground text-center max-w-xs">
+        <p className="text-muted-foreground max-w-xs text-center text-sm">
           Weekends and past dates are disabled
         </p>
       </div>
@@ -132,7 +144,7 @@ export const MultipleSelection: Story = {
     return (
       <div className="space-y-4">
         <Calendar mode="multiple" selected={selected} onSelect={setSelected} />
-        <div className="text-sm text-muted-foreground text-center">
+        <div className="text-muted-foreground text-center text-sm">
           {selected?.length || 0} dates selected
         </div>
       </div>
@@ -208,7 +220,7 @@ export const WithMinMaxDates: Story = {
             after: addMonths(new Date(), 2),
           }}
         />
-        <p className="text-sm text-muted-foreground text-center max-w-xs">
+        <p className="text-muted-foreground max-w-xs text-center text-sm">
           Can only select dates within ±1-2 months from today
         </p>
       </div>
@@ -239,8 +251,12 @@ export const MultipleMonths: Story = {
 export const CompleteShowcase: Story = {
   render: function CompleteShowcaseComponent() {
     const InteractiveCalendar = () => {
-      const [mode, setMode] = useState<'single' | 'range' | 'multiple'>('single');
-      const [singleDate, setSingleDate] = useState<Date | undefined>(new Date());
+      const [mode, setMode] = useState<'single' | 'range' | 'multiple'>(
+        'single',
+      );
+      const [singleDate, setSingleDate] = useState<Date | undefined>(
+        new Date(),
+      );
       const [rangeDate, setRangeDate] = useState<DateRangeType | undefined>({
         from: new Date(),
         to: addDays(new Date(), 5),
@@ -252,10 +268,10 @@ export const CompleteShowcase: Story = {
 
       return (
         <div className="space-y-6">
-          <div className="flex gap-2 justify-center">
+          <div className="flex justify-center gap-2">
             <button
               onClick={() => setMode('single')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                 mode === 'single'
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
@@ -265,7 +281,7 @@ export const CompleteShowcase: Story = {
             </button>
             <button
               onClick={() => setMode('range')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                 mode === 'range'
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
@@ -275,7 +291,7 @@ export const CompleteShowcase: Story = {
             </button>
             <button
               onClick={() => setMode('multiple')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                 mode === 'multiple'
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
@@ -286,10 +302,18 @@ export const CompleteShowcase: Story = {
           </div>
 
           {mode === 'single' && (
-            <Calendar mode="single" selected={singleDate} onSelect={setSingleDate} />
+            <Calendar
+              mode="single"
+              selected={singleDate}
+              onSelect={setSingleDate}
+            />
           )}
           {mode === 'range' && (
-            <Calendar mode="range" selected={rangeDate} onSelect={setRangeDate} />
+            <Calendar
+              mode="range"
+              selected={rangeDate}
+              onSelect={setRangeDate}
+            />
           )}
           {mode === 'multiple' && (
             <Calendar
@@ -299,7 +323,7 @@ export const CompleteShowcase: Story = {
             />
           )}
 
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-center text-sm">
             {mode === 'single' && singleDate && (
               <p>Selected: {singleDate.toLocaleDateString()}</p>
             )}
@@ -333,7 +357,7 @@ export const WithFooter: Story = {
         selected={selected}
         onSelect={setSelected}
         footer={
-          <div className="mt-4 pt-4 border-t text-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-4 border-t pt-4 text-center text-sm">
             {selected ? (
               <>Selected: {selected.toLocaleDateString()}</>
             ) : (
@@ -363,14 +387,14 @@ export const AllVariants: Story = {
     ]);
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+      <div className="grid grid-cols-1 gap-8 p-8 md:grid-cols-2">
         <div className="space-y-2">
-          <h4 className="font-semibold text-sm">Default</h4>
+          <h4 className="text-sm font-semibold">Default</h4>
           <Calendar mode="single" selected={date1} onSelect={setDate1} />
         </div>
 
         <div className="space-y-2">
-          <h4 className="font-semibold text-sm">With Dropdowns</h4>
+          <h4 className="text-sm font-semibold">With Dropdowns</h4>
           <Calendar
             mode="single"
             selected={date2}
@@ -382,13 +406,17 @@ export const AllVariants: Story = {
         </div>
 
         <div className="space-y-2">
-          <h4 className="font-semibold text-sm">Date Range</h4>
+          <h4 className="text-sm font-semibold">Date Range</h4>
           <Calendar mode="range" selected={range} onSelect={setRange} />
         </div>
 
         <div className="space-y-2">
-          <h4 className="font-semibold text-sm">Multiple Selection</h4>
-          <Calendar mode="multiple" selected={multiple} onSelect={setMultiple} />
+          <h4 className="text-sm font-semibold">Multiple Selection</h4>
+          <Calendar
+            mode="multiple"
+            selected={multiple}
+            onSelect={setMultiple}
+          />
         </div>
       </div>
     );
@@ -397,4 +425,3 @@ export const AllVariants: Story = {
     layout: 'fullscreen',
   },
 };
-

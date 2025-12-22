@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { addDays, subDays } from 'date-fns';
 import type { DateRange as DateRangeType } from 'react-day-picker';
+
 import {
   DatePicker,
   DatePickerWithPresets,
@@ -9,6 +9,17 @@ import {
   DatePickerButton,
 } from './date-picker';
 import { Label } from '@/components/label/label';
+
+// Date utility functions (private - not exported to avoid Storybook treating them as stories)
+function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function subDays(date: Date, days: number): Date {
+  return addDays(date, -days);
+}
 
 const meta = {
   title: 'Components/DatePicker',
@@ -28,11 +39,7 @@ export const Default: Story = {
     const [date, setDate] = React.useState<Date | undefined>(undefined);
 
     return (
-      <DatePicker
-        value={date}
-        onChange={setDate}
-        placeholder="Pick a date"
-      />
+      <DatePicker value={date} onChange={setDate} placeholder="Pick a date" />
     );
   },
 };
@@ -45,11 +52,7 @@ export const WithLabel: Story = {
     return (
       <div className="flex flex-col gap-2">
         <Label htmlFor="date-picker">Select a date</Label>
-        <DatePicker
-          value={date}
-          onChange={setDate}
-          placeholder="Pick a date"
-        />
+        <DatePicker value={date} onChange={setDate} placeholder="Pick a date" />
       </div>
     );
   },
@@ -61,11 +64,7 @@ export const WithDefaultValue: Story = {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
 
     return (
-      <DatePicker
-        value={date}
-        onChange={setDate}
-        placeholder="Pick a date"
-      />
+      <DatePicker value={date} onChange={setDate} placeholder="Pick a date" />
     );
   },
 };
@@ -84,7 +83,7 @@ export const DateOfBirth: Story = {
           onChange={setDate}
           placeholder="Select date"
           captionLayout="dropdown"
-          dateFormat="PP"
+          dateFormat={{ year: 'numeric', month: 'short', day: 'numeric' }}
         />
       </div>
     );
@@ -143,10 +142,12 @@ export const DateRange: Story = {
 export const DateRangeWithDefault: Story = {
   name: 'Date Range (Pre-selected)',
   render: function DateRangeDefaultExample() {
-    const [dateRange, setDateRange] = React.useState<DateRangeType | undefined>({
-      from: new Date(),
-      to: addDays(new Date(), 7),
-    });
+    const [dateRange, setDateRange] = React.useState<DateRangeType | undefined>(
+      {
+        from: new Date(),
+        to: addDays(new Date(), 7),
+      },
+    );
 
     return (
       <div className="flex flex-col gap-2">
@@ -183,15 +184,11 @@ export const SingleMonthRange: Story = {
 // Disabled State
 export const Disabled: Story = {
   render: () => (
-    <DatePicker
-      value={new Date()}
-      disabled
-      placeholder="Pick a date"
-    />
+    <DatePicker value={new Date()} disabled placeholder="Pick a date" />
   ),
 };
 
-// Custom Format
+// Custom Format with Intl.DateTimeFormatOptions
 export const CustomFormat: Story = {
   render: function CustomFormatExample() {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -199,21 +196,116 @@ export const CustomFormat: Story = {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <Label>Default format (PPP)</Label>
-          <DatePicker value={date} onChange={setDate} dateFormat="PPP" />
+          <Label>Long format: "December 22, 2025"</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            dateFormat={{ year: 'numeric', month: 'long', day: 'numeric' }}
+          />
         </div>
         <div className="flex flex-col gap-2">
-          <Label>Short format (PP)</Label>
-          <DatePicker value={date} onChange={setDate} dateFormat="PP" />
+          <Label>Medium format: "Dec 22, 2025"</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            dateFormat={{ year: 'numeric', month: 'short', day: 'numeric' }}
+          />
         </div>
         <div className="flex flex-col gap-2">
-          <Label>ISO format (yyyy-MM-dd)</Label>
-          <DatePicker value={date} onChange={setDate} dateFormat="yyyy-MM-dd" />
+          <Label>Short format: "12/22/2025"</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            dateFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
+          />
         </div>
         <div className="flex flex-col gap-2">
-          <Label>European format (dd/MM/yyyy)</Label>
-          <DatePicker value={date} onChange={setDate} dateFormat="dd/MM/yyyy" />
+          <Label>Full format: "Monday, December 22, 2025"</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            dateFormat={{
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }}
+          />
         </div>
+        <div className="flex flex-col gap-2">
+          <Label>2-digit day/month</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            dateFormat={{ day: '2-digit', month: '2-digit', year: 'numeric' }}
+          />
+        </div>
+        <p className="text-muted-foreground max-w-md text-sm">
+          Use <code className="bg-muted rounded px-1">dateFormat</code> with{' '}
+          <code className="bg-muted rounded px-1">
+            Intl.DateTimeFormatOptions
+          </code>{' '}
+          for native browser formatting.
+        </p>
+      </div>
+    );
+  },
+};
+
+// Custom Formatter Function
+export const CustomFormatterFunction: Story = {
+  name: 'Custom Formatter (formatFn)',
+  render: function CustomFormatterExample() {
+    const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <Label>ISO format (formatFn)</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            formatFn={(d) => d.toISOString().split('T')[0]} // "2025-12-22"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>German locale (formatFn)</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            formatFn={(d) => d.toLocaleDateString('de-DE')} // "22.12.2025"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Spanish locale (formatFn)</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            formatFn={(d) =>
+              d.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              })
+            }
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Custom format (formatFn)</Label>
+          <DatePicker
+            value={date}
+            onChange={setDate}
+            formatFn={(d) =>
+              `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`
+            }
+          />
+        </div>
+        <p className="text-muted-foreground max-w-md text-sm">
+          Use <code className="bg-muted rounded px-1">formatFn</code> to bring
+          your own formatter (date-fns, moment, dayjs, or native). When
+          provided, <code className="bg-muted rounded px-1">dateFormat</code> is
+          ignored.
+        </p>
       </div>
     );
   },
@@ -338,4 +430,3 @@ export const Controlled: Story = {
     );
   },
 };
-

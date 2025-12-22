@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { format } from 'date-fns';
 import { CalendarIcon, ChevronDownIcon } from 'lucide-react';
 import type { DateRange } from 'react-day-picker';
 
@@ -15,6 +14,28 @@ import {
 } from '@/components/popover/popover';
 
 /* -----------------------------------------------------------------------------
+ * Helper: Format date using native Intl.DateTimeFormat
+ * -------------------------------------------------------------------------- */
+
+const defaultDateFormat: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
+
+function formatDateNative(
+  date: Date,
+  options?: Intl.DateTimeFormatOptions,
+  locale?: string,
+): string {
+  // Handle invalid dates gracefully
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    return '';
+  }
+  return new Intl.DateTimeFormat(locale, options ?? defaultDateFormat).format(date);
+}
+
+/* -----------------------------------------------------------------------------
  * DatePicker (Single Date)
  * -------------------------------------------------------------------------- */
 
@@ -25,8 +46,10 @@ interface DatePickerProps {
   onChange?: (date: Date | undefined) => void;
   /** Placeholder text when no date is selected */
   placeholder?: string;
-  /** Date format string (date-fns format) */
-  dateFormat?: string;
+  /** Intl.DateTimeFormatOptions for formatting the date. Ignored if formatFn is provided. */
+  dateFormat?: Intl.DateTimeFormatOptions;
+  /** Custom formatter function. When provided, dateFormat is ignored. Use this for date-fns, moment, or any custom formatting. */
+  formatFn?: (date: Date) => string;
   /** Disable the date picker */
   disabled?: boolean;
   /** Additional className for the trigger button */
@@ -48,7 +71,8 @@ function DatePicker({
   value,
   onChange,
   placeholder = 'Select date',
-  dateFormat = 'PPP',
+  dateFormat,
+  formatFn,
   disabled = false,
   className,
   align = 'start',
@@ -65,6 +89,12 @@ function DatePicker({
     }
   };
 
+  const displayValue = value
+    ? formatFn
+      ? formatFn(value)
+      : formatDateNative(value, dateFormat)
+    : null;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -78,7 +108,7 @@ function DatePicker({
           )}
         >
           <CalendarIcon className="mr-2 size-4" />
-          {value ? format(value, dateFormat) : <span>{placeholder}</span>}
+          {displayValue ?? <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align={align}>
@@ -112,7 +142,8 @@ function DatePickerWithPresets({
   value,
   onChange,
   placeholder = 'Select date',
-  dateFormat = 'PPP',
+  dateFormat,
+  formatFn,
   disabled = false,
   className,
   align = 'start',
@@ -125,6 +156,12 @@ function DatePickerWithPresets({
     onChange?.(date);
     setOpen(false);
   };
+
+  const displayValue = value
+    ? formatFn
+      ? formatFn(value)
+      : formatDateNative(value, dateFormat)
+    : null;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -139,7 +176,7 @@ function DatePickerWithPresets({
           )}
         >
           <CalendarIcon className="mr-2 size-4" />
-          {value ? format(value, dateFormat) : <span>{placeholder}</span>}
+          {displayValue ?? <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col gap-2 p-2" align={align}>
@@ -182,8 +219,10 @@ interface DateRangePickerProps {
   onChange?: (range: DateRange | undefined) => void;
   /** Placeholder text when no range is selected */
   placeholder?: string;
-  /** Date format string (date-fns format) */
-  dateFormat?: string;
+  /** Intl.DateTimeFormatOptions for formatting the dates. Ignored if formatFn is provided. */
+  dateFormat?: Intl.DateTimeFormatOptions;
+  /** Custom formatter function. When provided, dateFormat is ignored. Use this for date-fns, moment, or any custom formatting. */
+  formatFn?: (date: Date) => string;
   /** Disable the date picker */
   disabled?: boolean;
   /** Additional className for the trigger button */
@@ -203,7 +242,8 @@ function DateRangePicker({
   value,
   onChange,
   placeholder = 'Select date range',
-  dateFormat = 'LLL dd, y',
+  dateFormat,
+  formatFn,
   disabled = false,
   className,
   align = 'start',
@@ -211,6 +251,9 @@ function DateRangePicker({
   calendarProps,
 }: DateRangePickerProps) {
   const [open, setOpen] = React.useState(false);
+
+  const formatSingleDate = (date: Date) =>
+    formatFn ? formatFn(date) : formatDateNative(date, dateFormat);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -228,11 +271,10 @@ function DateRangePicker({
           {value?.from ? (
             value.to ? (
               <>
-                {format(value.from, dateFormat)} -{' '}
-                {format(value.to, dateFormat)}
+                {formatSingleDate(value.from)} - {formatSingleDate(value.to)}
               </>
             ) : (
-              format(value.from, dateFormat)
+              formatSingleDate(value.from)
             )
           ) : (
             <span>{placeholder}</span>
@@ -265,7 +307,8 @@ function DatePickerButton({
   value,
   onChange,
   placeholder = 'Select date',
-  dateFormat = 'PPP',
+  dateFormat,
+  formatFn,
   disabled = false,
   className,
   align = 'start',
@@ -283,6 +326,12 @@ function DatePickerButton({
     }
   };
 
+  const displayValue = value
+    ? formatFn
+      ? formatFn(value)
+      : formatDateNative(value, dateFormat)
+    : null;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -295,7 +344,7 @@ function DatePickerButton({
             className,
           )}
         >
-          {value ? format(value, dateFormat) : <span>{placeholder}</span>}
+          {displayValue ?? <span>{placeholder}</span>}
           {useChevron ? (
             <ChevronDownIcon className="size-4 opacity-50" />
           ) : (

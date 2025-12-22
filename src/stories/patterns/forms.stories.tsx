@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { format } from 'date-fns';
 import * as z from 'zod';
 import {
   Field,
@@ -25,7 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/select/select';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from '@/components/radio-group/radio-group';
 import { Label } from '@/components/label/label';
 import {
   DatePicker,
@@ -333,7 +335,11 @@ export const BasicRHFForm: Story = {
 
           <div className="flex gap-2">
             <Button type="submit">Register Robot</Button>
-            <Button type="button" variant="outline" onClick={() => form.reset()}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => form.reset()}
+            >
               Reset
             </Button>
           </div>
@@ -615,7 +621,9 @@ export const PreferencesForm: Story = {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="munich">Munich Plant A</SelectItem>
-                      <SelectItem value="stuttgart">Stuttgart Factory</SelectItem>
+                      <SelectItem value="stuttgart">
+                        Stuttgart Factory
+                      </SelectItem>
                       <SelectItem value="berlin">Berlin Warehouse</SelectItem>
                       <SelectItem value="hamburg">Hamburg Line B</SelectItem>
                       <SelectItem value="metzingen">Metzingen HQ</SelectItem>
@@ -743,7 +751,9 @@ export const RealtimeValidation: Story = {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-realtime-email">Operator Email</FieldLabel>
+                <FieldLabel htmlFor="rhf-realtime-email">
+                  Operator Email
+                </FieldLabel>
                 <Input
                   {...field}
                   id="rhf-realtime-email"
@@ -763,7 +773,9 @@ export const RealtimeValidation: Story = {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-realtime-accesscode">Access Code</FieldLabel>
+                <FieldLabel htmlFor="rhf-realtime-accesscode">
+                  Access Code
+                </FieldLabel>
                 <Input
                   {...field}
                   id="rhf-realtime-accesscode"
@@ -820,7 +832,9 @@ export const EventForm: Story = {
         return;
       }
 
-      alert(`Maintenance scheduled for: ${robotId} on ${date?.toLocaleDateString()}`);
+      alert(
+        `Maintenance scheduled for: ${robotId} on ${date?.toLocaleDateString()}`,
+      );
     };
 
     return (
@@ -923,7 +937,7 @@ export const DateTimeForm: Story = {
 
             <FieldDescription>
               {date && time
-                ? `Scheduled for ${format(date, 'MMMM d, yyyy')} at ${time}`
+                ? `Scheduled for ${date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} at ${time}`
                 : 'Select a date and time for your appointment.'}
             </FieldDescription>
 
@@ -990,7 +1004,7 @@ export const DateOfBirthForm: Story = {
                 value={dob}
                 onChange={setDob}
                 placeholder="Select date"
-                dateFormat="PP"
+                dateFormat={{ year: 'numeric', month: 'short', day: 'numeric' }}
                 className="w-full"
                 captionLayout="dropdown"
                 calendarProps={{
@@ -1027,7 +1041,8 @@ export const DateRangeForm: Story = {
       const description = formData.get('reason') as string;
 
       if (!description || description.length < 5) {
-        newErrors.reason = 'Please provide a description (at least 5 characters).';
+        newErrors.reason =
+          'Please provide a description (at least 5 characters).';
       }
       if (!dateRange?.from || !dateRange?.to) {
         newErrors.dates = 'Please select both start and end dates.';
@@ -1038,12 +1053,13 @@ export const DateRangeForm: Story = {
         return;
       }
 
-      const days = dateRange?.from && dateRange?.to
-        ? Math.ceil(
-            (dateRange.to.getTime() - dateRange.from.getTime()) /
-              (1000 * 60 * 60 * 24),
-          ) + 1
-        : 0;
+      const days =
+        dateRange?.from && dateRange?.to
+          ? Math.ceil(
+              (dateRange.to.getTime() - dateRange.from.getTime()) /
+                (1000 * 60 * 60 * 24),
+            ) + 1
+          : 0;
 
       alert(
         `Deployment scheduled: ${days} days from ${dateRange?.from?.toLocaleDateString()} to ${dateRange?.to?.toLocaleDateString()}`,
@@ -1073,7 +1089,9 @@ export const DateRangeForm: Story = {
             </Field>
 
             <Field data-invalid={!!errors.reason}>
-              <FieldLabel htmlFor="vacation-reason">Project Description</FieldLabel>
+              <FieldLabel htmlFor="vacation-reason">
+                Project Description
+              </FieldLabel>
               <Textarea
                 id="vacation-reason"
                 name="reason"
@@ -1246,4 +1264,3 @@ export const DatePickerRHF: Story = {
     );
   },
 };
-
