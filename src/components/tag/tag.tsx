@@ -46,7 +46,7 @@ export function Tag({
   return (
     <Comp
       data-slot="tag"
-      className={cn(tagVariants({ variant, size }, 'rounde'), className)}
+      className={cn(tagVariants({ variant, size }), className)}
       {...props}
     />
   );

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Pill } from './pill';
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from '@/components/radio-group/radio-group';
-import { Label } from '@/components/label/label';
 
 const meta = {
   title: 'Components/Pill',
@@ -171,39 +166,6 @@ export const InteractiveFilter: Story = {
       </div>
     );
   },
-};
-
-// With RadioGroup - Accessible pill selector
-export const WithRadioGroup: Story = {
-  render: () => (
-    <div className="space-y-4">
-      <Label className="text-sm font-medium">Select status</Label>
-      <RadioGroup defaultValue="online" className="flex flex-wrap gap-2">
-        {[
-          { value: 'online', label: 'Online', dot: 'bg-green-500' },
-          { value: 'away', label: 'Away', dot: 'bg-yellow-500' },
-          { value: 'busy', label: 'Busy', dot: 'bg-red-500' },
-          { value: 'offline', label: 'Offline', dot: 'bg-gray-400' },
-        ].map((status) => (
-          <Label
-            key={status.value}
-            htmlFor={`status-${status.value}`}
-            className="cursor-pointer"
-          >
-            <Pill className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground has-[[data-state=checked]]:before:border-primary">
-              <RadioGroupItem
-                value={status.value}
-                id={`status-${status.value}`}
-                className="sr-only"
-              />
-              <span>{status.label}</span>
-              <span className={`size-2 rounded-full ${status.dot}`} />
-            </Pill>
-          </Label>
-        ))}
-      </RadioGroup>
-    </div>
-  ),
 };
 
 // All Variants Showcase

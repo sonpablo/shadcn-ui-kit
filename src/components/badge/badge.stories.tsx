@@ -33,95 +33,6 @@ export const Default: Story = {
   },
 };
 
-export const Secondary: Story = {
-  args: {
-    children: 'Secondary',
-    variant: 'secondary',
-  },
-};
-
-export const Destructive: Story = {
-  args: {
-    children: 'Destructive',
-    variant: 'destructive',
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    children: 'Outline',
-    variant: 'outline',
-  },
-};
-
-// With icons
-export const WithIconLeft: Story = {
-  args: {
-    children: (
-      <>
-        <Check />
-        Verified
-      </>
-    ),
-  },
-};
-
-export const WithIconRight: Story = {
-  args: {
-    children: (
-      <>
-        Premium
-        <Crown />
-      </>
-    ),
-    variant: 'secondary',
-  },
-};
-
-export const IconOnly: Story = {
-  args: {
-    children: <Star />,
-    variant: 'outline',
-  },
-};
-
-// Status badges
-export const Success: Story = {
-  args: {
-    children: (
-      <>
-        <Check />
-        Success
-      </>
-    ),
-    variant: 'default',
-  },
-};
-
-export const Error: Story = {
-  args: {
-    children: (
-      <>
-        <X />
-        Error
-      </>
-    ),
-    variant: 'destructive',
-  },
-};
-
-export const Warning: Story = {
-  args: {
-    children: (
-      <>
-        <AlertCircle />
-        Warning
-      </>
-    ),
-    variant: 'outline',
-  },
-};
-
 // All Variants Showcase
 export const AllVariants: Story = {
   render: () => (
@@ -130,6 +41,50 @@ export const AllVariants: Story = {
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="destructive">Destructive</Badge>
       <Badge variant="outline">Outline</Badge>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+export const AsChild: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="default" asChild={true}>
+        <button onClick={() => alert('button clicked')}>As button</button>
+      </Badge>
+      <Badge asChild={true} variant="outline">
+        <a href="#" target="_blank">
+          As link
+        </a>
+      </Badge>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// With icons
+export const WithIcons: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="default">
+        <Check />
+        Verified
+      </Badge>
+      <Badge variant="secondary">
+        Premium
+        <Crown />
+      </Badge>
+      <Badge variant="destructive">
+        <X />
+        Error
+      </Badge>
+      <Badge variant="outline">
+        <Star />
+      </Badge>
     </div>
   ),
   parameters: {
@@ -257,124 +212,6 @@ export const CompleteShowcase: Story = {
               Published
             </Badge>
           </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">In Context</h3>
-        <div className="flex flex-col gap-4 rounded-lg border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-semibold">User Profile</h4>
-              <p className="text-muted-foreground text-sm">
-                john.doe@example.com
-              </p>
-            </div>
-            <Badge>
-              <Check />
-              Verified
-            </Badge>
-          </div>
-
-          <div className="flex items-center justify-between border-t pt-4">
-            <div>
-              <h4 className="font-semibold">Premium Plan</h4>
-              <p className="text-muted-foreground text-sm">
-                Expires in 30 days
-              </p>
-            </div>
-            <Badge variant="secondary">
-              <Crown />
-              Pro
-            </Badge>
-          </div>
-
-          <div className="flex items-center justify-between border-t pt-4">
-            <div>
-              <h4 className="font-semibold">Build Status</h4>
-              <p className="text-muted-foreground text-sm">Last build failed</p>
-            </div>
-            <Badge variant="destructive">
-              <X />
-              Failed
-            </Badge>
-          </div>
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    layout: 'fullscreen',
-  },
-};
-
-// Interactive Example
-export const InteractiveExample: Story = {
-  render: () => (
-    <div className="flex flex-col gap-6 p-8">
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">
-          Real-world Examples with Badges
-        </h3>
-      </div>
-
-      {/* Notification List */}
-      <div className="rounded-lg border">
-        <div className="border-b p-4">
-          <h4 className="font-semibold">Notifications</h4>
-        </div>
-        <div className="divide-y">
-          <div className="flex items-center justify-between p-4">
-            <div>
-              <p className="font-medium">New message received</p>
-              <p className="text-muted-foreground text-sm">2 minutes ago</p>
-            </div>
-            <Badge variant="default">New</Badge>
-          </div>
-          <div className="flex items-center justify-between p-4">
-            <div>
-              <p className="font-medium">Build completed</p>
-              <p className="text-muted-foreground text-sm">1 hour ago</p>
-            </div>
-            <Badge variant="secondary">
-              <Check />
-              Success
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between p-4">
-            <div>
-              <p className="font-medium">Deployment failed</p>
-              <p className="text-muted-foreground text-sm">3 hours ago</p>
-            </div>
-            <Badge variant="destructive">
-              <X />
-              Failed
-            </Badge>
-          </div>
-        </div>
-      </div>
-
-      {/* Product Card */}
-      <div className="rounded-lg border p-4">
-        <div className="mb-4 flex items-start justify-between">
-          <div>
-            <h4 className="font-semibold">Premium Subscription</h4>
-            <p className="text-muted-foreground text-sm">
-              All features unlocked
-            </p>
-          </div>
-          <Badge variant="secondary">
-            <Crown />
-            Popular
-          </Badge>
-        </div>
-        <div className="flex gap-2">
-          <Badge variant="outline">
-            <Zap />
-            Fast
-          </Badge>
-          <Badge variant="outline">Unlimited</Badge>
-          <Badge variant="outline">24/7 Support</Badge>
         </div>
       </div>
     </div>

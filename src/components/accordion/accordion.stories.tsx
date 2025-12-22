@@ -106,3 +106,78 @@ export const MultipleOpen: Story = {
     </Accordion>
   ),
 };
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+  },
+  render: (args) => (
+    <Accordion {...args}>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Option one</AccordionTrigger>
+        <AccordionContent>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates,
+          distinctio assumenda ipsam labore impedit quis error. Aut harum iure,
+          quasi nobis, et similique quidem dolorem, voluptatibus corrupti nemo
+          qui recusandae?
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Option two</AccordionTrigger>
+        <AccordionContent>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae
+          eligendi eos quae maiores enim, ipsum, explicabo laudantium veritatis
+          voluptates dolores accusantium quaerat! Vitae id reiciendis corrupti
+          nobis optio non fugiat.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-3">
+        <AccordionTrigger>Option three</AccordionTrigger>
+        <AccordionContent>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio
+          ullam excepturi, aliquid debitis at ab, eius corrupti quasi laudantium
+          impedit hic doloremque fuga modi vero. Similique itaque nisi molestiae
+          minima?
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  ),
+};
+
+export const DisabledItem: Story = {
+  render: (args) => (
+    <Accordion {...args}>
+      <AccordionItem value="item-1" disabled={true}>
+        <AccordionTrigger>Option one</AccordionTrigger>
+        <AccordionContent>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates,
+          distinctio assumenda ipsam labore impedit quis error. Aut harum iure,
+          quasi nobis, et similique quidem dolorem, voluptatibus corrupti nemo
+          qui recusandae?
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Option two</AccordionTrigger>
+        <AccordionContent>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae
+          eligendi eos quae maiores enim, ipsum, explicabo laudantium veritatis
+          voluptates dolores accusantium quaerat! Vitae id reiciendis corrupti
+          nobis optio non fugiat.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-3">
+        <AccordionTrigger>Option three</AccordionTrigger>
+        <AccordionContent>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio
+          ullam excepturi, aliquid debitis at ab, eius corrupti quasi laudantium
+          impedit hic doloremque fuga modi vero. Similique itaque nisi molestiae
+          minima?
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  ),
+};

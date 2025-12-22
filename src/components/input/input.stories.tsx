@@ -1,8 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './input';
 import { Label } from '@/components/label/label';
-import { Textarea } from '@/components/textarea/textarea';
-import { Mail, Search, Eye, EyeOff, X } from 'lucide-react';
+import {
+  Mail,
+  Search,
+  Eye,
+  EyeOff,
+  X,
+  Phone,
+  Globe,
+  DollarSign,
+  Percent,
+  Lock,
+  User,
+  AtSign,
+  Link,
+  Copy,
+  Check,
+} from 'lucide-react';
 import { useState } from 'react';
 
 const meta = {
@@ -34,6 +49,14 @@ const meta = {
     disabled: {
       control: 'boolean',
       description: 'Whether the input is disabled',
+    },
+    prefix: {
+      control: false,
+      description: 'Content to display before the input (icons, text, etc.)',
+    },
+    suffix: {
+      control: false,
+      description: 'Content to display after the input (icons, buttons, etc.)',
     },
   },
 } satisfies Meta<typeof Input>;
@@ -101,52 +124,70 @@ export const WithLabel: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-2">
       <Label htmlFor="input-label">Email Address</Label>
-      <Input id="input-label" type="email" placeholder="email@example.com" />
+      <Input
+        id="input-label"
+        type="email"
+        placeholder="email@example.com"
+        prefix={<Mail />}
+      />
     </div>
   ),
 };
 
-// With Icon
-export const WithIconLeft: Story = {
+// Prefix Examples
+export const WithPrefix: Story = {
   render: () => (
-    <div className="relative w-80">
-      <Mail className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-      <Input placeholder="Email" className="pl-10" />
+    <div className="flex w-80 flex-col gap-4">
+      <Input placeholder="Email" prefix={<Mail />} />
+      <Input placeholder="Search..." prefix={<Search />} />
+      <Input placeholder="Username" prefix={<User />} />
+      <Input placeholder="Phone number" prefix={<Phone />} />
+      <Input placeholder="Website" prefix={<Globe />} />
     </div>
   ),
 };
 
-export const WithIconRight: Story = {
+// Suffix Examples
+export const WithSuffix: Story = {
   render: () => (
-    <div className="relative w-80">
-      <Search className="text-muted-foreground absolute top-1/2 right-3 size-4 -translate-y-1/2" />
-      <Input placeholder="Search" className="pr-10" />
+    <div className="flex w-80 flex-col gap-4">
+      <Input placeholder="Search..." suffix={<Search />} />
+      <Input placeholder="Email" suffix={<AtSign />} />
+      <Input placeholder="Link" suffix={<Link />} />
     </div>
   ),
 };
 
-// Password Toggle
+// Prefix and Suffix Combined
+export const WithPrefixAndSuffix: Story = {
+  render: () => (
+    <div className="flex w-80 flex-col gap-4">
+      <Input placeholder="Amount" prefix={<DollarSign />} suffix={<span className="text-sm">.00</span>} />
+      <Input placeholder="Discount" prefix={<span className="text-sm">-</span>} suffix={<Percent />} />
+      <Input placeholder="your-domain" prefix={<span className="text-sm">https://</span>} suffix={<span className="text-sm">.com</span>} />
+    </div>
+  ),
+};
+
+// Password Toggle with prefix/suffix
 function PasswordToggleComponent() {
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <div className="relative w-80">
-      <Input
-        type={showPassword ? 'text' : 'password'}
-        placeholder="Enter password"
-        className="pr-10"
-      />
-      <button
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
-      >
-        {showPassword ? (
-          <EyeOff className="size-4" />
-        ) : (
-          <Eye className="size-4" />
-        )}
-      </button>
-    </div>
+    <Input
+      type={showPassword ? 'text' : 'password'}
+      placeholder="Enter password"
+      prefix={<Lock />}
+      suffix={
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        </button>
+      }
+      className="w-80"
+    />
   );
 }
 
@@ -154,27 +195,28 @@ export const PasswordToggle: Story = {
   render: () => <PasswordToggleComponent />,
 };
 
-// Clearable Input
+// Clearable Input with prefix/suffix
 function ClearableInputComponent() {
   const [value, setValue] = useState('Clearable text');
   return (
-    <div className="relative w-80">
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Type something..."
-        className="pr-10"
-      />
-      {value && (
-        <button
-          type="button"
-          onClick={() => setValue('')}
-          className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
-        >
-          <X className="size-4" />
-        </button>
-      )}
-    </div>
+    <Input
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Type something..."
+      prefix={<Search />}
+      suffix={
+        value ? (
+          <button
+            type="button"
+            onClick={() => setValue('')}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <X className="size-4" />
+          </button>
+        ) : null
+      }
+      className="w-80"
+    />
   );
 }
 
@@ -182,155 +224,162 @@ export const ClearableInput: Story = {
   render: () => <ClearableInputComponent />,
 };
 
-// Complete Showcase
-export const CompleteShowcase: Story = {
+// Copy to clipboard example
+function CopyInputComponent() {
+  const [copied, setCopied] = useState(false);
+  const value = 'https://example.com/share/abc123';
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Input
+      value={value}
+      readOnly
+      prefix={<Link />}
+      suffix={
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {copied ? (
+            <Check className="size-4 text-green-500" />
+          ) : (
+            <Copy className="size-4" />
+          )}
+        </button>
+      }
+      className="w-96"
+    />
+  );
+}
+
+export const CopyInput: Story = {
+  render: () => <CopyInputComponent />,
+};
+
+// Disabled with prefix/suffix
+export const DisabledWithAddons: Story = {
   render: () => (
-    <div className="flex flex-col gap-8 p-8">
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Input Types</h3>
-        <div className="grid w-full max-w-2xl gap-4">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="text-input">Text</Label>
-            <Input id="text-input" type="text" placeholder="Enter text" />
-          </div>
+    <div className="flex w-80 flex-col gap-4">
+      <Input placeholder="Email" prefix={<Mail />} disabled />
+      <Input
+        placeholder="Amount"
+        prefix={<DollarSign />}
+        suffix={<span className="text-sm">.00</span>}
+        disabled
+      />
+    </div>
+  ),
+};
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="email-input">Email</Label>
-            <Input
-              id="email-input"
-              type="email"
-              placeholder="email@example.com"
-            />
-          </div>
+// Error state with prefix/suffix
+export const ErrorWithAddons: Story = {
+  render: () => (
+    <div className="flex w-80 flex-col gap-2">
+      <Label className="text-destructive">Email</Label>
+      <Input
+        placeholder="email@example.com"
+        prefix={<Mail />}
+        aria-invalid
+      />
+      <p className="text-destructive text-sm">Please enter a valid email.</p>
+    </div>
+  ),
+};
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="password-input">Password</Label>
-            <Input
-              id="password-input"
-              type="password"
-              placeholder="Enter password"
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="number-input">Number</Label>
-            <Input id="number-input" type="number" placeholder="0" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="tel-input">Phone</Label>
-            <Input id="tel-input" type="tel" placeholder="+1 (555) 000-0000" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="url-input">URL</Label>
-            <Input
-              id="url-input"
-              type="url"
-              placeholder="https://example.com"
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="date-input">Date</Label>
-            <Input id="date-input" type="date" />
-          </div>
-        </div>
+// Form Example
+export const FormExample: Story = {
+  render: () => (
+    <div className="w-96 space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="name">Full Name</Label>
+        <Input id="name" placeholder="John Doe" prefix={<User />} />
       </div>
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">With Icons</h3>
-        <div className="grid w-full max-w-2xl gap-4">
-          <div className="flex flex-col gap-2">
-            <Label>Email with Icon</Label>
-            <div className="relative">
-              <Mail className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-              <Input placeholder="email@example.com" className="pl-10" />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>Search with Icon</Label>
-            <div className="relative">
-              <Search className="text-muted-foreground absolute top-1/2 right-3 size-4 -translate-y-1/2" />
-              <Input placeholder="Search..." className="pr-10" />
-            </div>
-          </div>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="john@example.com"
+          prefix={<Mail />}
+        />
       </div>
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">States</h3>
-        <div className="grid w-full max-w-2xl gap-4">
-          <div className="flex flex-col gap-2">
-            <Label>Default</Label>
-            <Input placeholder="Normal input" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>With Value</Label>
-            <Input defaultValue="Has a value" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>Disabled</Label>
-            <Input placeholder="Disabled input" disabled />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>Error State</Label>
-            <Input placeholder="Invalid input" aria-invalid />
-          </div>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="phone">Phone</Label>
+        <Input
+          id="phone"
+          type="tel"
+          placeholder="+1 (555) 000-0000"
+          prefix={<Phone />}
+        />
       </div>
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Textarea</h3>
-        <div className="grid w-full max-w-2xl gap-4">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="textarea">Message</Label>
-            <Textarea
-              id="textarea"
-              placeholder="Enter your message..."
-              rows={4}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="textarea-disabled">Disabled Textarea</Label>
-            <Textarea
-              id="textarea-disabled"
-              placeholder="Cannot edit"
-              rows={4}
-              disabled
-            />
-          </div>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="website">Website</Label>
+        <Input
+          id="website"
+          type="url"
+          placeholder="your-site"
+          prefix={<span className="text-sm">https://</span>}
+          suffix={<span className="text-sm">.com</span>}
+        />
       </div>
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Sizes</h3>
-        <div className="grid w-full max-w-2xl gap-4">
-          <div className="flex flex-col gap-2">
-            <Label>Default (h-9)</Label>
-            <Input placeholder="Default size" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>Small (h-8)</Label>
-            <Input placeholder="Small size" className="h-8" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>Large (h-10)</Label>
-            <Input placeholder="Large size" className="h-10" />
-          </div>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="price">Price</Label>
+        <Input
+          id="price"
+          type="number"
+          placeholder="0.00"
+          prefix={<DollarSign />}
+        />
       </div>
     </div>
   ),
-  parameters: {
-    layout: 'fullscreen',
-  },
 };
 
+// All Variants Showcase
+export const AllVariants: Story = {
+  render: () => (
+    <div className="w-96 space-y-8">
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Without Addons</h3>
+        <Input placeholder="Basic input" />
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">With Prefix</h3>
+        <Input placeholder="With icon prefix" prefix={<Search />} />
+        <Input placeholder="With text prefix" prefix={<span className="text-sm">$</span>} />
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">With Suffix</h3>
+        <Input placeholder="With icon suffix" suffix={<Search />} />
+        <Input placeholder="With text suffix" suffix={<span className="text-sm">kg</span>} />
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">With Both</h3>
+        <Input
+          placeholder="Amount"
+          prefix={<DollarSign />}
+          suffix={<span className="text-sm">USD</span>}
+        />
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">States</h3>
+        <Input placeholder="Disabled" prefix={<Mail />} disabled />
+        <Input placeholder="Error" prefix={<Mail />} aria-invalid />
+      </div>
+    </div>
+  ),
+};
