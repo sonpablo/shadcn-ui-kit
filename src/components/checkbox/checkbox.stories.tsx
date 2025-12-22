@@ -123,7 +123,7 @@ export const Indeterminate: Story = {
           <Checkbox
             id="indeterminate"
             checked={checked}
-            onCheckedChange={(value) => {
+            onCheckedChange={() => {
               if (checked === 'indeterminate') {
                 setChecked(true);
               } else if (checked === true) {
