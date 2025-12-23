@@ -28,6 +28,11 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
+    size: {
+      control: 'select',
+      options: ['sm', 'default', 'lg'],
+      description: 'The size of the input',
+    },
     type: {
       control: 'select',
       options: [
@@ -75,6 +80,57 @@ export const WithValue: Story = {
   args: {
     defaultValue: 'Hello World',
   },
+};
+
+// Sizes
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex w-80 flex-col gap-4">
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: sm (h-8 / 32px)
+        </Label>
+        <Input size="sm" placeholder="Small input" />
+      </div>
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: default (h-9 / 36px)
+        </Label>
+        <Input placeholder="Default input" />
+      </div>
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: lg (h-10 / 40px)
+        </Label>
+        <Input size="lg" placeholder="Large input" />
+      </div>
+    </div>
+  ),
+};
+
+export const SizesWithAddons: Story = {
+  render: () => (
+    <div className="flex w-80 flex-col gap-4">
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: sm with prefix
+        </Label>
+        <Input size="sm" placeholder="Search..." prefix={<Search />} />
+      </div>
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: default with prefix
+        </Label>
+        <Input placeholder="Search..." prefix={<Search />} />
+      </div>
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: lg with prefix
+        </Label>
+        <Input size="lg" placeholder="Search..." prefix={<Search />} />
+      </div>
+    </div>
+  ),
 };
 
 export const Email: Story = {
@@ -162,9 +218,21 @@ export const WithSuffix: Story = {
 export const WithPrefixAndSuffix: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-4">
-      <Input placeholder="Amount" prefix={<DollarSign />} suffix={<span className="text-sm">.00</span>} />
-      <Input placeholder="Discount" prefix={<span className="text-sm">-</span>} suffix={<Percent />} />
-      <Input placeholder="your-domain" prefix={<span className="text-sm">https://</span>} suffix={<span className="text-sm">.com</span>} />
+      <Input
+        placeholder="Amount"
+        prefix={<DollarSign />}
+        suffix={<span className="text-sm">.00</span>}
+      />
+      <Input
+        placeholder="Discount"
+        prefix={<span className="text-sm">-</span>}
+        suffix={<Percent />}
+      />
+      <Input
+        placeholder="your-domain"
+        prefix={<span className="text-sm">https://</span>}
+        suffix={<span className="text-sm">.com</span>}
+      />
     </div>
   ),
 };
@@ -183,7 +251,11 @@ function PasswordToggleComponent() {
           onClick={() => setShowPassword(!showPassword)}
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
-          {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          {showPassword ? (
+            <EyeOff className="size-4" />
+          ) : (
+            <Eye className="size-4" />
+          )}
         </button>
       }
       className="w-80"
@@ -282,11 +354,7 @@ export const ErrorWithAddons: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-2">
       <Label className="text-destructive">Email</Label>
-      <Input
-        placeholder="email@example.com"
-        prefix={<Mail />}
-        aria-invalid
-      />
+      <Input placeholder="email@example.com" prefix={<Mail />} aria-invalid />
       <p className="text-destructive text-sm">Please enter a valid email.</p>
     </div>
   ),
@@ -350,6 +418,15 @@ export const AllVariants: Story = {
   render: () => (
     <div className="w-96 space-y-8">
       <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Sizes</h3>
+        <div className="space-y-2">
+          <Input size="sm" placeholder="Small (h-8)" />
+          <Input placeholder="Default (h-9)" />
+          <Input size="lg" placeholder="Large (h-10)" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
         <h3 className="text-lg font-semibold">Without Addons</h3>
         <Input placeholder="Basic input" />
       </div>
@@ -357,13 +434,19 @@ export const AllVariants: Story = {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">With Prefix</h3>
         <Input placeholder="With icon prefix" prefix={<Search />} />
-        <Input placeholder="With text prefix" prefix={<span className="text-sm">$</span>} />
+        <Input
+          placeholder="With text prefix"
+          prefix={<span className="text-sm">$</span>}
+        />
       </div>
 
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">With Suffix</h3>
         <Input placeholder="With icon suffix" suffix={<Search />} />
-        <Input placeholder="With text suffix" suffix={<span className="text-sm">kg</span>} />
+        <Input
+          placeholder="With text suffix"
+          suffix={<span className="text-sm">kg</span>}
+        />
       </div>
 
       <div className="space-y-4">
@@ -373,6 +456,13 @@ export const AllVariants: Story = {
           prefix={<DollarSign />}
           suffix={<span className="text-sm">USD</span>}
         />
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Sizes with Addons</h3>
+        <Input size="sm" placeholder="Small" prefix={<Mail />} />
+        <Input placeholder="Default" prefix={<Mail />} />
+        <Input size="lg" placeholder="Large" prefix={<Mail />} />
       </div>
 
       <div className="space-y-4">

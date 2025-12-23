@@ -213,12 +213,14 @@ export const WithIcons: Story = {
 // Different Sizes
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col gap-4">
       <div className="space-y-2">
-        <Label className="text-muted-foreground text-xs">Small</Label>
+        <Label className="text-muted-foreground text-xs">
+          Size: sm (h-8 / 32px)
+        </Label>
         <Select>
-          <SelectTrigger size="sm" className="w-[150px]">
-            <SelectValue placeholder="Select..." />
+          <SelectTrigger size="sm" className="w-[180px]">
+            <SelectValue placeholder="Small select" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="option1">Option 1</SelectItem>
@@ -228,10 +230,27 @@ export const Sizes: Story = {
         </Select>
       </div>
       <div className="space-y-2">
-        <Label className="text-muted-foreground text-xs">Default</Label>
+        <Label className="text-muted-foreground text-xs">
+          Size: default (h-9 / 36px)
+        </Label>
         <Select>
-          <SelectTrigger size="default" className="w-[150px]">
-            <SelectValue placeholder="Select..." />
+          <SelectTrigger size="default" className="w-[180px]">
+            <SelectValue placeholder="Default select" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="option1">Option 1</SelectItem>
+            <SelectItem value="option2">Option 2</SelectItem>
+            <SelectItem value="option3">Option 3</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label className="text-muted-foreground text-xs">
+          Size: lg (h-10 / 40px)
+        </Label>
+        <Select>
+          <SelectTrigger size="lg" className="w-[180px]">
+            <SelectValue placeholder="Large select" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="option1">Option 1</SelectItem>

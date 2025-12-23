@@ -46,6 +46,8 @@ interface DatePickerProps {
   onChange?: (date: Date | undefined) => void;
   /** Placeholder text when no date is selected */
   placeholder?: string;
+  /** Size of the trigger button */
+  size?: 'sm' | 'default' | 'lg';
   /** Intl.DateTimeFormatOptions for formatting the date. Ignored if formatFn is provided. */
   dateFormat?: Intl.DateTimeFormatOptions;
   /** Custom formatter function. When provided, dateFormat is ignored. Use this for date-fns, moment, or any custom formatting. */
@@ -71,6 +73,7 @@ function DatePicker({
   value,
   onChange,
   placeholder = 'Select date',
+  size = 'default',
   dateFormat,
   formatFn,
   disabled = false,
@@ -100,10 +103,11 @@ function DatePicker({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          size={size}
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground',
+            'w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -142,6 +146,7 @@ function DatePickerWithPresets({
   value,
   onChange,
   placeholder = 'Select date',
+  size = 'default',
   dateFormat,
   formatFn,
   disabled = false,
@@ -168,10 +173,11 @@ function DatePickerWithPresets({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          size={size}
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground',
+            'w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -219,6 +225,8 @@ interface DateRangePickerProps {
   onChange?: (range: DateRange | undefined) => void;
   /** Placeholder text when no range is selected */
   placeholder?: string;
+  /** Size of the trigger button */
+  size?: 'sm' | 'default' | 'lg';
   /** Intl.DateTimeFormatOptions for formatting the dates. Ignored if formatFn is provided. */
   dateFormat?: Intl.DateTimeFormatOptions;
   /** Custom formatter function. When provided, dateFormat is ignored. Use this for date-fns, moment, or any custom formatting. */
@@ -242,6 +250,7 @@ function DateRangePicker({
   value,
   onChange,
   placeholder = 'Select date range',
+  size = 'default',
   dateFormat,
   formatFn,
   disabled = false,
@@ -260,10 +269,11 @@ function DateRangePicker({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          size={size}
           disabled={disabled}
           data-empty={!value?.from}
           className={cn(
-            'w-[300px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground',
+            'w-[300px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -307,6 +317,7 @@ function DatePickerButton({
   value,
   onChange,
   placeholder = 'Select date',
+  size = 'default',
   dateFormat,
   formatFn,
   disabled = false,
@@ -337,10 +348,11 @@ function DatePickerButton({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          size={size}
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'w-48 justify-between font-normal data-[empty=true]:text-muted-foreground',
+            'w-48 justify-between font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -376,4 +388,3 @@ export {
   type DatePickerButtonProps,
   type DatePreset,
 };
-

@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import {
-  UserIcon,
-  MailIcon,
-  BellIcon,
-  StarIcon,
-  HeartIcon,
-  Globe,
-  Smartphone,
-  Monitor,
-  Server,
+  Bot,
+  Cpu,
+  Navigation,
+  Wrench,
+  Camera,
+  Gauge,
+  Zap,
 } from 'lucide-react';
 import { MultiSelect } from './multi-select';
 
@@ -47,9 +45,9 @@ import { MultiSelect } from '@neura/shadcn-ui-kit';
 import { useState } from 'react';
 
 const options = [
-  { label: 'React', value: 'react' },
-  { label: 'Vue', value: 'vue' },
-  { label: 'Angular', value: 'angular' },
+  { label: 'MAiRA-001', value: 'maira-001' },
+  { label: 'LARA-001', value: 'lara-001' },
+  { label: '4NE1-001', value: '4ne1-001' },
 ];
 
 function MyComponent() {
@@ -59,7 +57,7 @@ function MyComponent() {
     <MultiSelect
       options={options}
       onValueChange={setSelected}
-      placeholder="Select frameworks"
+      placeholder="Select robots"
     />
   );
 }
@@ -68,25 +66,25 @@ function MyComponent() {
 ## 🎨 Grouped Options
 
 \`\`\`tsx
-const groupedOptions = [
+const fleetOptions = [
   {
-    heading: 'Frontend',
+    heading: 'Munich Plant A',
     options: [
-      { label: 'React', value: 'react' },
-      { label: 'Vue', value: 'vue' },
+      { label: 'MAiRA-001', value: 'maira-001' },
+      { label: 'MAiRA-002', value: 'maira-002' },
     ],
   },
   {
-    heading: 'Backend',
+    heading: 'Stuttgart Factory',
     options: [
-      { label: 'Node.js', value: 'nodejs' },
-      { label: 'Django', value: 'django' },
+      { label: 'LARA-003', value: 'lara-003' },
+      { label: '4NE1-002', value: '4ne1-002' },
     ],
   },
 ];
 
 <MultiSelect 
-  options={groupedOptions} 
+  options={fleetOptions} 
   onValueChange={setSelected}
 />
 \`\`\`
@@ -96,9 +94,9 @@ const groupedOptions = [
 \`\`\`tsx
 const customOptions = [
   {
-    label: 'Web App',
-    value: 'web',
-    icon: Globe,
+    label: 'MAiRA-001',
+    value: 'maira-001',
+    icon: Bot,
     style: {
       badgeColor: '#3b82f6',
       gradient: 'from-blue-500 to-blue-600',
@@ -197,61 +195,58 @@ const customOptions = [
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Sample data
-const frameworkOptions = [
-  { label: 'React', value: 'react' },
-  { label: 'Vue', value: 'vue' },
-  { label: 'Angular', value: 'angular' },
-  { label: 'Svelte', value: 'svelte' },
-  { label: 'Next.js', value: 'nextjs' },
-  { label: 'Nuxt', value: 'nuxt' },
-  { label: 'Remix', value: 'remix' },
-  { label: 'Astro', value: 'astro' },
+// Sample data - NEURA Robot Fleet Management Context
+const robotOptions = [
+  { label: 'MAiRA-001', value: 'maira-001' },
+  { label: 'MAiRA-002', value: 'maira-002' },
+  { label: 'LARA-001', value: 'lara-001' },
+  { label: 'LARA-003', value: 'lara-003' },
+  { label: 'MAV-001', value: 'mav-001' },
+  { label: 'MiPA-001', value: 'mipa-001' },
+  { label: '4NE1-001', value: '4ne1-001' },
+  { label: '4NE1-002', value: '4ne1-002' },
 ];
 
-const iconOptions = [
-  { label: 'User', value: 'user', icon: UserIcon },
-  { label: 'Email', value: 'email', icon: MailIcon },
-  { label: 'Notifications', value: 'notifications', icon: BellIcon },
-  { label: 'Favorites', value: 'favorites', icon: StarIcon },
-  { label: 'Likes', value: 'likes', icon: HeartIcon },
+const capabilityOptions = [
+  { label: 'Vision System', value: 'vision', icon: Camera },
+  { label: 'Force/Torque Sensor', value: 'force', icon: Gauge },
+  { label: 'Navigation', value: 'navigation', icon: Navigation },
+  { label: 'Maintenance', value: 'maintenance', icon: Wrench },
+  { label: 'Power Management', value: 'power', icon: Zap },
 ];
 
-const groupedOptions = [
+const fleetOptions = [
   {
-    heading: 'Frontend',
+    heading: 'Munich Plant A',
     options: [
-      { label: 'React', value: 'react' },
-      { label: 'Vue', value: 'vue' },
-      { label: 'Angular', value: 'angular' },
-      { label: 'Svelte', value: 'svelte' },
+      { label: 'MAiRA-001', value: 'maira-001' },
+      { label: 'MAiRA-002', value: 'maira-002' },
+      { label: 'LARA-001', value: 'lara-001' },
     ],
   },
   {
-    heading: 'Backend',
+    heading: 'Stuttgart Factory',
     options: [
-      { label: 'Node.js', value: 'nodejs' },
-      { label: 'Django', value: 'django' },
-      { label: 'Ruby on Rails', value: 'rails' },
-      { label: 'Laravel', value: 'laravel' },
+      { label: 'LARA-003', value: 'lara-003' },
+      { label: '4NE1-001', value: '4ne1-001' },
+      { label: '4NE1-002', value: '4ne1-002' },
     ],
   },
   {
-    heading: 'Full Stack',
+    heading: 'Berlin Warehouse',
     options: [
-      { label: 'Next.js', value: 'nextjs' },
-      { label: 'Nuxt', value: 'nuxt' },
-      { label: 'Remix', value: 'remix' },
+      { label: 'MAV-001', value: 'mav-001' },
+      { label: 'MiPA-001', value: 'mipa-001' },
     ],
   },
 ];
 
-const disabledOptions = [
-  { label: 'Active Option 1', value: 'active1' },
-  { label: 'Active Option 2', value: 'active2' },
-  { label: 'Disabled Option', value: 'disabled', disabled: true },
-  { label: 'Active Option 3', value: 'active3' },
-  { label: 'Also Disabled', value: 'disabled2', disabled: true },
+const robotStatusOptions = [
+  { label: 'MAiRA-001 (Active)', value: 'maira-001' },
+  { label: 'MAiRA-002 (Active)', value: 'maira-002' },
+  { label: 'LARA-003 (Maintenance)', value: 'lara-003', disabled: true },
+  { label: '4NE1-001 (Active)', value: '4ne1-001' },
+  { label: 'MAV-001 (Offline)', value: 'mav-001', disabled: true },
 ];
 
 // Wrapper component for controlled state
@@ -265,7 +260,7 @@ const MultiSelectWrapper = (props: any) => {
  * ## Basic Multi-Select
  * 
  * The simplest implementation with an array of options. Perfect for straightforward
- * selection scenarios like choosing frameworks, languages, or categories.
+ * selection scenarios like choosing robots, projects, or fleets.
  * 
  * **When to use:**
  * - Simple lists without categorization
@@ -275,9 +270,9 @@ const MultiSelectWrapper = (props: any) => {
 export const Default: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
-    placeholder: 'Select frameworks',
-    defaultValue: ['react'],
+    options: robotOptions,
+    placeholder: 'Select robots',
+    defaultValue: ['maira-001'],
   },
   parameters: {
     docs: {
@@ -289,10 +284,84 @@ export const Default: Story = {
 };
 
 /**
+ * ## Sizes
+ * 
+ * Three size variants to match other form components (Input, Button, Select).
+ * 
+ * **Size Reference:**
+ * - sm: h-8 (32px) - Compact interfaces, toolbars, filters
+ * - default: h-9 (36px) - Standard forms
+ * - lg: h-10 (40px) - Landing pages, emphasis
+ */
+export const Sizes: Story = {
+  render: function SizesExample() {
+    const [selected1, setSelected1] = useState<string[]>([]);
+    const [selected2, setSelected2] = useState<string[]>([]);
+    const [selected3, setSelected3] = useState<string[]>([]);
+    const options = [
+      { label: 'Atlas-01', value: 'atlas-01' },
+      { label: 'Titan-X1', value: 'titan-x1' },
+      { label: 'Scout-A', value: 'scout-a' },
+    ];
+
+    return (
+      <div className="flex flex-col gap-4 w-[300px]">
+        <div className="space-y-2">
+          <label className="text-muted-foreground text-xs">
+            Size: sm (h-8 / 32px)
+          </label>
+          <MultiSelect
+            size="sm"
+            options={options}
+            onValueChange={setSelected1}
+            defaultValue={selected1}
+            placeholder="Select robots"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-muted-foreground text-xs">
+            Size: default (h-9 / 36px)
+          </label>
+          <MultiSelect
+            options={options}
+            onValueChange={setSelected2}
+            defaultValue={selected2}
+            placeholder="Select robots"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-muted-foreground text-xs">
+            Size: lg (h-10 / 40px)
+          </label>
+          <MultiSelect
+            size="lg"
+            options={options}
+            onValueChange={setSelected3}
+            defaultValue={selected3}
+            placeholder="Select robots"
+          />
+        </div>
+      </div>
+    );
+  },
+  args: {
+    options: robotOptions,
+    onValueChange: () => {},
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Size variants that match Button, Input, Select, and DatePicker components. Use sm for compact UIs, default for standard forms, and lg for emphasis.',
+      },
+    },
+  },
+};
+
+/**
  * ## Grouped Options
  * 
  * Organize large option sets into logical categories with visual separators.
- * Essential for complex selections with multiple categories.
+ * Essential for complex selections with multiple fleets or locations.
  * 
  * **Benefits:**
  * - Improved scanability for users
@@ -303,14 +372,14 @@ export const Default: Story = {
 export const Grouped: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: groupedOptions,
-    placeholder: 'Select technologies',
-    defaultValue: ['react', 'nodejs'],
+    options: fleetOptions,
+    placeholder: 'Select robots by fleet',
+    defaultValue: ['maira-001', 'lara-001'],
   },
   parameters: {
     docs: {
       description: {
-        story: 'Options organized into Frontend, Backend, and Full Stack categories. Groups are preserved during search and maintain visual separation.',
+        story: 'Robots organized by warehouse/fleet location. Groups are preserved during search and maintain visual separation.',
       },
     },
   },
@@ -331,9 +400,9 @@ export const Grouped: Story = {
 export const WithIcons: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: iconOptions,
-    placeholder: 'Select features',
-    defaultValue: ['user', 'email'],
+    options: capabilityOptions,
+    placeholder: 'Select capabilities',
+    defaultValue: ['navigation', 'camera'],
   },
   parameters: {
     docs: {
@@ -359,10 +428,10 @@ export const WithIcons: Story = {
 export const Secondary: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
-    placeholder: 'Select frameworks',
+    options: robotOptions,
+    placeholder: 'Select robots',
     variant: 'secondary',
-    defaultValue: ['react', 'vue'],
+    defaultValue: ['maira-001', 'maira-002'],
   },
   parameters: {
     docs: {
@@ -390,10 +459,10 @@ export const Secondary: Story = {
 export const Destructive: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
-    placeholder: 'Select items to delete',
+    options: robotOptions,
+    placeholder: 'Select robots to decommission',
     variant: 'destructive',
-    defaultValue: ['angular'],
+    defaultValue: ['4ne1-002'],
   },
   parameters: {
     docs: {
@@ -410,9 +479,9 @@ export const Destructive: Story = {
 export const WithAnimations: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
+    options: robotOptions,
     placeholder: 'Hover badges to see animation',
-    defaultValue: ['react', 'vue', 'angular'],
+    defaultValue: ['maira-001', 'lara-001', '4ne1-001'],
     animationConfig: {
       badgeAnimation: 'bounce',
       popoverAnimation: 'scale',
@@ -428,10 +497,10 @@ export const WithAnimations: Story = {
 export const MaxCount: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
-    placeholder: 'Select frameworks',
+    options: robotOptions,
+    placeholder: 'Select robots',
     maxCount: 2,
-    defaultValue: ['react', 'vue', 'angular', 'svelte'],
+    defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003'],
   },
 };
 
@@ -441,10 +510,10 @@ export const MaxCount: Story = {
 export const SingleLine: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
-    placeholder: 'Select frameworks',
+    options: robotOptions,
+    placeholder: 'Select robots',
     singleLine: true,
-    defaultValue: ['react', 'vue', 'angular', 'svelte', 'nextjs'],
+    defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003', 'mav-001'],
   },
 };
 
@@ -454,10 +523,10 @@ export const SingleLine: Story = {
 export const Disabled: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
+    options: robotOptions,
     placeholder: 'Disabled select',
     disabled: true,
-    defaultValue: ['react', 'vue'],
+    defaultValue: ['maira-001', 'maira-002'],
   },
 };
 
@@ -467,9 +536,9 @@ export const Disabled: Story = {
 export const DisabledOptions: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: disabledOptions,
-    placeholder: 'Some options are disabled',
-    defaultValue: ['active1'],
+    options: robotStatusOptions,
+    placeholder: 'Some robots are offline',
+    defaultValue: ['maira-001'],
   },
 };
 
@@ -479,10 +548,10 @@ export const DisabledOptions: Story = {
 export const NoSearch: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions.slice(0, 4), // Fewer options when search is disabled
+    options: robotOptions.slice(0, 4), // Fewer options when search is disabled
     placeholder: 'Select (no search)',
     searchable: false,
-    defaultValue: ['react'],
+    defaultValue: ['maira-001'],
   },
 };
 
@@ -492,7 +561,7 @@ export const NoSearch: Story = {
 export const NoSelectAll: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
+    options: robotOptions,
     placeholder: 'No select all option',
     hideSelectAll: true,
   },
@@ -504,9 +573,9 @@ export const NoSelectAll: Story = {
 export const Responsive: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
+    options: robotOptions,
     placeholder: 'Resize window to see changes',
-    defaultValue: ['react', 'vue', 'angular', 'svelte', 'nextjs', 'nuxt'],
+    defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003', 'mav-001', 'mipa-001'],
     responsive: {
       mobile: {
         maxCount: 1,
@@ -528,7 +597,7 @@ export const Responsive: Story = {
 export const CustomEmptyState: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: frameworkOptions,
+    options: robotOptions,
     placeholder: 'Search for frameworks',
     emptyIndicator: (
       <div className="text-muted-foreground py-6 text-center">
@@ -549,10 +618,10 @@ export const Inverted: Story = {
     </div>
   ),
   args: {
-    options: frameworkOptions,
+    options: robotOptions,
     placeholder: 'Perfect for dark themes',
     variant: 'inverted',
-    defaultValue: ['react', 'vue'],
+    defaultValue: ['maira-001', 'maira-002'],
   },
   parameters: {
     backgrounds: { default: 'dark' },
@@ -567,32 +636,32 @@ export const CustomStyling: Story = {
   args: {
     options: [
       {
-        label: 'Web Application',
-        value: 'web',
-        icon: Globe,
+        label: 'MAiRA',
+        value: 'maira',
+        icon: Bot,
         style: { badgeColor: '#3b82f6', gradient: 'from-blue-500 to-blue-600' },
       },
       {
-        label: 'Mobile App',
-        value: 'mobile',
-        icon: Smartphone,
+        label: 'LARA',
+        value: 'lara',
+        icon: Cpu,
         style: { badgeColor: '#10b981', gradient: 'from-green-500 to-green-600' },
       },
       {
-        label: 'Desktop Application',
-        value: 'desktop',
-        icon: Monitor,
+        label: 'MAV',
+        value: 'mav',
+        icon: Navigation,
         style: { badgeColor: '#8b5cf6', gradient: 'from-purple-500 to-purple-600' },
       },
       {
-        label: 'API Service',
-        value: 'api',
-        icon: Server,
+        label: '4NE1',
+        value: '4ne1',
+        icon: Camera,
         style: { badgeColor: '#f59e0b', gradient: 'from-amber-500 to-amber-600' },
       },
     ],
-    placeholder: 'Custom styled project types',
-    defaultValue: ['web', 'mobile'],
+    placeholder: 'Select robot model',
+    defaultValue: ['maira', 'lara'],
   },
 };
 
@@ -616,17 +685,17 @@ const AllAnimationsComponent = () => {
       </div>
       {animations.map((animation) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const [, setSelected] = useState<string[]>(['react', 'vue']);
+        const [, setSelected] = useState<string[]>(['atlas-01', 'atlas-02']);
         return (
           <div key={animation} className="space-y-2">
             <div className="text-xs font-medium text-muted-foreground uppercase">
               {animation} Animation
             </div>
             <MultiSelect
-              options={frameworkOptions}
+              options={robotOptions}
               onValueChange={setSelected}
               placeholder={`${animation} animation`}
-              defaultValue={['react', 'vue']}
+              defaultValue={['atlas-01', 'atlas-02']}
               animationConfig={{
                 badgeAnimation: animation,
               }}
@@ -650,18 +719,18 @@ export const AllAnimations = {
  */
 const LayoutComparisonComponent = () => {
   const [singleLineSelected, setSingleLineSelected] = useState<string[]>([
-    'react',
-    'vue',
-    'angular',
-    'svelte',
-    'nextjs',
+    'atlas-01',
+    'atlas-02',
+    'titan-x1',
+    'titan-x2',
+    'scout-a',
   ]);
   const [multiLineSelected, setMultiLineSelected] = useState<string[]>([
-    'react',
-    'vue',
-    'angular',
-    'svelte',
-    'nextjs',
+    'atlas-01',
+    'atlas-02',
+    'titan-x1',
+    'titan-x2',
+    'scout-a',
   ]);
 
   return (
@@ -672,7 +741,7 @@ const LayoutComparisonComponent = () => {
           Badges scroll horizontally when container width is exceeded
         </div>
         <MultiSelect
-          options={frameworkOptions}
+          options={robotOptions}
           onValueChange={setSingleLineSelected}
           placeholder="Single line layout"
           singleLine={true}
@@ -686,7 +755,7 @@ const LayoutComparisonComponent = () => {
           Badges wrap to multiple lines as needed
         </div>
         <MultiSelect
-          options={frameworkOptions}
+          options={robotOptions}
           onValueChange={setMultiLineSelected}
           placeholder="Multi line layout"
           singleLine={false}
@@ -716,10 +785,10 @@ export const VariantsShowcase = {
           Perfect for main actions and primary selections
         </div>
         <MultiSelectWrapper
-          options={frameworkOptions}
+          options={robotOptions}
           placeholder="Default variant"
           variant="default"
-          defaultValue={['react', 'vue']}
+          defaultValue={['atlas-01', 'atlas-02']}
         />
       </div>
 
@@ -729,10 +798,10 @@ export const VariantsShowcase = {
           Great for secondary actions and supplementary data
         </div>
         <MultiSelectWrapper
-          options={frameworkOptions}
+          options={robotOptions}
           placeholder="Secondary variant"
           variant="secondary"
-          defaultValue={['angular', 'svelte']}
+          defaultValue={['titan-x1', 'titan-x2']}
         />
       </div>
 
@@ -742,10 +811,10 @@ export const VariantsShowcase = {
           Use for critical actions and error states
         </div>
         <MultiSelectWrapper
-          options={frameworkOptions}
+          options={robotOptions}
           placeholder="Destructive variant"
           variant="destructive"
-          defaultValue={['nextjs']}
+          defaultValue={['sentinel-7']}
         />
       </div>
 
@@ -756,10 +825,10 @@ export const VariantsShowcase = {
         </div>
         <div className="bg-slate-900 p-4 rounded-lg">
           <MultiSelectWrapper
-            options={frameworkOptions}
+            options={robotOptions}
             placeholder="Inverted variant"
             variant="inverted"
-            defaultValue={['remix', 'astro']}
+            defaultValue={['scout-a', 'scout-b']}
           />
         </div>
       </div>
@@ -970,7 +1039,7 @@ const PropRow = ({
 export const Playground: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
-    options: groupedOptions,
+    options: fleetOptions,
     placeholder: 'Experiment with all features',
     variant: 'default',
     maxCount: 3,
@@ -978,7 +1047,7 @@ export const Playground: Story = {
     singleLine: false,
     hideSelectAll: false,
     disabled: false,
-    defaultValue: ['react', 'nodejs'],
+    defaultValue: ['maira-001', 'lara-001'],
     animationConfig: {
       badgeAnimation: 'bounce',
       popoverAnimation: 'scale',

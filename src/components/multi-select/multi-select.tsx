@@ -111,9 +111,17 @@ interface MultiSelectGroup {
 interface MultiSelectProps
   extends Omit<
       React.ButtonHTMLAttributes<HTMLButtonElement>,
-      'animationConfig'
+      'animationConfig' | 'size'
     >,
     VariantProps<typeof multiSelectVariants> {
+  /**
+   * Size of the multi-select trigger.
+   * - sm: h-8 (32px) - compact size
+   * - default: h-9 (36px) - standard size
+   * - lg: h-10 (40px) - large size
+   */
+  size?: 'sm' | 'default' | 'lg';
+
   /**
    * An array of option objects or groups to be displayed in the multi-select component.
    */
@@ -310,6 +318,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       options,
       onValueChange,
       variant,
+      size = 'default',
       defaultValue = [],
       placeholder = 'Select options',
       animation = 0,
@@ -481,6 +490,47 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
     };
 
     const responsiveSettings = getResponsiveSettings();
+
+    // Size-specific classes
+    const getSizeClasses = () => {
+      switch (size) {
+        case 'sm':
+          return {
+            trigger: 'min-h-8 p-0.5',
+            placeholder: 'text-xs',
+            badge: 'px-1 py-0.5 text-xs',
+            badgeIcon: 'mr-1 h-3 w-3',
+            badgeRemove: 'h-2.5 w-2.5',
+            icon: 'h-3.5 w-3.5',
+            separator: 'min-h-5',
+            clearIcon: 'h-3.5 w-3.5',
+          };
+        case 'lg':
+          return {
+            trigger: 'min-h-10 p-1.5',
+            placeholder: 'text-sm',
+            badge: '',
+            badgeIcon: 'mr-2 h-4 w-4',
+            badgeRemove: 'h-3 w-3',
+            icon: 'h-4 w-4',
+            separator: 'min-h-6',
+            clearIcon: 'h-4 w-4',
+          };
+        default: // 'default'
+          return {
+            trigger: 'min-h-9 p-1',
+            placeholder: 'text-sm',
+            badge: '',
+            badgeIcon: 'mr-2 h-4 w-4',
+            badgeRemove: 'h-3 w-3',
+            icon: 'h-4 w-4',
+            separator: 'min-h-6',
+            clearIcon: 'h-4 w-4',
+          };
+      }
+    };
+
+    const sizeClasses = getSizeClasses();
 
     const getBadgeAnimationClass = () => {
       if (animationConfig?.badgeAnimation) {
@@ -806,10 +856,12 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 getAllOptions().length
               } options selected. ${placeholder}`}
               className={cn(
-                'flex h-auto min-h-10 items-center justify-between rounded-md border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
+                'flex h-auto items-center justify-between rounded-md border bg-inherit hover:!bg-inherit focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px] [&_svg]:pointer-events-auto',
+                sizeClasses.trigger,
                 autoSize ? 'w-auto' : 'w-full',
-                responsiveSettings.compactMode && 'min-h-8 text-sm',
-                screenSize === 'mobile' && 'min-h-12 text-base',
+                // Responsive overrides (only when not explicitly sized)
+                responsiveSettings.compactMode && size === 'default' && 'min-h-8 text-sm',
+                screenSize === 'mobile' && size === 'default' && 'min-h-12 text-base',
                 disabled && 'cursor-not-allowed opacity-50',
                 className,
               )}
@@ -822,11 +874,12 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 <div className="flex w-full items-center justify-between">
                   <div
                     className={cn(
-                      'flex items-center gap-1',
+                      'flex items-center',
+                      size === 'sm' ? 'gap-0.5' : 'gap-1',
                       singleLine
                         ? 'multiselect-singleline-scroll overflow-x-auto'
                         : 'flex-wrap',
-                      responsiveSettings.compactMode && 'gap-0.5',
+                      responsiveSettings.compactMode && size === 'default' && 'gap-0.5',
                     )}
                     style={
                       singleLine
@@ -861,9 +914,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             className={cn(
                               getBadgeAnimationClass(),
                               multiSelectVariants({ variant }),
+                              sizeClasses.badge,
                               customStyle?.gradient &&
                                 'border-transparent text-white',
-                              responsiveSettings.compactMode &&
+                              responsiveSettings.compactMode && size === 'default' &&
                                 'px-1.5 py-0.5 text-xs',
                               screenSize === 'mobile' &&
                                 'max-w-[120px] truncate',
@@ -881,8 +935,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             {IconComponent && !responsiveSettings.hideIcons && (
                               <IconComponent
                                 className={cn(
-                                  'mr-2 h-4 w-4',
-                                  responsiveSettings.compactMode &&
+                                  sizeClasses.badgeIcon,
+                                  responsiveSettings.compactMode && size === 'default' &&
                                     'mr-1 h-3 w-3',
                                   customStyle?.iconColor && 'text-current',
                                 )}
@@ -920,8 +974,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             >
                               <XCircle
                                 className={cn(
-                                  'h-3 w-3',
-                                  responsiveSettings.compactMode &&
+                                  sizeClasses.badgeRemove,
+                                  responsiveSettings.compactMode && size === 'default' &&
                                     'h-2.5 w-2.5',
                                 )}
                               />
@@ -936,7 +990,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           'text-foreground border-foreground/1 bg-transparent hover:bg-transparent',
                           getBadgeAnimationClass(),
                           multiSelectVariants({ variant }),
-                          responsiveSettings.compactMode &&
+                          sizeClasses.badge,
+                          responsiveSettings.compactMode && size === 'default' &&
                             'px-1.5 py-0.5 text-xs',
                           singleLine && 'flex-shrink-0 whitespace-nowrap',
                           '[&>svg]:pointer-events-auto',
@@ -953,8 +1008,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         } more`}
                         <XCircle
                           className={cn(
-                            'ml-2 h-4 w-4 cursor-pointer',
-                            responsiveSettings.compactMode && 'ml-1 h-3 w-3',
+                            'ml-2 cursor-pointer',
+                            sizeClasses.icon,
+                            responsiveSettings.compactMode && size === 'default' && 'ml-1 h-3 w-3',
                           )}
                           onClick={(event) => {
                             event.stopPropagation();
@@ -982,24 +1038,24 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       aria-label={`Clear all ${selectedValues.length} selected options`}
                       className="text-muted-foreground hover:text-foreground focus:ring-ring mx-2 flex h-4 w-4 cursor-pointer items-center justify-center rounded-sm focus:ring-2 focus:ring-offset-1 focus:outline-none"
                     >
-                      <XIcon className="h-4 w-4" />
+                      <XIcon className={sizeClasses.clearIcon} />
                     </div>
                     <Separator
                       orientation="vertical"
-                      className="flex h-full min-h-6"
+                      className={cn('flex h-full', sizeClasses.separator)}
                     />
                     <ChevronDown
-                      className="text-muted-foreground mx-2 h-4 cursor-pointer"
+                      className={cn('text-muted-foreground mx-2 cursor-pointer', sizeClasses.icon)}
                       aria-hidden="true"
                     />
                   </div>
                 </div>
               ) : (
                 <div className="mx-auto flex w-full items-center justify-between">
-                  <span className="text-muted-foreground mx-3 text-sm">
+                  <span className={cn('text-muted-foreground mx-3', sizeClasses.placeholder)}>
                     {placeholder}
                   </span>
-                  <ChevronDown className="text-muted-foreground mx-2 h-4 cursor-pointer" />
+                  <ChevronDown className={cn('text-muted-foreground mx-2 cursor-pointer', sizeClasses.icon)} />
                 </div>
               )}
             </Button>

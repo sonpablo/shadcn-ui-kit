@@ -181,6 +181,52 @@ export const SingleMonthRange: Story = {
   },
 };
 
+// Different Sizes
+export const Sizes: Story = {
+  render: function SizesExample() {
+    const [date1, setDate1] = React.useState<Date | undefined>(undefined);
+    const [date2, setDate2] = React.useState<Date | undefined>(undefined);
+    const [date3, setDate3] = React.useState<Date | undefined>(undefined);
+
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <Label className="text-muted-foreground text-xs">
+            Size: sm (h-8 / 32px)
+          </Label>
+          <DatePicker
+            size="sm"
+            value={date1}
+            onChange={setDate1}
+            placeholder="Small date picker"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="text-muted-foreground text-xs">
+            Size: default (h-9 / 36px)
+          </Label>
+          <DatePicker
+            value={date2}
+            onChange={setDate2}
+            placeholder="Default date picker"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="text-muted-foreground text-xs">
+            Size: lg (h-10 / 40px)
+          </Label>
+          <DatePicker
+            size="lg"
+            value={date3}
+            onChange={setDate3}
+            placeholder="Large date picker"
+          />
+        </div>
+      </div>
+    );
+  },
+};
+
 // Disabled State
 export const Disabled: Story = {
   render: () => (
