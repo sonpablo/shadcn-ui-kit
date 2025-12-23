@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
   Table,
   TableHeader,
   TableBody,
+  TableFooter,
   TableHead,
   TableRow,
   TableCell,
@@ -17,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/tooltip/tooltip';
+import { NeuraPagination } from '@/components/pagination/neura-pagination';
 import { MoreHorizontal, Info } from 'lucide-react';
 
 // Sample data - Robot Fleet
@@ -488,6 +490,224 @@ export const SelectableRows: Story = {
     );
   },
 };
+
+/* =============================================================================
+ * Pagination
+ * ============================================================================= */
+
+// Extended robot data for pagination demos
+const allRobots = [
+  ...robots,
+  {
+    id: 'LARA-007',
+    name: 'LARA Eta',
+    serialNumber: 'NR-2025-LAR-0007',
+    model: 'LARA',
+    application: 'Assembly',
+    facility: 'Munich Plant B',
+    uptime: '98.9%',
+    deployDate: '2024-04-10',
+    operator: 'Hans Gruber',
+    status: 'Active',
+  },
+  {
+    id: 'MAiRA-008',
+    name: 'MAiRA Theta',
+    serialNumber: 'NR-2025-MAI-0008',
+    model: 'MAiRA',
+    application: 'Painting',
+    facility: 'Dresden Factory',
+    uptime: '99.2%',
+    deployDate: '2024-05-20',
+    operator: 'Eva Braun',
+    status: 'Active',
+  },
+  {
+    id: 'MAV-009',
+    name: 'MAV Iota',
+    serialNumber: 'NR-2025-MAV-0009',
+    model: 'MAV',
+    application: 'Transport',
+    facility: 'Leipzig Center',
+    uptime: '96.8%',
+    deployDate: '2023-12-01',
+    operator: 'Fritz Meyer',
+    status: 'Active',
+  },
+  {
+    id: '4NE1-010',
+    name: '4NE1 Kappa',
+    serialNumber: 'NR-2025-4NE-0010',
+    model: '4NE1',
+    application: 'Sorting',
+    facility: 'Cologne Depot',
+    uptime: '99.4%',
+    deployDate: '2024-07-15',
+    operator: 'Helga Schmidt',
+    status: 'Maintenance',
+  },
+  {
+    id: 'MiPA-011',
+    name: 'MiPA Lambda',
+    serialNumber: 'NR-2025-MIP-0011',
+    model: 'MiPA',
+    application: 'Guidance',
+    facility: 'Dusseldorf HQ',
+    uptime: '99.7%',
+    deployDate: '2024-08-01',
+    operator: 'Karl Weber',
+    status: 'Active',
+  },
+  {
+    id: 'MAiRA-012',
+    name: 'MAiRA Mu',
+    serialNumber: 'NR-2025-MAI-0012',
+    model: 'MAiRA',
+    application: 'Pick & Place',
+    facility: 'Nuremberg Line C',
+    uptime: '99.0%',
+    deployDate: '2024-09-10',
+    operator: 'Ingrid Bauer',
+    status: 'Active',
+  },
+];
+
+/**
+ * Table with NeuraPagination in TableFooter - complete pattern for paginated data.
+ */
+export const WithPagination: Story = {
+  render: function TableWithPagination() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4;
+    const totalPages = Math.ceil(allRobots.length / pageSize);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedRobots = allRobots.slice(startIndex, endIndex);
+
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Robot ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Model</TableHead>
+            <TableHead>Application</TableHead>
+            <TableHead>Facility</TableHead>
+            <TableHead>Uptime</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paginatedRobots.map((robot) => (
+            <TableRow key={robot.id}>
+              <TableCell className="font-medium">{robot.id}</TableCell>
+              <TableCell>{robot.name}</TableCell>
+              <TableCell>{robot.model}</TableCell>
+              <TableCell>{robot.application}</TableCell>
+              <TableCell>{robot.facility}</TableCell>
+              <TableCell>{robot.uptime}</TableCell>
+              <TableCell>
+                <Badge
+                  variant={robot.status === 'Active' ? 'default' : 'secondary'}
+                >
+                  {robot.status}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={4}>
+              <span className="text-muted-foreground text-sm">
+                Showing {startIndex + 1}-{Math.min(endIndex, allRobots.length)}{' '}
+                of {allRobots.length} robots
+              </span>
+            </TableCell>
+            <TableCell colSpan={3} align="right">
+              <NeuraPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                siblings={1}
+                className="justify-end"
+              />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    );
+  },
+};
+
+/**
+ * Table with pagination in TableFooter and text labels on Previous/Next buttons.
+ */
+export const WithPaginationLabels: Story = {
+  render: function TableWithPaginationLabels() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4;
+    const totalPages = Math.ceil(allRobots.length / pageSize);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedRobots = allRobots.slice(startIndex, endIndex);
+
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Robot ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Serial Number</TableHead>
+            <TableHead>Application</TableHead>
+            <TableHead>Operator</TableHead>
+            <TableHead align="right">Uptime</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paginatedRobots.map((robot) => (
+            <TableRow key={robot.id}>
+              <TableCell className="font-medium">{robot.id}</TableCell>
+              <TableCell>{robot.name}</TableCell>
+              <TableCell>{robot.serialNumber}</TableCell>
+              <TableCell>{robot.application}</TableCell>
+              <TableCell>{robot.operator}</TableCell>
+              <TableCell align="right">{robot.uptime}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3}>
+              <span className="text-muted-foreground text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+            </TableCell>
+            <TableCell colSpan={3} align="right">
+              <NeuraPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                siblings={1}
+                labels={{
+                  previous: 'Previous',
+                  next: 'Next',
+                }}
+                className="justify-end"
+              />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    );
+  },
+};
+
+/* =============================================================================
+ * Sorting
+ * ============================================================================= */
 
 /**
  * Table with sortable columns - demonstrates sorting functionality

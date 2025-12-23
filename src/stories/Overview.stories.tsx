@@ -76,6 +76,22 @@ import {
 import { MultiSelect } from '@/components/multi-select/multi-select';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
+import { NeuraBreadcrumb } from '@/components/breadcrumb/neura-breadcrumb';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/tabs/tabs';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/pagination/pagination';
 
 // --- Overview Component ---
 function Overview() {
@@ -109,6 +125,21 @@ function Overview() {
               <ModeToggle />
             </div>
           </header>
+
+          {/* Breadcrumb Navigation */}
+          <div className="border-b">
+            <div className="mx-auto max-w-7xl px-6 py-3">
+              <NeuraBreadcrumb
+                items={[
+                  { label: 'Fleet Dashboard', to: '/' },
+                  { label: 'Robots', to: '/robots' },
+                  { label: 'MAiRA Units', to: '/robots/maira' },
+                  { label: 'Component Showcase', to: '/showcase' },
+                ]}
+                ariaLabel="Page navigation"
+              />
+            </div>
+          </div>
 
           {/* Hero Section */}
           <div className="from-muted/50 to-background relative overflow-hidden border-b bg-linear-to-b">
@@ -830,6 +861,183 @@ function Overview() {
                 </CardContent>
               </Card>
 
+              {/* --- Robot Details Tabs --- */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Cpu className="size-5" />
+                    Robot Details
+                  </CardTitle>
+                  <CardDescription>
+                    View detailed information about the selected robot.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="overview">
+                    <TabsList>
+                      <TabsTrigger value="overview">
+                        <Activity className="size-4" />
+                        Overview
+                      </TabsTrigger>
+                      <TabsTrigger value="diagnostics">
+                        <Wrench className="size-4" />
+                        Diagnostics
+                      </TabsTrigger>
+                      <TabsTrigger value="history">
+                        <FileText className="size-4" />
+                        History
+                      </TabsTrigger>
+                      <TabsTrigger value="settings">
+                        <Settings className="size-4" />
+                        Settings
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="overview">
+                      <div className="space-y-4">
+                        <div className="grid gap-4 sm:grid-cols-3">
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <p className="text-muted-foreground text-sm">Status</p>
+                            <p className="mt-1 text-2xl font-semibold text-green-500">
+                              Active
+                            </p>
+                          </div>
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <p className="text-muted-foreground text-sm">Uptime</p>
+                            <p className="mt-1 text-2xl font-semibold">99.8%</p>
+                          </div>
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <p className="text-muted-foreground text-sm">
+                              Tasks Completed
+                            </p>
+                            <p className="mt-1 text-2xl font-semibold">1,247</p>
+                          </div>
+                        </div>
+                        <p className="text-muted-foreground text-sm">
+                          MAiRA-001 is operating normally with no issues detected.
+                        </p>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="diagnostics">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">CPU Temperature</span>
+                          <Badge variant="secondary">42°C</Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">Motor Health</span>
+                          <Badge className="bg-green-500/10 text-green-500">
+                            Excellent
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">Battery Level</span>
+                          <Badge variant="secondary">87%</Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">Last Calibration</span>
+                          <span className="text-muted-foreground text-sm">
+                            2 days ago
+                          </span>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="history">
+                      <div className="space-y-2">
+                        {[
+                          { time: '10:32 AM', event: 'Task completed: Palletizing' },
+                          { time: '10:15 AM', event: 'Started new task' },
+                          { time: '09:45 AM', event: 'Maintenance check passed' },
+                          { time: '08:00 AM', event: 'System startup' },
+                        ].map((log, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center gap-3 text-sm"
+                          >
+                            <span className="text-muted-foreground w-20">
+                              {log.time}
+                            </span>
+                            <span>{log.event}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="settings">
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium">Auto-restart</p>
+                            <p className="text-muted-foreground text-xs">
+                              Restart on error detection
+                            </p>
+                          </div>
+                          <Checkbox defaultChecked />
+                        </div>
+                        <Separator />
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium">Verbose Logging</p>
+                            <p className="text-muted-foreground text-xs">
+                              Enable detailed logs
+                            </p>
+                          </div>
+                          <Checkbox />
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+
+              {/* --- Pagination Example --- */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="size-5" />
+                    Data Pagination
+                  </CardTitle>
+                  <CardDescription>
+                    Navigate through robot activity logs
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="text-muted-foreground text-sm">
+                      Showing entries 21-30 of 127 total records
+                    </div>
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious href="#" />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#">1</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#" isActive>
+                            3
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#">4</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#">13</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationNext href="#" />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* --- Support Request Form --- */}
               <Card className="lg:col-span-2">
                 <CardHeader>
@@ -905,7 +1113,7 @@ function Overview() {
                   Everything you need to build
                 </h2>
                 <p className="text-muted-foreground mt-2">
-                  A comprehensive collection of {28}+ components
+                  A comprehensive collection of {31}+ components
                 </p>
               </div>
 
@@ -914,6 +1122,7 @@ function Overview() {
                   'Accordion',
                   'Avatar',
                   'Badge',
+                  'Breadcrumb',
                   'Button',
                   'Calendar',
                   'Card',
@@ -926,6 +1135,7 @@ function Overview() {
                   'Input',
                   'Label',
                   'MultiSelect',
+                  'Pagination',
                   'Pill',
                   'Popover',
                   'RadioGroup',
@@ -933,6 +1143,7 @@ function Overview() {
                   'Separator',
                   'Switch',
                   'Table',
+                  'Tabs',
                   'Tag',
                   'Textarea',
                   'Tooltip',
