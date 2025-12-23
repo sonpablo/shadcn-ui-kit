@@ -77,6 +77,7 @@ import { MultiSelect } from '@/components/multi-select/multi-select';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
 import { NeuraBreadcrumb } from '@/components/breadcrumb/neura-breadcrumb';
+import { Link } from '@/components/link/link';
 import {
   Tabs,
   TabsContent,
@@ -1093,6 +1094,17 @@ function Overview() {
                       </Tooltip>
                     </Label>
                   </div>
+                  <p className="text-muted-foreground text-xs">
+                    By submitting, you agree to our{' '}
+                    <Link href="#" size="xs">
+                      Terms of Service
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="#" size="xs">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </p>
                 </CardContent>
                 <CardFooter className="justify-end gap-2">
                   <Button variant="destructive">Cancel</Button>
@@ -1113,7 +1125,7 @@ function Overview() {
                   Everything you need to build
                 </h2>
                 <p className="text-muted-foreground mt-2">
-                  A comprehensive collection of {31}+ components
+                  A comprehensive collection of {32}+ components
                 </p>
               </div>
 
@@ -1134,6 +1146,7 @@ function Overview() {
                   'Field',
                   'Input',
                   'Label',
+                  'Link',
                   'MultiSelect',
                   'Pagination',
                   'Pill',

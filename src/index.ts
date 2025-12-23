@@ -8,6 +8,7 @@ export * from './components/command/command';
 export * from './components/dropdown-menu/dropdown-menu';
 export * from './components/input/input';
 export * from './components/label/label';
+export * from './components/link/link';
 export * from './components/mode-toggle/mode-toggle';
 export * from './components/multi-select/multi-select';
 export * from './components/pagination/pagination';
