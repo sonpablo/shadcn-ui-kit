@@ -182,38 +182,6 @@ export const CompleteShowcase: Story = {
           <Badge variant="outline">Draft</Badge>
         </div>
       </div>
-
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Use Cases</h3>
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-sm">
-              Notifications:
-            </span>
-            <Badge variant="destructive">5 new</Badge>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-sm">User role:</span>
-            <Badge variant="default">
-              <Crown />
-              Admin
-            </Badge>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-sm">Tags:</span>
-            <Badge variant="secondary">React</Badge>
-            <Badge variant="secondary">TypeScript</Badge>
-            <Badge variant="secondary">Tailwind</Badge>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-sm">Status:</span>
-            <Badge variant="outline">
-              <Check />
-              Published
-            </Badge>
-          </div>
-        </div>
-      </div>
     </div>
   ),
   parameters: {

@@ -18,6 +18,7 @@ export * from './components/pill-radio-item/pill-radio-item';
 export * from './components/popover/popover';
 export * from './components/radio-group/radio-group';
 export * from './components/separator/separator';
+export * from './components/spinner/spinner';
 export * from './components/table/table';
 export * from './components/tabs/tabs';
 export * from './components/textarea/textarea';
