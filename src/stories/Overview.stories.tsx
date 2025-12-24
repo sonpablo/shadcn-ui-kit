@@ -262,7 +262,10 @@ function Overview() {
                     <Input id="robot-name" placeholder="MAiRA-001" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="serial-number" className="flex items-center gap-1">
+                    <Label
+                      htmlFor="serial-number"
+                      className="flex items-center gap-1"
+                    >
                       Serial Number
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -288,7 +291,8 @@ function Overview() {
                             <HelpCircle className="text-muted-foreground size-3.5 cursor-help" />
                           </TooltipTrigger>
                           <TooltipContent className="max-w-[200px]">
-                            MAiRA: Cognitive robot • LARA: Collaborative • MAV: Mobile • MiPA: Assistant • 4NE1: Humanoid
+                            MAiRA: Cognitive robot • LARA: Collaborative • MAV:
+                            Mobile • MiPA: Assistant • 4NE1: Humanoid
                           </TooltipContent>
                         </Tooltip>
                       </Label>
@@ -682,7 +686,9 @@ function Overview() {
                             className="h-auto flex-col gap-2 py-4"
                           >
                             <Play className="size-5" />
-                            <span className="text-xs">Deploy (Show Dailog)</span>
+                            <span className="text-xs">
+                              Deploy (Show Dailog)
+                            </span>
                           </Button>
                         </DialogTrigger>
                       </TooltipTrigger>
@@ -703,7 +709,9 @@ function Overview() {
                               <SelectValue placeholder="Select robot..." />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="maira-001">MAiRA-001</SelectItem>
+                              <SelectItem value="maira-001">
+                                MAiRA-001
+                              </SelectItem>
                               <SelectItem value="lara-003">LARA-003</SelectItem>
                               <SelectItem value="4ne1-002">4NE1-002</SelectItem>
                             </SelectContent>
@@ -963,13 +971,17 @@ function Overview() {
                       <div className="space-y-4">
                         <div className="grid gap-4 sm:grid-cols-3">
                           <div className="bg-muted/50 rounded-lg p-4">
-                            <p className="text-muted-foreground text-sm">Status</p>
+                            <p className="text-muted-foreground text-sm">
+                              Status
+                            </p>
                             <p className="mt-1 text-2xl font-semibold text-green-500">
                               Active
                             </p>
                           </div>
                           <div className="bg-muted/50 rounded-lg p-4">
-                            <p className="text-muted-foreground text-sm">Uptime</p>
+                            <p className="text-muted-foreground text-sm">
+                              Uptime
+                            </p>
                             <p className="mt-1 text-2xl font-semibold">99.8%</p>
                           </div>
                           <div className="bg-muted/50 rounded-lg p-4">
@@ -980,7 +992,8 @@ function Overview() {
                           </div>
                         </div>
                         <p className="text-muted-foreground text-sm">
-                          MAiRA-001 is operating normally with no issues detected.
+                          MAiRA-001 is operating normally with no issues
+                          detected.
                         </p>
                       </div>
                     </TabsContent>
@@ -1011,9 +1024,15 @@ function Overview() {
                     <TabsContent value="history">
                       <div className="space-y-2">
                         {[
-                          { time: '10:32 AM', event: 'Task completed: Palletizing' },
+                          {
+                            time: '10:32 AM',
+                            event: 'Task completed: Palletizing',
+                          },
                           { time: '10:15 AM', event: 'Started new task' },
-                          { time: '09:45 AM', event: 'Maintenance check passed' },
+                          {
+                            time: '09:45 AM',
+                            event: 'Maintenance check passed',
+                          },
                           { time: '08:00 AM', event: 'System startup' },
                         ].map((log, i) => (
                           <div
@@ -1042,7 +1061,9 @@ function Overview() {
                         <Separator />
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium">Verbose Logging</p>
+                            <p className="text-sm font-medium">
+                              Verbose Logging
+                            </p>
                             <p className="text-muted-foreground text-xs">
                               Enable detailed logs
                             </p>
@@ -1155,7 +1176,8 @@ function Overview() {
                           <HelpCircle className="text-muted-foreground size-3.5 cursor-help" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          Urgent requests are prioritized and responded to within 2 hours
+                          Urgent requests are prioritized and responded to
+                          within 2 hours
                         </TooltipContent>
                       </Tooltip>
                     </Label>
