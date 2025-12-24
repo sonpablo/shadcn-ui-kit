@@ -2,14 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Spinner } from './spinner';
 import { Button } from '@/components/button/button';
 import { Badge } from '@/components/badge/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/card/card';
-import { Bot } from 'lucide-react';
 
 const meta = {
   title: 'Components/Spinner',

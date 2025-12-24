@@ -78,6 +78,17 @@ import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
 import { NeuraBreadcrumb } from '@/components/breadcrumb/neura-breadcrumb';
 import { Link } from '@/components/link/link';
+import { Spinner } from '@/components/spinner/spinner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/dialog/dialog';
 import {
   Tabs,
   TabsContent,
@@ -535,6 +546,12 @@ function Overview() {
                           status: 'Active',
                           uptime: '99.5%',
                         },
+                        {
+                          id: 'MAV-005',
+                          model: 'MAV',
+                          status: 'Syncing',
+                          uptime: null,
+                        },
                       ].map((robot) => (
                         <TableRow key={robot.id}>
                           <TableCell className="font-medium">
@@ -542,16 +559,25 @@ function Overview() {
                           </TableCell>
                           <TableCell>{robot.model}</TableCell>
                           <TableCell>
-                            <Tag
-                              variant={
-                                robot.status === 'Active' ? 'green' : 'yellow'
-                              }
-                            >
-                              {robot.status}
-                            </Tag>
+                            {robot.status === 'Syncing' ? (
+                              <span className="text-muted-foreground inline-flex items-center gap-2 text-sm">
+                                <Spinner className="size-3" />
+                                Syncing...
+                              </span>
+                            ) : (
+                              <Tag
+                                variant={
+                                  robot.status === 'Active' ? 'green' : 'yellow'
+                                }
+                              >
+                                {robot.status}
+                              </Tag>
+                            )}
                           </TableCell>
                           <TableCell className="text-right">
-                            {robot.uptime}
+                            {robot.uptime ?? (
+                              <span className="text-muted-foreground">—</span>
+                            )}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -647,18 +673,58 @@ function Overview() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-3">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="h-auto flex-col gap-2 py-4"
-                      >
-                        <Play className="size-5" />
-                        <span className="text-xs">Deploy</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Deploy new robot</TooltipContent>
-                  </Tooltip>
+                  <Dialog>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="h-auto flex-col gap-2 py-4"
+                          >
+                            <Play className="size-5" />
+                            <span className="text-xs">Deploy (Show Dailog)</span>
+                          </Button>
+                        </DialogTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>Deploy new robot</TooltipContent>
+                    </Tooltip>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Deploy New Robot</DialogTitle>
+                        <DialogDescription>
+                          Select a robot to deploy to the production line.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label>Robot</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select robot..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="maira-001">MAiRA-001</SelectItem>
+                              <SelectItem value="lara-003">LARA-003</SelectItem>
+                              <SelectItem value="4ne1-002">4NE1-002</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Deployment Location</Label>
+                          <Input placeholder="Production Line A" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <Button>
+                          <Play className="size-4" />
+                          Deploy Robot
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -1125,7 +1191,7 @@ function Overview() {
                   Everything you need to build
                 </h2>
                 <p className="text-muted-foreground mt-2">
-                  A comprehensive collection of {32}+ components
+                  A comprehensive collection of 35+ components
                 </p>
               </div>
 
@@ -1144,6 +1210,7 @@ function Overview() {
                   'Dialog',
                   'DropdownMenu',
                   'Field',
+                  'FullModal',
                   'Input',
                   'Label',
                   'Link',
@@ -1154,6 +1221,7 @@ function Overview() {
                   'RadioGroup',
                   'Select',
                   'Separator',
+                  'Spinner',
                   'Switch',
                   'Table',
                   'Tabs',
