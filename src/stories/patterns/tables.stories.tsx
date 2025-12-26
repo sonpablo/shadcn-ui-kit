@@ -19,7 +19,15 @@ import {
   TooltipTrigger,
 } from '@/components/tooltip/tooltip';
 import { NeuraPagination } from '@/components/pagination/neura-pagination';
-import { MoreHorizontal, Info } from 'lucide-react';
+import { MoreHorizontal, Info, Eye, Pencil, Trash2, Copy } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from '@/components/dropdown-menu/dropdown-menu';
 
 // Sample data - Robot Fleet
 const robots = [
@@ -269,16 +277,39 @@ export const StickyRightColumn: Story = {
                 <TableCell>{robot.deployDate}</TableCell>
                 <TableCell>{robot.operator}</TableCell>
                 <TableCell sticky="right" align="center">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <MoreHorizontal className="size-4" />
+                        <span className="sr-only">Open menu</span>
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="left">
-                      Manage {robot.name}
-                    </TooltipContent>
-                  </Tooltip>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          navigator.clipboard.writeText(robot.id)
+                        }
+                      >
+                        <Copy />
+                        Copy ID
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Eye />
+                        View details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Pencil />
+                        Edit robot
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive">
+                        <Trash2 />
+                        Delete robot
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
@@ -346,14 +377,39 @@ export const MultipleStickyColumns: Story = {
                 <TableCell>{robot.deployDate}</TableCell>
                 <TableCell>{robot.operator}</TableCell>
                 <TableCell sticky="right" align="center">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <MoreHorizontal className="size-4" />
+                        <span className="sr-only">Open menu</span>
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="left">Actions</TooltipContent>
-                  </Tooltip>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          navigator.clipboard.writeText(robot.id)
+                        }
+                      >
+                        <Copy />
+                        Copy ID
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Eye />
+                        View details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Pencil />
+                        Edit robot
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive">
+                        <Trash2 />
+                        Delete robot
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
