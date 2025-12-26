@@ -26,10 +26,6 @@ import {
   DropdownMenuLabel,
 } from '@/components/dropdown-menu/dropdown-menu';
 
-// =============================================================================
-// Sample Data
-// =============================================================================
-
 interface Robot {
   id: string;
   name: string;
@@ -277,10 +273,6 @@ const robots: Robot[] = [
   },
 ];
 
-// =============================================================================
-// Meta
-// =============================================================================
-
 const meta: Meta = {
   title: 'Components/NeuraTable',
   parameters: {
@@ -339,10 +331,6 @@ function MyTable() {
 export default meta;
 type Story = StoryObj;
 
-// =============================================================================
-// Stories
-// =============================================================================
-
 /**
  * ## Basic Usage
  *
@@ -351,7 +339,7 @@ type Story = StoryObj;
 export const Basic: Story = {
   render: function BasicExample() {
     const columns: NeuraColumnDef<Robot>[] = [
-      { accessorKey: 'id', header: 'Robot ID', enableSorting: true },
+      { accessorKey: 'id', header: 'Robot ID', enableSorting: false },
       { accessorKey: 'name', header: 'Name', enableSorting: true },
       {
         accessorKey: 'model',
@@ -383,6 +371,8 @@ export const Basic: Story = {
             {row.original.status}
           </Badge>
         ),
+        enableSorting: false,
+        tooltip: 'Robot stuses (Offline, Active, Online)',
       },
     ];
 
@@ -554,14 +544,14 @@ export const StripedRows: Story = {
 export const WithPagination: Story = {
   render: function PaginationExample() {
     const columns: NeuraColumnDef<Robot>[] = [
-      { accessorKey: 'id', header: 'Robot ID', sortable: true },
-      { accessorKey: 'name', header: 'Name', sortable: true },
+      { accessorKey: 'id', header: 'Robot ID', enableSorting: true },
+      { accessorKey: 'name', header: 'Name', enableSorting: true },
       { accessorKey: 'model', header: 'Model' },
       { accessorKey: 'facility', header: 'Facility' },
       {
         accessorKey: 'uptime',
         header: 'Uptime',
-        sortable: true,
+        enableSorting: true,
         cell: ({ row }) => `${row.original.uptime.toFixed(1)}%`,
       },
       {
@@ -955,7 +945,7 @@ export const ColumnDefinitionGuide: Story = {
         {
           accessorKey: 'uptime',
           header: 'Uptime',
-          sortable: true,
+          enableSorting: true,
           tooltip: 'Formatted number with sorting enabled',
           cell: ({ row }: { row: Row<SampleRobot> }) =>
             `${row.original.uptime.toFixed(1)}%`,

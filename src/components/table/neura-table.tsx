@@ -36,14 +36,18 @@ export interface NeuraColumnDef<TData>
   extends Omit<Column<TData, unknown>['columnDef'], 'header'> {
   header: string;
   accessorKey: string;
+  /** Tooltip content for the header */
   tooltip?: React.ReactNode;
-  sortable?: boolean;
+  /** Make column sticky */
   sticky?: boolean;
+  /** Column width in pixels */
   width?: number;
+  /** Custom cell renderer */
   cell?: (params: {
     cell: Cell<TData, unknown>;
     row: Row<TData>;
   }) => React.ReactNode;
+  // Note: Use `enableSorting: true` from TanStack to make column sortable
 }
 
 export interface NeuraPaginationConfig {
