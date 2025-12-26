@@ -353,7 +353,12 @@ export const Basic: Story = {
     const columns: NeuraColumnDef<Robot>[] = [
       { accessorKey: 'id', header: 'Robot ID', enableSorting: true },
       { accessorKey: 'name', header: 'Name', enableSorting: true },
-      { accessorKey: 'model', header: 'Model', enableSorting: true },
+      {
+        accessorKey: 'model',
+        header: 'Model',
+        enableSorting: true,
+        tooltip: 'Robot model series (MAiRA, LARA, MAV, 4NE1, MiPA)',
+      },
       { accessorKey: 'application', header: 'Application' },
       { accessorKey: 'facility', header: 'Facility' },
       {
@@ -381,15 +386,21 @@ export const Basic: Story = {
       },
     ];
 
-    const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
-      data: robots,
-      columns,
-    });
+    const { NeuraTableHeader, NeuraTableBody, NeuraTableFooter } =
+      useNeuraTable({
+        data: robots,
+        columns,
+        pagination: {
+          pageSize: 5,
+          itemLabel: 'robots',
+        },
+      });
 
     return (
       <Table>
         <NeuraTableHeader />
         <NeuraTableBody />
+        <NeuraTableFooter />
       </Table>
     );
   },
@@ -529,6 +540,59 @@ export const StripedRows: Story = {
       <Table>
         <NeuraTableHeader />
         <NeuraTableBody stripedRows />
+      </Table>
+    );
+  },
+};
+
+/**
+ * ## With Pagination
+ *
+ * Enable pagination by passing a `pagination` config with `pageSize`.
+ * The hook returns a `NeuraTablePagination` component to render.
+ */
+export const WithPagination: Story = {
+  render: function PaginationExample() {
+    const columns: NeuraColumnDef<Robot>[] = [
+      { accessorKey: 'id', header: 'Robot ID', sortable: true },
+      { accessorKey: 'name', header: 'Name', sortable: true },
+      { accessorKey: 'model', header: 'Model' },
+      { accessorKey: 'facility', header: 'Facility' },
+      {
+        accessorKey: 'uptime',
+        header: 'Uptime',
+        sortable: true,
+        cell: ({ row }) => `${row.original.uptime.toFixed(1)}%`,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => (
+          <Badge
+            variant={row.original.status === 'Active' ? 'default' : 'secondary'}
+          >
+            {row.original.status}
+          </Badge>
+        ),
+      },
+    ];
+
+    const { NeuraTableHeader, NeuraTableBody, NeuraTableFooter } =
+      useNeuraTable({
+        data: robots,
+        columns,
+        pagination: {
+          pageSize: 4,
+          siblings: 1,
+          itemLabel: 'robots',
+        },
+      });
+
+    return (
+      <Table>
+        <NeuraTableHeader />
+        <NeuraTableBody stripedRows />
+        <NeuraTableFooter />
       </Table>
     );
   },
@@ -868,7 +932,7 @@ export const ColumnDefinitionGuide: Story = {
           header: 'Name',
           tooltip: 'accessorKey + cell: Custom rendering',
           cell: ({ row }: { row: Row<SampleRobot> }) => (
-            <span className="font-semibold text-primary">
+            <span className="text-primary font-semibold">
               {row.original.name}
             </span>
           ),
@@ -956,8 +1020,8 @@ export const ColumnDefinitionGuide: Story = {
               header text
             </li>
             <li>
-              <code className="bg-muted rounded px-1">tooltip</code> - Info
-              icon with tooltip on header
+              <code className="bg-muted rounded px-1">tooltip</code> - Info icon
+              with tooltip on header
             </li>
             <li>
               <code className="bg-muted rounded px-1">sortable</code> - Enable

@@ -5,8 +5,10 @@ import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
+  getPaginationRowModel,
   flexRender,
   type SortingState,
+  type PaginationState,
   type ColumnDef,
   type Cell,
   type Row,
@@ -18,6 +20,7 @@ import { cn } from '@/lib/utils';
 import {
   TableHeader,
   TableBody,
+  TableFooter,
   TableHead,
   TableRow,
   TableCell,
@@ -27,6 +30,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/tooltip/tooltip';
+import { NeuraPagination } from '@/components/pagination/neura-pagination';
 
 export interface NeuraColumnDef<TData>
   extends Omit<Column<TData, unknown>['columnDef'], 'header'> {
@@ -42,9 +46,24 @@ export interface NeuraColumnDef<TData>
   }) => React.ReactNode;
 }
 
+export interface NeuraPaginationConfig {
+  /** Page size (items per page) */
+  pageSize: number;
+  /** Initial page index (0-based). Default: 0 */
+  pageIndex?: number;
+  /** Number of sibling pages to show. Default: 1 */
+  siblings?: number;
+  /** Show first/last page buttons. Default: true */
+  showFirstLast?: boolean;
+  /** Custom label for items (e.g., "robots", "users"). Default: "items" */
+  itemLabel?: string;
+}
+
 interface UseNeuraTableProps<TData> {
   columns: NeuraColumnDef<TData>[];
   data: TData[];
+  /** Pagination configuration. If provided, pagination is enabled. */
+  pagination?: NeuraPaginationConfig;
 }
 
 interface NeuraTableBodyProps<TData> {
@@ -55,19 +74,30 @@ interface NeuraTableBodyProps<TData> {
 export function useNeuraTable<TData>({
   columns,
   data,
+  pagination: paginationConfig,
 }: UseNeuraTableProps<TData>) {
-  console.log('🙅 son-p 👉🏻 neura-table-v2.tsx:56 👉🏻 useNeuraTable');
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: paginationConfig?.pageIndex ?? 0,
+    pageSize: paginationConfig?.pageSize ?? data.length,
+  });
 
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is intentionally used
   const table = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: {
+      sorting,
+      ...(paginationConfig && { pagination }),
+    },
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    ...(paginationConfig && { getPaginationRowModel: getPaginationRowModel() }),
   });
+
+  const columnCount = columns.length;
 
   // Header component
   const NeuraTableHeader = React.memo(function NeuraTableHeader() {
@@ -171,12 +201,53 @@ export function useNeuraTable<TData>({
     );
   });
 
+  // Footer with pagination component
+  const NeuraTableFooter = React.memo(function NeuraTableFooter() {
+    if (!paginationConfig) return null;
+
+    const totalPages = table.getPageCount();
+    const currentPage = table.getState().pagination.pageIndex + 1;
+    const pageSize = table.getState().pagination.pageSize;
+    const totalItems = data.length;
+    const startIndex = (currentPage - 1) * pageSize + 1;
+    const endIndex = Math.min(currentPage * pageSize, totalItems);
+    const itemLabel = paginationConfig.itemLabel ?? 'items';
+
+    const leftColSpan = Math.ceil(columnCount / 2);
+    const rightColSpan = columnCount - leftColSpan;
+
+    return (
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={leftColSpan}>
+            <span className="text-muted-foreground text-sm">
+              Showing {startIndex}-{endIndex} of {totalItems} {itemLabel}
+            </span>
+          </TableCell>
+          <TableCell colSpan={rightColSpan} align="right">
+            {totalPages > 1 && (
+              <NeuraPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => table.setPageIndex(page - 1)}
+                siblings={paginationConfig.siblings ?? 1}
+                showFirstLast={paginationConfig.showFirstLast ?? true}
+                className="justify-end"
+              />
+            )}
+          </TableCell>
+        </TableRow>
+      </TableFooter>
+    );
+  });
+
   return {
     table,
     NeuraTableHeader,
     NeuraTableBody,
+    NeuraTableFooter,
   };
 }
 
 // Re-export types for consumers
-export type { ColumnDef, Row, Cell, SortingState };
+export type { ColumnDef, Row, Cell, SortingState, PaginationState };
