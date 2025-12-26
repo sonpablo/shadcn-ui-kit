@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NeuraColumnDef, Row, useNeuraTable } from './neura-table';
 import { Table } from './table';
@@ -25,262 +25,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from '@/components/dropdown-menu/dropdown-menu';
-
-interface Robot {
-  id: string;
-  name: string;
-  model: string;
-  application: string;
-  facility: string;
-  uptime: number;
-  status: 'Active' | 'Maintenance' | 'Offline';
-}
-
-const robots: Robot[] = [
-  {
-    id: 'MAiRA-001',
-    name: 'MAiRA Alpha',
-    model: 'MAiRA',
-    application: 'Palletizing',
-    facility: 'Munich Plant A',
-    uptime: 99.8,
-    status: 'Active',
-  },
-  {
-    id: 'LARA-002',
-    name: 'LARA Beta',
-    model: 'LARA',
-    application: 'Machine Tending',
-    facility: 'Stuttgart Factory',
-    uptime: 98.5,
-    status: 'Active',
-  },
-  {
-    id: 'MAV-003',
-    name: 'MAV Gamma',
-    model: 'MAV',
-    application: 'Logistics',
-    facility: 'Berlin Warehouse',
-    uptime: 97.2,
-    status: 'Maintenance',
-  },
-  {
-    id: '4NE1-004',
-    name: '4NE1 Delta',
-    model: '4NE1',
-    application: 'Quality Inspection',
-    facility: 'Hamburg Line B',
-    uptime: 99.1,
-    status: 'Active',
-  },
-  {
-    id: 'MAiRA-005',
-    name: 'MAiRA Epsilon',
-    model: 'MAiRA',
-    application: 'Welding',
-    facility: 'Metzingen HQ',
-    uptime: 99.5,
-    status: 'Active',
-  },
-  {
-    id: 'MiPA-006',
-    name: 'MiPA Zeta',
-    model: 'MiPA',
-    application: 'Assistance',
-    facility: 'Frankfurt Office',
-    uptime: 99.9,
-    status: 'Active',
-  },
-  {
-    id: 'LARA-007',
-    name: 'LARA Eta',
-    model: 'LARA',
-    application: 'Assembly',
-    facility: 'Munich Plant B',
-    uptime: 96.3,
-    status: 'Active',
-  },
-  {
-    id: 'MAiRA-008',
-    name: 'MAiRA Theta',
-    model: 'MAiRA',
-    application: 'Packaging',
-    facility: 'Stuttgart Factory',
-    uptime: 98.7,
-    status: 'Active',
-  },
-  {
-    id: 'MAV-009',
-    name: 'MAV Iota',
-    model: 'MAV',
-    application: 'Transport',
-    facility: 'Berlin Warehouse',
-    uptime: 94.1,
-    status: 'Offline',
-  },
-  {
-    id: '4NE1-010',
-    name: '4NE1 Kappa',
-    model: '4NE1',
-    application: 'Inspection',
-    facility: 'Hamburg Line A',
-    uptime: 99.4,
-    status: 'Active',
-  },
-  {
-    id: 'MAiRA-011',
-    name: 'MAiRA Lambda',
-    model: 'MAiRA',
-    application: 'Sorting',
-    facility: 'Munich Plant A',
-    uptime: 97.8,
-    status: 'Active',
-  },
-  {
-    id: 'LARA-012',
-    name: 'LARA Mu',
-    model: 'LARA',
-    application: 'Polishing',
-    facility: 'Cologne Plant',
-    uptime: 98.2,
-    status: 'Maintenance',
-  },
-  {
-    id: 'MiPA-013',
-    name: 'MiPA Nu',
-    model: 'MiPA',
-    application: 'Collaboration',
-    facility: 'Dresden Lab',
-    uptime: 99.6,
-    status: 'Active',
-  },
-  {
-    id: 'MAV-014',
-    name: 'MAV Xi',
-    model: 'MAV',
-    application: 'Delivery',
-    facility: 'Leipzig Center',
-    uptime: 95.9,
-    status: 'Active',
-  },
-  {
-    id: '4NE1-015',
-    name: '4NE1 Omicron',
-    model: '4NE1',
-    application: 'Testing',
-    facility: 'Metzingen HQ',
-    uptime: 99.0,
-    status: 'Active',
-  },
-  {
-    id: 'MAiRA-016',
-    name: 'MAiRA Pi',
-    model: 'MAiRA',
-    application: 'Deburring',
-    facility: 'Stuttgart Factory',
-    uptime: 98.4,
-    status: 'Active',
-  },
-  {
-    id: 'LARA-017',
-    name: 'LARA Rho',
-    model: 'LARA',
-    application: 'Grinding',
-    facility: 'Munich Plant B',
-    uptime: 97.1,
-    status: 'Offline',
-  },
-  {
-    id: 'MAV-018',
-    name: 'MAV Sigma',
-    model: 'MAV',
-    application: 'Warehousing',
-    facility: 'Frankfurt Office',
-    uptime: 96.8,
-    status: 'Active',
-  },
-  {
-    id: 'MiPA-019',
-    name: 'MiPA Tau',
-    model: 'MiPA',
-    application: 'Training',
-    facility: 'Berlin Warehouse',
-    uptime: 99.7,
-    status: 'Active',
-  },
-  {
-    id: '4NE1-020',
-    name: '4NE1 Upsilon',
-    model: '4NE1',
-    application: 'Measurement',
-    facility: 'Hamburg Line B',
-    uptime: 98.9,
-    status: 'Active',
-  },
-  {
-    id: 'MAiRA-021',
-    name: 'MAiRA Phi',
-    model: 'MAiRA',
-    application: 'Dispensing',
-    facility: 'Cologne Plant',
-    uptime: 99.2,
-    status: 'Active',
-  },
-  {
-    id: 'LARA-022',
-    name: 'LARA Chi',
-    model: 'LARA',
-    application: 'Screwing',
-    facility: 'Dresden Lab',
-    uptime: 97.5,
-    status: 'Maintenance',
-  },
-  {
-    id: 'MAV-023',
-    name: 'MAV Psi',
-    model: 'MAV',
-    application: 'Picking',
-    facility: 'Leipzig Center',
-    uptime: 95.4,
-    status: 'Active',
-  },
-  {
-    id: '4NE1-024',
-    name: '4NE1 Omega',
-    model: '4NE1',
-    application: 'Scanning',
-    facility: 'Munich Plant A',
-    uptime: 99.3,
-    status: 'Active',
-  },
-  {
-    id: 'MAiRA-025',
-    name: 'MAiRA Prime',
-    model: 'MAiRA',
-    application: 'Coating',
-    facility: 'Metzingen HQ',
-    uptime: 98.8,
-    status: 'Active',
-  },
-  {
-    id: 'MiPA-026',
-    name: 'MiPA Ultra',
-    model: 'MiPA',
-    application: 'Monitoring',
-    facility: 'Frankfurt Office',
-    uptime: 99.5,
-    status: 'Active',
-  },
-];
+import { robots, type Robot } from './stories-utils';
 
 const meta: Meta = {
-  title: 'Components/NeuraTable',
+  title: 'Components/NeuraTable/Client Side',
   parameters: {
     layout: 'padded',
     docs: {
       description: {
         component: `
-Hook-based table following the Astor pattern. Uses TanStack Table columns directly.
+Hook-based table following the TanStack pattern. Uses TanStack Table columns directly.
 
 ## Usage
 
@@ -292,7 +46,7 @@ const columns: ColumnDef<Robot>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
-    enableSorting: true,
+    
   },
   {
     accessorKey: 'status',
@@ -340,11 +94,10 @@ export const Basic: Story = {
   render: function BasicExample() {
     const columns: NeuraColumnDef<Robot>[] = [
       { accessorKey: 'id', header: 'Robot ID', enableSorting: false },
-      { accessorKey: 'name', header: 'Name', enableSorting: true },
+      { accessorKey: 'name', header: 'Name' },
       {
         accessorKey: 'model',
         header: 'Model',
-        enableSorting: true,
         tooltip: 'Robot model series (MAiRA, LARA, MAV, 4NE1, MiPA)',
       },
       { accessorKey: 'application', header: 'Application' },
@@ -352,7 +105,6 @@ export const Basic: Story = {
       {
         accessorKey: 'uptime',
         header: 'Uptime',
-        enableSorting: true,
         cell: ({ row }) => `${row.original.uptime.toFixed(1)}%`,
       },
       {
@@ -410,7 +162,7 @@ export const WithSorting: Story = {
       {
         accessorKey: 'uptime',
         header: 'Uptime',
-        enableSorting: true,
+
         cell: ({ row }) => `${row.original.uptime.toFixed(1)}%`,
       },
       {
@@ -476,10 +228,15 @@ export const WithRowClick: Story = {
       },
     ];
 
-    const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
-      data: robots,
-      columns,
-    });
+    const { NeuraTableHeader, NeuraTableBody, NeuraTableFooter } =
+      useNeuraTable({
+        data: robots,
+        columns,
+        pagination: {
+          pageSize: 5,
+          itemLabel: 'robots',
+        },
+      });
 
     return (
       <div className="space-y-4">
@@ -492,6 +249,7 @@ export const WithRowClick: Story = {
         <Table>
           <NeuraTableHeader />
           <NeuraTableBody onRowClick={setSelectedRow} />
+          <NeuraTableFooter />
         </Table>
       </div>
     );
@@ -551,7 +309,7 @@ export const WithPagination: Story = {
       {
         accessorKey: 'uptime',
         header: 'Uptime',
-        enableSorting: true,
+
         cell: ({ row }) => `${row.original.uptime.toFixed(1)}%`,
       },
       {
@@ -667,10 +425,15 @@ export const WithActions: Story = {
       },
     ];
 
-    const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
-      data: robots,
-      columns,
-    });
+    const { NeuraTableHeader, NeuraTableBody, NeuraTableFooter } =
+      useNeuraTable({
+        data: robots,
+        columns,
+        pagination: {
+          pageSize: 5,
+          itemLabel: 'robots',
+        },
+      });
 
     return (
       <Table>
@@ -680,44 +443,8 @@ export const WithActions: Story = {
             console.log(row);
           }}
         />
+        <NeuraTableFooter />
       </Table>
-    );
-  },
-};
-
-/**
- * ## TanStack Table Access
- *
- * The `table` instance gives you full access to TanStack Table's API.
- */
-export const TanStackAccess: Story = {
-  render: function TanStackExample() {
-    const columns: NeuraColumnDef<Robot>[] = [
-      { accessorKey: 'id', header: 'Robot ID', enableSorting: true },
-      { accessorKey: 'name', header: 'Name', enableSorting: true },
-      { accessorKey: 'model', header: 'Model' },
-    ];
-
-    const { table, NeuraTableHeader, NeuraTableBody } = useNeuraTable({
-      data: robots,
-      columns,
-    });
-
-    return (
-      <div className="space-y-4">
-        <div className="bg-muted/50 rounded-lg p-4">
-          <h3 className="mb-2 font-semibold">TanStack Table Instance</h3>
-          <ul className="text-muted-foreground space-y-1 text-sm">
-            <li>• Rows: {table.getRowModel().rows.length}</li>
-            <li>• Columns: {table.getAllColumns().length}</li>
-            <li>• Sorting: {JSON.stringify(table.getState().sorting)}</li>
-          </ul>
-        </div>
-        <Table>
-          <NeuraTableHeader />
-          <NeuraTableBody />
-        </Table>
-      </div>
     );
   },
 };
@@ -758,16 +485,22 @@ export const StickyColumn: Story = {
       },
     ];
 
-    const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
-      data: robots,
-      columns,
-    });
+    const { NeuraTableHeader, NeuraTableBody, NeuraTableFooter } =
+      useNeuraTable({
+        data: robots,
+        columns,
+        pagination: {
+          pageSize: 5,
+          itemLabel: 'robots',
+        },
+      });
 
     return (
       <div className="max-w-xl">
         <Table>
           <NeuraTableHeader />
           <NeuraTableBody />
+          <NeuraTableFooter />
         </Table>
       </div>
     );
@@ -794,7 +527,7 @@ export const WithTooltips: Story = {
         {
           accessorKey: 'uptime',
           header: 'Uptime',
-          enableSorting: true,
+
           tooltip:
             'Percentage of time the robot has been operational in the last 30 days',
 
@@ -859,6 +592,204 @@ export const WithTooltips: Story = {
 };
 
 /**
+ * ## Selectable Rows
+ *
+ * Table with checkbox selection. Uses a custom column for the checkbox
+ * and manages selection state externally.
+ */
+export const SelectableRows: Story = {
+  render: function SelectableRowsExample() {
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+    const allRowIds = robots.map((robot) => robot.id);
+    const isAllSelected = selectedIds.size === robots.length;
+    const isSomeSelected =
+      selectedIds.size > 0 && selectedIds.size < robots.length;
+
+    const handleSelectAll = () => {
+      if (isAllSelected) {
+        setSelectedIds(new Set());
+      } else {
+        setSelectedIds(new Set(allRowIds));
+      }
+    };
+
+    const handleSelectRow = useCallback((id: string) => {
+      setSelectedIds((prev) => {
+        const newSelected = new Set(prev);
+        if (newSelected.has(id)) {
+          newSelected.delete(id);
+        } else {
+          newSelected.add(id);
+        }
+        return newSelected;
+      });
+    }, []);
+
+    const columns = useMemo<NeuraColumnDef<Robot>[]>(
+      () => [
+        {
+          id: 'select',
+          accessorKey: '',
+          header: '',
+          width: 50,
+          cell: ({ row }: { row: Row<Robot> }) => (
+            <input
+              type="checkbox"
+              className="size-4 cursor-pointer"
+              checked={selectedIds.has(row.original.id)}
+              onChange={() => handleSelectRow(row.original.id)}
+              aria-label={`Select ${row.original.name}`}
+            />
+          ),
+        },
+        { accessorKey: 'id', header: 'Robot ID' },
+        { accessorKey: 'name', header: 'Name' },
+        { accessorKey: 'model', header: 'Model' },
+        { accessorKey: 'facility', header: 'Facility' },
+        {
+          accessorKey: 'uptime',
+          header: 'Uptime',
+          cell: ({ row }: { row: Row<Robot> }) =>
+            `${row.original.uptime.toFixed(1)}%`,
+        },
+        {
+          accessorKey: 'status',
+          header: 'Status',
+          cell: ({ row }: { row: Row<Robot> }) => (
+            <Badge
+              variant={
+                row.original.status === 'Active'
+                  ? 'default'
+                  : row.original.status === 'Maintenance'
+                    ? 'secondary'
+                    : 'destructive'
+              }
+            >
+              {row.original.status}
+            </Badge>
+          ),
+        },
+      ],
+      [selectedIds, handleSelectRow],
+    );
+
+    const { NeuraTableBody } = useNeuraTable({
+      data: robots,
+      columns,
+    });
+
+    // Custom header with "Select All" checkbox
+    const SelectAllHeader = () => (
+      <thead className="bg-muted/50 [&_tr]:border-b">
+        <tr className="border-b transition-colors">
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <input
+                  type="checkbox"
+                  className="size-4 cursor-pointer"
+                  checked={isAllSelected}
+                  ref={(el) => {
+                    if (el) el.indeterminate = isSomeSelected;
+                  }}
+                  onChange={handleSelectAll}
+                  aria-label="Select all robots"
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                {isAllSelected ? 'Deselect all' : 'Select all'}
+              </TooltipContent>
+            </Tooltip>
+          </th>
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            Robot ID
+          </th>
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            Name
+          </th>
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            Model
+          </th>
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            Facility
+          </th>
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            Uptime
+          </th>
+          <th className="text-muted-foreground h-10 px-2 text-left align-middle font-medium">
+            Status
+          </th>
+        </tr>
+      </thead>
+    );
+
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="text-muted-foreground text-sm">
+            Selected: {selectedIds.size} of {robots.length} robots
+          </div>
+          {selectedIds.size > 0 && (
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline">
+                <Eye className="mr-2 size-4" />
+                View Selected
+              </Button>
+              <Button size="sm" variant="destructive">
+                <Trash2 className="mr-2 size-4" />
+                Delete Selected
+              </Button>
+            </div>
+          )}
+        </div>
+        <Table>
+          <SelectAllHeader />
+          <NeuraTableBody />
+        </Table>
+      </div>
+    );
+  },
+};
+
+/**
+ * ## TanStack Table Access
+ *
+ * The `table` instance gives you full access to TanStack Table's API.
+ */
+export const TanStackAccess: Story = {
+  render: function TanStackExample() {
+    const columns: NeuraColumnDef<Robot>[] = [
+      { accessorKey: 'id', header: 'Robot ID', enableSorting: true },
+      { accessorKey: 'name', header: 'Name', enableSorting: true },
+      { accessorKey: 'model', header: 'Model' },
+    ];
+
+    const { table, NeuraTableHeader, NeuraTableBody } = useNeuraTable({
+      data: robots,
+      columns,
+    });
+
+    return (
+      <div className="space-y-4">
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h3 className="mb-2 font-semibold">TanStack Table Instance</h3>
+          <ul className="text-muted-foreground space-y-1 text-sm">
+            <li>• Rows: {table.getRowModel().rows.length}</li>
+            <li>• Columns: {table.getAllColumns().length}</li>
+            <li>• Sorting: {JSON.stringify(table.getState().sorting)}</li>
+          </ul>
+        </div>
+        <Table>
+          <NeuraTableHeader />
+          <NeuraTableBody />
+        </Table>
+      </div>
+    );
+  },
+};
+
+/**
  * ## Column Definition Guide
  *
  * This story demonstrates the different ways to define columns:
@@ -868,48 +799,17 @@ export const WithTooltips: Story = {
  * - **cell**: Custom render function for the cell content
  * - **header**: Column header text
  * - **tooltip**: Optional tooltip for the header
- * - **sortable**: Enable sorting for this column
+ * - **enableSorting**: Enable sorting for this column
  * - **sticky**: Make the column sticky
  */
-// Sample data defined outside component to avoid recreation
-interface SampleRobot {
-  id: string;
-  name: string;
-  specs: { weight: number; payload: number };
-  status: string;
-  uptime: number;
-}
-
-const sampleRobotData: SampleRobot[] = [
-  {
-    id: 'MAiRA-001',
-    name: 'MAiRA Alpha',
-    specs: { weight: 25, payload: 10 },
-    status: 'Active',
-    uptime: 99.8,
-  },
-  {
-    id: 'LARA-002',
-    name: 'LARA Beta',
-    specs: { weight: 18, payload: 5 },
-    status: 'Maintenance',
-    uptime: 97.2,
-  },
-  {
-    id: 'MAV-003',
-    name: 'MAV Gamma',
-    specs: { weight: 120, payload: 50 },
-    status: 'Active',
-    uptime: 98.5,
-  },
-];
-
 export const ColumnDefinitionGuide: Story = {
   render: function ColumnGuideExample() {
-    const columns = useMemo<NeuraColumnDef<SampleRobot>[]>(
+    // Use only first 5 robots for cleaner display
+    const sampleData = useMemo(() => robots.slice(0, 5), []);
+
+    const columns = useMemo<NeuraColumnDef<Robot>[]>(
       () => [
         // 1. Simple accessorKey - most common case
-        // id is auto-generated as 'id'
         {
           accessorKey: 'id',
           header: 'Robot ID',
@@ -921,22 +821,21 @@ export const ColumnDefinitionGuide: Story = {
           accessorKey: 'name',
           header: 'Name',
           tooltip: 'accessorKey + cell: Custom rendering',
-          cell: ({ row }: { row: Row<SampleRobot> }) => (
+          cell: ({ row }: { row: Row<Robot> }) => (
             <span className="text-primary font-semibold">
               {row.original.name}
             </span>
           ),
         },
 
-        // 3. Computed value using cell (no direct accessorKey match)
+        // 3. Combining multiple fields in one cell
         {
-          accessorKey: 'specs',
-          header: 'Specs',
-          tooltip: 'Accessing nested object: specs.weight, specs.payload',
-          cell: ({ row }: { row: Row<SampleRobot> }) => (
+          accessorKey: 'model',
+          header: 'Model & App',
+          tooltip: 'Combining model + application in one cell',
+          cell: ({ row }: { row: Row<Robot> }) => (
             <span className="text-muted-foreground text-sm">
-              {row.original.specs.weight}kg / {row.original.specs.payload}kg
-              payload
+              {row.original.model} — {row.original.application}
             </span>
           ),
         },
@@ -945,9 +844,8 @@ export const ColumnDefinitionGuide: Story = {
         {
           accessorKey: 'uptime',
           header: 'Uptime',
-          enableSorting: true,
-          tooltip: 'Formatted number with sorting enabled',
-          cell: ({ row }: { row: Row<SampleRobot> }) =>
+          tooltip: 'Formatted number with percentage',
+          cell: ({ row }: { row: Row<Robot> }) =>
             `${row.original.uptime.toFixed(1)}%`,
         },
 
@@ -956,10 +854,14 @@ export const ColumnDefinitionGuide: Story = {
           accessorKey: 'status',
           header: 'Status',
           tooltip: 'Conditional badge based on value',
-          cell: ({ row }: { row: Row<SampleRobot> }) => (
+          cell: ({ row }: { row: Row<Robot> }) => (
             <Badge
               variant={
-                row.original.status === 'Active' ? 'default' : 'secondary'
+                row.original.status === 'Active'
+                  ? 'default'
+                  : row.original.status === 'Maintenance'
+                    ? 'secondary'
+                    : 'destructive'
               }
             >
               {row.original.status}
@@ -969,8 +871,8 @@ export const ColumnDefinitionGuide: Story = {
 
         // 6. Action column - requires explicit id since no data field
         {
-          id: 'actions', // ← Required! No accessorKey for this column
-          accessorKey: '', // Empty string as placeholder
+          id: 'actions',
+          accessorKey: '',
           header: 'Actions',
           tooltip: 'id: "actions" - No data field, just UI',
           cell: () => (
@@ -984,7 +886,7 @@ export const ColumnDefinitionGuide: Story = {
     );
 
     const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
-      data: sampleRobotData,
+      data: sampleData,
       columns,
     });
 
@@ -1014,8 +916,8 @@ export const ColumnDefinitionGuide: Story = {
               with tooltip on header
             </li>
             <li>
-              <code className="bg-muted rounded px-1">sortable</code> - Enable
-              column sorting
+              <code className="bg-muted rounded px-1">enableSorting</code> -
+              Enable column sorting
             </li>
           </ul>
         </div>

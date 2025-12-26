@@ -10,23 +10,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: `
-A simple spinner component to indicate loading states.
-
-
-
-## Usage
-
-\`\`\`tsx
-import { Spinner } from '@neura/shadcn-ui-kit';
-
-<Spinner />
-<Spinner className="size-6" />
-<Spinner className="size-8 text-green-500" />
-\`\`\`
-
-The spinner uses \`text-primary\` (blue) by default. Override with any \`text-*\` class.
-        `,
+        component: `A simple spinner component to indicate loading states.`,
       },
     },
   },

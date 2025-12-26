@@ -47,7 +47,6 @@ export interface NeuraColumnDef<TData>
     cell: Cell<TData, unknown>;
     row: Row<TData>;
   }) => React.ReactNode;
-  // Note: Use `enableSorting: true` from TanStack to make column sortable
 }
 
 export interface NeuraPaginationConfig {
@@ -68,6 +67,50 @@ interface UseNeuraTableProps<TData> {
   data: TData[];
   /** Pagination configuration. If provided, pagination is enabled. */
   pagination?: NeuraPaginationConfig;
+
+  // ─────────────────────────────────────────────────────────────
+  // Server-side mode props (following TanStack Table patterns)
+  // ─────────────────────────────────────────────────────────────
+
+  /**
+   * Enable manual/server-side pagination.
+   * When true, data is assumed to be already paginated by the server.
+   * You must provide rowCount and handle onPaginationChange.
+   */
+  manualPagination?: boolean;
+
+  /**
+   * Enable manual/server-side sorting.
+   * When true, data is assumed to be already sorted by the server.
+   * You must handle onSortingChange to fetch sorted data.
+   */
+  manualSorting?: boolean;
+
+  /**
+   * Total number of rows in the server dataset.
+   * Required for server-side pagination to calculate page count.
+   */
+  rowCount?: number;
+
+  /**
+   * Callback fired when pagination state changes.
+   * Use this to fetch new data from your API.
+   * @example onPaginationChange: (p) => fetchData({ page: p.pageIndex, size: p.pageSize })
+   */
+  onPaginationChange?: (pagination: PaginationState) => void;
+
+  /**
+   * Callback fired when sorting state changes.
+   * Use this to fetch sorted data from your API.
+   * @example onSortingChange: (s) => fetchData({ sort: s[0]?.id, order: s[0]?.desc ? 'desc' : 'asc' })
+   */
+  onSortingChange?: (sorting: SortingState) => void;
+
+  /**
+   * Initial sorting state.
+   * Useful for server-side when you want to start with a specific sort.
+   */
+  initialSorting?: SortingState;
 }
 
 interface NeuraTableBodyProps<TData> {
@@ -79,32 +122,82 @@ export function useNeuraTable<TData>({
   columns,
   data,
   pagination: paginationConfig,
+  // Server-side props
+  manualPagination = false,
+  manualSorting = false,
+  rowCount,
+  onPaginationChange: onPaginationChangeCallback,
+  onSortingChange: onSortingChangeCallback,
+  initialSorting = [],
 }: UseNeuraTableProps<TData>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>(initialSorting);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: paginationConfig?.pageIndex ?? 0,
     pageSize: paginationConfig?.pageSize ?? data.length,
   });
 
+  // Handle sorting changes (internal + callback for server-side)
+  const handleSortingChange = React.useCallback(
+    (updater: SortingState | ((old: SortingState) => SortingState)) => {
+      setSorting((prev) => {
+        const newSorting =
+          typeof updater === 'function' ? updater(prev) : updater;
+        // Fire callback for server-side mode
+        onSortingChangeCallback?.(newSorting);
+        return newSorting;
+      });
+    },
+    [onSortingChangeCallback],
+  );
+
+  // Handle pagination changes (internal + callback for server-side)
+  const handlePaginationChange = React.useCallback(
+    (
+      updater: PaginationState | ((old: PaginationState) => PaginationState),
+    ) => {
+      setPagination((prev) => {
+        const newPagination =
+          typeof updater === 'function' ? updater(prev) : updater;
+        // Fire callback for server-side mode
+        onPaginationChangeCallback?.(newPagination);
+        return newPagination;
+      });
+    },
+    [onPaginationChangeCallback],
+  );
+
+  // Determine if we need pagination row model (only for client-side)
+  const needsPaginationRowModel = paginationConfig && !manualPagination;
+  // Determine if we need sorted row model (only for client-side)
+  const needsSortedRowModel = !manualSorting;
+
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is intentionally used
   const table = useReactTable({
     data,
-    columns,
+    columns: columns,
     state: {
       sorting,
       ...(paginationConfig && { pagination }),
     },
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
+    // Server-side configuration
+    manualPagination,
+    manualSorting,
+    ...(manualPagination && rowCount !== undefined && { rowCount }),
+    // Change handlers
+    onSortingChange: handleSortingChange,
+    onPaginationChange: handlePaginationChange,
+    // Row models
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    ...(paginationConfig && { getPaginationRowModel: getPaginationRowModel() }),
+    ...(needsSortedRowModel && { getSortedRowModel: getSortedRowModel() }),
+    ...(needsPaginationRowModel && {
+      getPaginationRowModel: getPaginationRowModel(),
+    }),
   });
 
   const columnCount = columns.length;
 
-  // Header component
-  const NeuraTableHeader = React.memo(function NeuraTableHeader() {
+  // Header component (no memo to allow sorting animation)
+  const NeuraTableHeader = function NeuraTableHeader() {
     return (
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
@@ -158,7 +251,7 @@ export function useNeuraTable<TData>({
         ))}
       </TableHeader>
     );
-  });
+  };
 
   // Body component
   const NeuraTableBody = React.memo(function NeuraTableBody({
@@ -212,7 +305,9 @@ export function useNeuraTable<TData>({
     const totalPages = table.getPageCount();
     const currentPage = table.getState().pagination.pageIndex + 1;
     const pageSize = table.getState().pagination.pageSize;
-    const totalItems = data.length;
+    // Use rowCount for server-side, data.length for client-side
+    const totalItems =
+      manualPagination && rowCount !== undefined ? rowCount : data.length;
     const startIndex = (currentPage - 1) * pageSize + 1;
     const endIndex = Math.min(currentPage * pageSize, totalItems);
     const itemLabel = paginationConfig.itemLabel ?? 'items';
