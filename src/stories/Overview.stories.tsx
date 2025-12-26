@@ -104,6 +104,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/pagination/pagination';
+import { Toaster } from '@/components/sonner/sonner';
+import { toast } from 'sonner';
 
 // --- Overview Component ---
 function Overview() {
@@ -738,9 +740,14 @@ function Overview() {
                       <Button
                         variant="outline"
                         className="h-auto flex-col gap-2 py-4"
+                        onClick={() =>
+                          toast.success('Fleet Monitored', {
+                            description: 'All 4 robots are operating normally',
+                          })
+                        }
                       >
                         <Activity className="size-5" />
-                        <span className="text-xs">Monitor</span>
+                        <span className="text-xs">Monitor (Toast)</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>View fleet analytics</TooltipContent>
@@ -1232,17 +1239,18 @@ function Overview() {
                   'Dialog',
                   'DropdownMenu',
                   'Field',
-                  'FullModal',
                   'Input',
                   'Label',
                   'Link',
                   'MultiSelect',
+                  'NeuraTable',
                   'Pagination',
                   'Pill',
                   'Popover',
                   'RadioGroup',
                   'Select',
                   'Separator',
+                  'Sonner',
                   'Spinner',
                   'Switch',
                   'Table',
@@ -1272,6 +1280,9 @@ function Overview() {
               </p>
             </div>
           </div>
+
+          {/* Sonner Toaster - placed at root level */}
+          <Toaster />
         </div>
       </TooltipProvider>
     </ThemeProvider>
