@@ -9,7 +9,14 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/tooltip/tooltip';
-import { MoreHorizontal, AlertCircle, Eye, Pencil, Trash2, Copy } from 'lucide-react';
+import {
+  MoreHorizontal,
+  AlertCircle,
+  Eye,
+  Pencil,
+  Trash2,
+  Copy,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -568,7 +575,7 @@ export const WithActions: Story = {
       },
       {
         id: 'actions',
-        header: '',
+        header: 'Actions',
         accessorKey: '',
         cell: ({ row }) => (
           <DropdownMenu>
@@ -614,7 +621,11 @@ export const WithActions: Story = {
     return (
       <Table>
         <NeuraTableHeader />
-        <NeuraTableBody />
+        <NeuraTableBody
+          onRowClick={(row) => {
+            console.log(row);
+          }}
+        />
       </Table>
     );
   },
@@ -789,6 +800,180 @@ export const WithTooltips: Story = {
         <NeuraTableHeader />
         <NeuraTableBody />
       </Table>
+    );
+  },
+};
+
+/**
+ * ## Column Definition Guide
+ *
+ * This story demonstrates the different ways to define columns:
+ *
+ * - **accessorKey**: Simple key to access data from the row object
+ * - **id**: Unique identifier (auto-generated from accessorKey if not provided)
+ * - **cell**: Custom render function for the cell content
+ * - **header**: Column header text
+ * - **tooltip**: Optional tooltip for the header
+ * - **sortable**: Enable sorting for this column
+ * - **sticky**: Make the column sticky
+ */
+// Sample data defined outside component to avoid recreation
+interface SampleRobot {
+  id: string;
+  name: string;
+  specs: { weight: number; payload: number };
+  status: string;
+  uptime: number;
+}
+
+const sampleRobotData: SampleRobot[] = [
+  {
+    id: 'MAiRA-001',
+    name: 'MAiRA Alpha',
+    specs: { weight: 25, payload: 10 },
+    status: 'Active',
+    uptime: 99.8,
+  },
+  {
+    id: 'LARA-002',
+    name: 'LARA Beta',
+    specs: { weight: 18, payload: 5 },
+    status: 'Maintenance',
+    uptime: 97.2,
+  },
+  {
+    id: 'MAV-003',
+    name: 'MAV Gamma',
+    specs: { weight: 120, payload: 50 },
+    status: 'Active',
+    uptime: 98.5,
+  },
+];
+
+export const ColumnDefinitionGuide: Story = {
+  render: function ColumnGuideExample() {
+    const columns = useMemo<NeuraColumnDef<SampleRobot>[]>(
+      () => [
+        // 1. Simple accessorKey - most common case
+        // id is auto-generated as 'id'
+        {
+          accessorKey: 'id',
+          header: 'Robot ID',
+          tooltip: 'accessorKey: "id" - Simple key access',
+        },
+
+        // 2. accessorKey with custom cell renderer
+        {
+          accessorKey: 'name',
+          header: 'Name',
+          tooltip: 'accessorKey + cell: Custom rendering',
+          cell: ({ row }: { row: Row<SampleRobot> }) => (
+            <span className="font-semibold text-primary">
+              {row.original.name}
+            </span>
+          ),
+        },
+
+        // 3. Computed value using cell (no direct accessorKey match)
+        {
+          accessorKey: 'specs',
+          header: 'Specs',
+          tooltip: 'Accessing nested object: specs.weight, specs.payload',
+          cell: ({ row }: { row: Row<SampleRobot> }) => (
+            <span className="text-muted-foreground text-sm">
+              {row.original.specs.weight}kg / {row.original.specs.payload}kg
+              payload
+            </span>
+          ),
+        },
+
+        // 4. Formatted value
+        {
+          accessorKey: 'uptime',
+          header: 'Uptime',
+          sortable: true,
+          tooltip: 'Formatted number with sorting enabled',
+          cell: ({ row }: { row: Row<SampleRobot> }) =>
+            `${row.original.uptime.toFixed(1)}%`,
+        },
+
+        // 5. Conditional rendering
+        {
+          accessorKey: 'status',
+          header: 'Status',
+          tooltip: 'Conditional badge based on value',
+          cell: ({ row }: { row: Row<SampleRobot> }) => (
+            <Badge
+              variant={
+                row.original.status === 'Active' ? 'default' : 'secondary'
+              }
+            >
+              {row.original.status}
+            </Badge>
+          ),
+        },
+
+        // 6. Action column - requires explicit id since no data field
+        {
+          id: 'actions', // ← Required! No accessorKey for this column
+          accessorKey: '', // Empty string as placeholder
+          header: 'Actions',
+          tooltip: 'id: "actions" - No data field, just UI',
+          cell: () => (
+            <Button variant="outline" size="sm">
+              View
+            </Button>
+          ),
+        },
+      ],
+      [],
+    );
+
+    const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
+      data: sampleRobotData,
+      columns,
+    });
+
+    return (
+      <div className="space-y-4">
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h3 className="mb-3 font-semibold">Column Definition Patterns</h3>
+          <ul className="text-muted-foreground space-y-2 text-sm">
+            <li>
+              <code className="bg-muted rounded px-1">accessorKey</code> - Key
+              to access row data (e.g., "name" → row.name)
+            </li>
+            <li>
+              <code className="bg-muted rounded px-1">id</code> - Unique
+              identifier (auto-generated from accessorKey if not set)
+            </li>
+            <li>
+              <code className="bg-muted rounded px-1">cell</code> - Custom
+              render function, receives {'{row}'}
+            </li>
+            <li>
+              <code className="bg-muted rounded px-1">header</code> - Column
+              header text
+            </li>
+            <li>
+              <code className="bg-muted rounded px-1">tooltip</code> - Info
+              icon with tooltip on header
+            </li>
+            <li>
+              <code className="bg-muted rounded px-1">sortable</code> - Enable
+              column sorting
+            </li>
+          </ul>
+        </div>
+        <p className="text-muted-foreground text-sm">
+          💡 Hover over the <span className="text-primary">ℹ️</span> icons in
+          each column header to see how each column is defined.
+        </p>
+        <Table>
+          <NeuraTableHeader />
+          <NeuraTableBody />
+        </Table>
+      </div>
     );
   },
 };
