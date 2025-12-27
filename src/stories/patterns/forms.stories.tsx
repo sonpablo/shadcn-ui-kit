@@ -9,6 +9,7 @@ import { Button } from '../../components/button/button';
 import { Input } from '../../components/input/input';
 import { Textarea } from '../../components/textarea/textarea';
 import { Checkbox } from '../../components/checkbox/checkbox';
+import { Switch } from '../../components/switch/switch';
 import { Label } from '../../components/label/label';
 import {
   Select,
@@ -136,6 +137,8 @@ This approach uses native HTML5 validation attributes combined with React state 
     >();
     const [autoStart, setAutoStart] = React.useState(false);
     const [notifyOnComplete, setNotifyOnComplete] = React.useState(false);
+    const [enableMonitoring, setEnableMonitoring] = React.useState(true);
+    const [lowPowerMode, setLowPowerMode] = React.useState(false);
 
     // State for validation errors
     const [errors, setErrors] = React.useState<Record<string, string>>({});
@@ -214,10 +217,12 @@ This approach uses native HTML5 validation attributes combined with React state 
         operatorEmail,
         autoStart,
         notifyOnComplete,
+        enableMonitoring,
+        lowPowerMode,
       });
     };
 
-    return (
+      return (
       <div className="w-full max-w-2xl space-y-6">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">Native HTML + React</h2>
@@ -228,15 +233,15 @@ This approach uses native HTML5 validation attributes combined with React state 
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          <FieldSet>
+        <FieldSet>
             <FieldLegend>Robot Deployment Configuration</FieldLegend>
-            <FieldGroup>
+          <FieldGroup>
               {/* Text Input */}
               <Field data-invalid={!!errors.projectName}>
                 <FieldLabel htmlFor="projectName">
                   Project Name <span className="text-destructive">*</span>
                 </FieldLabel>
-                <Input
+              <Input
                   id="projectName"
                   name="projectName"
                   value={projectName}
@@ -252,18 +257,18 @@ This approach uses native HTML5 validation attributes combined with React state 
                 />
                 <FieldDescription id="projectName-description">
                   A unique name to identify this deployment project.
-                </FieldDescription>
+              </FieldDescription>
                 {errors.projectName && (
                   <FieldError id="projectName-error" errors={errors.projectName} />
                 )}
-              </Field>
+            </Field>
 
               {/* Textarea */}
-              <Field>
+            <Field>
                 <FieldLabel htmlFor="description">
                   Project Description
-                </FieldLabel>
-                <Textarea
+              </FieldLabel>
+              <Textarea
                   id="description"
                   name="description"
                   placeholder="Describe the goals and scope of this deployment..."
@@ -273,13 +278,13 @@ This approach uses native HTML5 validation attributes combined with React state 
                 <FieldDescription id="description-hint">
                   Optional. Provide context for the deployment team.
                 </FieldDescription>
-              </Field>
+            </Field>
 
               {/* Combobox - Searchable Select */}
               <Field data-invalid={!!errors.primaryRobot}>
                 <FieldLabel htmlFor="primaryRobot">
                   Primary Robot <span className="text-destructive">*</span>
-                </FieldLabel>
+              </FieldLabel>
                 <Combobox
                   items={robotOptions}
                   value={primaryRobot}
@@ -296,7 +301,7 @@ This approach uses native HTML5 validation attributes combined with React state 
                 {errors.primaryRobot && (
                   <FieldError errors={errors.primaryRobot} />
                 )}
-              </Field>
+          </Field>
 
               {/* MultiSelect */}
               <Field data-invalid={!!errors.facilities}>
@@ -318,14 +323,14 @@ This approach uses native HTML5 validation attributes combined with React state 
                 {errors.facilities && (
                   <FieldError errors={errors.facilities} />
                 )}
-              </Field>
+          </Field>
 
               <div className="grid grid-cols-2 gap-4">
                 {/* Radio Group */}
                 <Field data-invalid={!!errors.projectType}>
                   <FieldLabel>
                     Project Type <span className="text-destructive">*</span>
-                  </FieldLabel>
+              </FieldLabel>
                   <RadioGroup
                     value={projectType}
                     onValueChange={setProjectType}
@@ -336,7 +341,7 @@ This approach uses native HTML5 validation attributes combined with React state 
                       <Label htmlFor="production" className="font-normal">
                         Production
                       </Label>
-                    </div>
+            </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="testing" id="testing" />
                       <Label htmlFor="testing" className="font-normal">
@@ -353,7 +358,7 @@ This approach uses native HTML5 validation attributes combined with React state 
                   {errors.projectType && (
                     <FieldError errors={errors.projectType} />
                   )}
-                </Field>
+          </Field>
 
                 {/* Select Dropdown */}
                 <Field data-invalid={!!errors.priority}>
@@ -415,7 +420,7 @@ This approach uses native HTML5 validation attributes combined with React state 
                     <FieldError errors={errors.deploymentPeriod} />
                   )}
                 </Field>
-              </div>
+        </div>
 
               {/* Email Input */}
               <Field data-invalid={!!errors.operatorEmail}>
@@ -470,6 +475,44 @@ This approach uses native HTML5 validation attributes combined with React state 
                 </Field>
               </div>
 
+              {/* Switches */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <FieldLabel
+                      htmlFor="enableMonitoring"
+                      className="cursor-pointer"
+                    >
+                      Enable Real-time Monitoring
+                    </FieldLabel>
+                    <FieldDescription>
+                      Monitor robot performance and status in real-time
+                    </FieldDescription>
+                  </div>
+                  <Switch
+                    id="enableMonitoring"
+                    checked={enableMonitoring}
+                    onCheckedChange={setEnableMonitoring}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <FieldLabel htmlFor="lowPowerMode" className="cursor-pointer">
+                      Low Power Mode
+                    </FieldLabel>
+                    <FieldDescription>
+                      Reduce energy consumption during idle periods
+                    </FieldDescription>
+                  </div>
+                  <Switch
+                    id="lowPowerMode"
+                    checked={lowPowerMode}
+                    onCheckedChange={setLowPowerMode}
+                  />
+                </div>
+              </div>
+
               {/* Submit Button */}
               <div className="flex gap-3 pt-4">
                 <Button type="submit" className="flex-1">
@@ -488,15 +531,17 @@ This approach uses native HTML5 validation attributes combined with React state 
                     setDeploymentPeriod(undefined);
                     setAutoStart(false);
                     setNotifyOnComplete(false);
+                    setEnableMonitoring(true);
+                    setLowPowerMode(false);
                     setErrors({});
                   }}
                 >
                   Reset
                 </Button>
-              </div>
-            </FieldGroup>
+          </div>
+        </FieldGroup>
           </FieldSet>
-        </form>
+      </form>
 
         {/* Result Display */}
         {submittedData && (
@@ -574,6 +619,8 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
       operatorEmail: string;
       autoStart: boolean;
       notifyOnComplete: boolean;
+      enableMonitoring: boolean;
+      lowPowerMode: boolean;
     };
 
     const {
@@ -595,6 +642,8 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
         operatorEmail: '',
         autoStart: false,
         notifyOnComplete: false,
+        enableMonitoring: true,
+        lowPowerMode: false,
       },
     });
 
@@ -609,7 +658,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
       });
     };
 
-    return (
+      return (
       <div className="w-full max-w-2xl space-y-6">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">React Hook Form</h2>
@@ -622,13 +671,13 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <FieldSet>
             <FieldLegend>Robot Deployment Configuration</FieldLegend>
-            <FieldGroup>
+        <FieldGroup>
               {/* Text Input with RHF */}
               <Field data-invalid={!!errors.projectName}>
                 <FieldLabel htmlFor="projectName-rhf">
                   Project Name <span className="text-destructive">*</span>
                 </FieldLabel>
-                <Input
+                  <Input
                   id="projectName-rhf"
                   placeholder="Warehouse Automation 2024"
                   aria-invalid={!!errors.projectName}
@@ -645,8 +694,8 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                 </FieldDescription>
                 {errors.projectName && (
                   <FieldError errors={errors.projectName.message} />
-                )}
-              </Field>
+                  )}
+                </Field>
 
               {/* Textarea */}
               <Field>
@@ -662,15 +711,15 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                 <FieldDescription>
                   Optional. Provide context for the deployment team.
                 </FieldDescription>
-              </Field>
+                </Field>
 
               {/* Combobox with Controller */}
-              <Controller
+          <Controller
                 name="primaryRobot"
                 control={control}
                 rules={{ required: 'Please select a primary robot' }}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>
                       Primary Robot <span className="text-destructive">*</span>
                     </FieldLabel>
@@ -680,7 +729,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       onValueChange={field.onChange}
                       placeholder="Select primary robot..."
                       searchPlaceholder="Search robots..."
-                      aria-invalid={fieldState.invalid}
+                  aria-invalid={fieldState.invalid}
                       className="w-full"
                     />
                     <FieldDescription>
@@ -688,21 +737,21 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                     </FieldDescription>
                     {fieldState.error && (
                       <FieldError errors={fieldState.error.message} />
-                    )}
-                  </Field>
                 )}
-              />
+              </Field>
+            )}
+          />
 
               {/* MultiSelect with Controller */}
-              <Controller
+          <Controller
                 name="facilities"
                 control={control}
                 rules={{
                   validate: (value) =>
                     value.length > 0 || 'Please select at least one facility',
                 }}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>
                       Deployment Facilities{' '}
                       <span className="text-destructive">*</span>
@@ -713,28 +762,28 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       defaultValue={field.value}
                       placeholder="Select facilities..."
                       className="w-full"
-                    />
-                    <FieldDescription>
+                />
+                <FieldDescription>
                       Select all facilities where robots will be deployed.
-                    </FieldDescription>
+                </FieldDescription>
                     {fieldState.error && (
                       <FieldError errors={fieldState.error.message} />
-                    )}
-                  </Field>
                 )}
-              />
+              </Field>
+            )}
+          />
 
               <div className="grid grid-cols-2 gap-4">
                 {/* Radio Group with Controller */}
-                <Controller
+          <Controller
                   name="projectType"
                   control={control}
                   rules={{ required: 'Please select a project type' }}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Project Type <span className="text-destructive">*</span>
-                      </FieldLabel>
+                </FieldLabel>
                       <RadioGroup
                         value={field.value}
                         onValueChange={field.onChange}
@@ -767,17 +816,17 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
                       )}
-                    </Field>
-                  )}
-                />
+              </Field>
+            )}
+          />
 
                 {/* Select with Controller */}
-                <Controller
+            <Controller
                   name="priority"
                   control={control}
                   rules={{ required: 'Please select a priority level' }}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Priority Level{' '}
                         <span className="text-destructive">*</span>
@@ -788,35 +837,35 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       >
                         <SelectTrigger aria-invalid={fieldState.invalid}>
                           <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                        <SelectContent>
+                    </SelectTrigger>
+                    <SelectContent>
                           <SelectItem value="low">Low</SelectItem>
                           <SelectItem value="medium">Medium</SelectItem>
                           <SelectItem value="high">High</SelectItem>
                           <SelectItem value="critical">Critical</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    </SelectContent>
+                  </Select>
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
-                      )}
-                    </Field>
                   )}
-                />
+                </Field>
+              )}
+            />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 {/* DatePicker with Controller */}
-                <Controller
+            <Controller
                   name="startDate"
                   control={control}
                   rules={{ required: 'Please select a start date' }}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Start Date <span className="text-destructive">*</span>
                       </FieldLabel>
                       <DatePicker
-                        value={field.value}
+                    value={field.value}
                         onChange={field.onChange}
                         placeholder="Select start date"
                         className="w-full"
@@ -826,13 +875,13 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       />
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
-                      )}
-                    </Field>
                   )}
-                />
+                </Field>
+              )}
+            />
 
                 {/* DateRangePicker with Controller */}
-                <Controller
+            <Controller
                   name="deploymentPeriod"
                   control={control}
                   rules={{
@@ -843,12 +892,12 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       return true;
                     },
                   }}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Deployment Period{' '}
                         <span className="text-destructive">*</span>
-                      </FieldLabel>
+                  </FieldLabel>
                       <DateRangePicker
                         value={field.value}
                         onChange={field.onChange}
@@ -860,11 +909,11 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                       />
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
-                      )}
-                    </Field>
                   )}
-                />
-              </div>
+                </Field>
+              )}
+            />
+            </div>
 
               {/* Email with validation */}
               <Field data-invalid={!!errors.operatorEmail}>
@@ -902,7 +951,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                   <FieldLabel htmlFor="autoStart-rhf" className="cursor-pointer">
                     Auto-start deployment on scheduled date
                   </FieldLabel>
-                </Field>
+              </Field>
 
                 <Field className="flex-row items-center gap-3">
                   <Checkbox
@@ -918,15 +967,68 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                 </Field>
               </div>
 
+              {/* Switches */}
+              <div className="space-y-3">
+                <Controller
+                  name="enableMonitoring"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <FieldLabel
+                          htmlFor="enableMonitoring-rhf"
+                          className="cursor-pointer"
+                        >
+                          Enable Real-time Monitoring
+                        </FieldLabel>
+                        <FieldDescription>
+                          Monitor robot performance and status in real-time
+                        </FieldDescription>
+                      </div>
+                      <Switch
+                        id="enableMonitoring-rhf"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </div>
+                  )}
+                />
+
+                <Controller
+                  name="lowPowerMode"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <FieldLabel
+                          htmlFor="lowPowerMode-rhf"
+                          className="cursor-pointer"
+                        >
+                          Low Power Mode
+                        </FieldLabel>
+                        <FieldDescription>
+                          Reduce energy consumption during idle periods
+                        </FieldDescription>
+                      </div>
+                      <Switch
+                        id="lowPowerMode-rhf"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+
               {/* Submit Buttons */}
               <div className="flex gap-3 pt-4">
-                <Button
-                  type="submit"
+          <Button
+            type="submit"
                   className="flex-1"
                   disabled={isSubmitting}
-                >
+          >
                   {isSubmitting ? 'Creating...' : 'Create Deployment'}
-                </Button>
+          </Button>
                 <Button
                   type="button"
                   variant="outline"
@@ -935,9 +1037,9 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                   Reset
                 </Button>
               </div>
-            </FieldGroup>
+        </FieldGroup>
           </FieldSet>
-        </form>
+      </form>
 
         {/* Result Display */}
         {submittedData && (
@@ -993,6 +1095,8 @@ const deploymentSchema = z.object({
     }),
   autoStart: z.boolean(),
   notifyOnComplete: z.boolean(),
+  enableMonitoring: z.boolean(),
+  lowPowerMode: z.boolean(),
 });
 
 type DeploymentFormData = z.infer<typeof deploymentSchema>;
@@ -1056,6 +1160,8 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
         operatorEmail: '',
         autoStart: false,
         notifyOnComplete: false,
+        enableMonitoring: true,
+        lowPowerMode: false,
       },
     });
 
@@ -1089,35 +1195,35 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <FieldSet>
+        <FieldSet>
             <FieldLegend>Robot Deployment Configuration</FieldLegend>
-            <FieldGroup>
+          <FieldGroup>
               {/* Text Input */}
               <Field data-invalid={!!errors.projectName}>
                 <FieldLabel htmlFor="projectName-zod">
                   Project Name <span className="text-destructive">*</span>
                 </FieldLabel>
-                <Input
+              <Input
                   id="projectName-zod"
                   placeholder="Warehouse Automation 2024"
                   aria-invalid={!!errors.projectName}
                   {...register('projectName')}
-                />
-                <FieldDescription>
+              />
+              <FieldDescription>
                   A unique name to identify this deployment project (3-50
                   characters).
-                </FieldDescription>
+              </FieldDescription>
                 {errors.projectName && (
                   <FieldError errors={errors.projectName.message} />
                 )}
-              </Field>
+            </Field>
 
               {/* Textarea */}
-              <Field>
+            <Field>
                 <FieldLabel htmlFor="description-zod">
                   Project Description
-                </FieldLabel>
-                <Textarea
+              </FieldLabel>
+              <Textarea
                   id="description-zod"
                   placeholder="Describe the goals and scope of this deployment..."
                   className="min-h-[100px]"
@@ -1126,7 +1232,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                 <FieldDescription>
                   Optional. Provide context for the deployment team.
                 </FieldDescription>
-              </Field>
+            </Field>
 
               {/* Combobox */}
               <Controller
@@ -1144,15 +1250,15 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                       placeholder="Select primary robot..."
                       searchPlaceholder="Search robots..."
                       aria-invalid={fieldState.invalid}
-                      className="w-full"
+                  className="w-full"
                     />
-                    <FieldDescription>
+            <FieldDescription>
                       The main robot unit for this deployment.
-                    </FieldDescription>
+            </FieldDescription>
                     {fieldState.error && (
                       <FieldError errors={fieldState.error.message} />
                     )}
-                  </Field>
+            </Field>
                 )}
               />
 
@@ -1172,15 +1278,15 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                       defaultValue={field.value}
                       placeholder="Select facilities..."
                       maxCount={3}
-                      className="w-full"
-                    />
-                    <FieldDescription>
+                className="w-full"
+              />
+              <FieldDescription>
                       Select 1-5 facilities where robots will be deployed.
-                    </FieldDescription>
+              </FieldDescription>
                     {fieldState.error && (
                       <FieldError errors={fieldState.error.message} />
                     )}
-                  </Field>
+            </Field>
                 )}
               />
 
@@ -1193,7 +1299,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Project Type <span className="text-destructive">*</span>
-                      </FieldLabel>
+              </FieldLabel>
                       <RadioGroup
                         value={field.value}
                         onValueChange={field.onChange}
@@ -1209,7 +1315,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                           >
                             Production
                           </Label>
-                        </div>
+        </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="testing" id="testing-zod" />
                           <Label htmlFor="testing-zod" className="font-normal">
@@ -1231,11 +1337,11 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                 />
 
                 {/* Select */}
-                <Controller
+            <Controller
                   name="priority"
                   control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Priority Level{' '}
                         <span className="text-destructive">*</span>
@@ -1256,44 +1362,44 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                       </Select>
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
-                      )}
-                    </Field>
                   )}
-                />
+                </Field>
+              )}
+            />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 {/* DatePicker */}
-                <Controller
+            <Controller
                   name="startDate"
                   control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Start Date <span className="text-destructive">*</span>
                       </FieldLabel>
-                      <DatePicker
-                        value={field.value}
-                        onChange={field.onChange}
+                  <DatePicker
+                    value={field.value}
+                    onChange={field.onChange}
                         placeholder="Select start date"
-                        className="w-full"
-                        calendarProps={{
-                          disabled: { before: new Date() },
-                        }}
-                      />
+                    className="w-full"
+                    calendarProps={{
+                      disabled: { before: new Date() },
+                    }}
+                  />
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
-                      )}
-                    </Field>
                   )}
-                />
+                </Field>
+              )}
+            />
 
                 {/* DateRangePicker */}
-                <Controller
+            <Controller
                   name="deploymentPeriod"
                   control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>
                         Deployment Period{' '}
                         <span className="text-destructive">*</span>
@@ -1309,10 +1415,10 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                       />
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
-                      )}
-                    </Field>
                   )}
-                />
+                </Field>
+              )}
+            />
               </div>
 
               {/* Email */}
@@ -1337,10 +1443,10 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
 
               {/* Checkboxes */}
               <div className="space-y-3">
-                <Controller
+            <Controller
                   name="autoStart"
                   control={control}
-                  render={({ field }) => (
+              render={({ field }) => (
                     <Field className="flex-row items-center gap-3">
                       <Checkbox
                         id="autoStart-zod"
@@ -1352,7 +1458,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                         className="cursor-pointer"
                       >
                         Auto-start deployment on scheduled date
-                      </FieldLabel>
+                  </FieldLabel>
                     </Field>
                   )}
                 />
@@ -1373,7 +1479,60 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                       >
                         Send notification on completion
                       </FieldLabel>
-                    </Field>
+                </Field>
+              )}
+            />
+              </div>
+
+              {/* Switches */}
+              <div className="space-y-3">
+                <Controller
+                  name="enableMonitoring"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <FieldLabel
+                          htmlFor="enableMonitoring-zod"
+                          className="cursor-pointer"
+                        >
+                          Enable Real-time Monitoring
+                        </FieldLabel>
+                        <FieldDescription>
+                          Monitor robot performance and status in real-time
+                        </FieldDescription>
+                      </div>
+                      <Switch
+                        id="enableMonitoring-zod"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </div>
+                  )}
+                />
+
+                <Controller
+                  name="lowPowerMode"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <FieldLabel
+                          htmlFor="lowPowerMode-zod"
+                          className="cursor-pointer"
+                        >
+                          Low Power Mode
+                        </FieldLabel>
+                        <FieldDescription>
+                          Reduce energy consumption during idle periods
+                        </FieldDescription>
+                      </div>
+                      <Switch
+                        id="lowPowerMode-zod"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </div>
                   )}
                 />
               </div>
@@ -1386,7 +1545,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Creating...' : 'Create Deployment'}
-                </Button>
+            </Button>
                 <Button
                   type="button"
                   variant="outline"
@@ -1395,9 +1554,9 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                   Reset
                 </Button>
               </div>
-            </FieldGroup>
-          </FieldSet>
-        </form>
+          </FieldGroup>
+        </FieldSet>
+      </form>
 
         {/* Result Display */}
         {submittedData && (

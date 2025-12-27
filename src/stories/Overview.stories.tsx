@@ -79,6 +79,7 @@ import {
   AccordionTrigger,
 } from '@/components/accordion/accordion';
 import { MultiSelect } from '@/components/multi-select/multi-select';
+import { Switch } from '@/components/switch/switch';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
 import { NeuraBreadcrumb } from '@/components/breadcrumb/neura-breadcrumb';
@@ -1274,6 +1275,73 @@ function Overview() {
                   <p className="text-muted-foreground text-xs">
                     💡 <strong>Tip:</strong> Use Popovers for detailed
                     information without leaving the current view
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* --- Fleet Settings (Switch) --- */}
+              <Card className="border-2 border-green-500/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-br from-green-500/5 to-green-500/10">
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="size-5 text-green-500" />
+                    Fleet Settings
+                  </CardTitle>
+                  <CardDescription>
+                    Toggle switches for binary configuration options
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="auto-deploy" className="cursor-pointer">
+                        Auto-Deploy Updates
+                      </Label>
+                      <p className="text-muted-foreground text-xs">
+                        Automatically deploy firmware updates to all robots
+                      </p>
+                    </div>
+                    <Switch id="auto-deploy" defaultChecked />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="collision-avoid" className="cursor-pointer">
+                        Collision Avoidance
+                      </Label>
+                      <p className="text-muted-foreground text-xs">
+                        Enable real-time obstacle detection
+                      </p>
+                    </div>
+                    <Switch id="collision-avoid" defaultChecked />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="energy-save" className="cursor-pointer">
+                        Energy Saving Mode
+                      </Label>
+                      <p className="text-muted-foreground text-xs">
+                        Reduce power consumption during idle time
+                      </p>
+                    </div>
+                    <Switch id="energy-save" />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="maintenance-mode" className="cursor-pointer">
+                        Maintenance Mode
+                      </Label>
+                      <p className="text-muted-foreground text-xs">
+                        Pause all operations for system maintenance
+                      </p>
+                    </div>
+                    <Switch id="maintenance-mode" variant="primary" />
+                  </div>
+
+                  <p className="text-muted-foreground text-xs">
+                    💡 <strong>Tip:</strong> Green switches for operational
+                    settings, blue for UI preferences
                   </p>
                 </CardContent>
               </Card>

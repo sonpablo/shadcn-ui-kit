@@ -22,6 +22,7 @@ export * from './components/radio-group/radio-group';
 export * from './components/separator/separator';
 export * from './components/sonner/sonner';
 export * from './components/spinner/spinner';
+export * from './components/switch/switch';
 export * from './components/table/table';
 export * from './components/table/neura-table';
 export * from './components/tabs/tabs';
