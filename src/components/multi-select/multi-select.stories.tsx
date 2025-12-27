@@ -1,14 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import {
-  Bot,
-  Cpu,
-  Navigation,
-  Wrench,
-  Camera,
-  Gauge,
-  Zap,
-} from 'lucide-react';
+import { Bot, Cpu, Navigation, Wrench, Camera, Gauge, Zap } from 'lucide-react';
 import { MultiSelect } from './multi-select';
 
 const meta = {
@@ -258,10 +250,10 @@ const MultiSelectWrapper = (props: any) => {
 
 /**
  * ## Basic Multi-Select
- * 
+ *
  * The simplest implementation with an array of options. Perfect for straightforward
  * selection scenarios like choosing robots, projects, or fleets.
- * 
+ *
  * **When to use:**
  * - Simple lists without categorization
  * - Quick selections with < 15 items
@@ -273,11 +265,13 @@ export const Default: Story = {
     options: robotOptions,
     placeholder: 'Select robots',
     defaultValue: ['maira-001'],
+    onValueChange: () => {},
   },
   parameters: {
     docs: {
       description: {
-        story: 'Basic usage with an array of simple options. The component handles search, keyboard navigation, and selection state automatically.',
+        story:
+          'Basic usage with an array of simple options. The component handles search, keyboard navigation, and selection state automatically.',
       },
     },
   },
@@ -285,9 +279,9 @@ export const Default: Story = {
 
 /**
  * ## Sizes
- * 
+ *
  * Three size variants to match other form components (Input, Button, Select).
- * 
+ *
  * **Size Reference:**
  * - sm: h-8 (32px) - Compact interfaces, toolbars, filters
  * - default: h-9 (36px) - Standard forms
@@ -305,7 +299,7 @@ export const Sizes: Story = {
     ];
 
     return (
-      <div className="flex flex-col gap-4 w-[300px]">
+      <div className="flex w-[300px] flex-col gap-4">
         <div className="space-y-2">
           <label className="text-muted-foreground text-xs">
             Size: sm (h-8 / 32px)
@@ -351,7 +345,8 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Size variants that match Button, Input, Select, and DatePicker components. Use sm for compact UIs, default for standard forms, and lg for emphasis.',
+        story:
+          'Size variants that match Button, Input, Select, and DatePicker components. Use sm for compact UIs, default for standard forms, and lg for emphasis.',
       },
     },
   },
@@ -359,10 +354,10 @@ export const Sizes: Story = {
 
 /**
  * ## Grouped Options
- * 
+ *
  * Organize large option sets into logical categories with visual separators.
  * Essential for complex selections with multiple fleets or locations.
- * 
+ *
  * **Benefits:**
  * - Improved scanability for users
  * - Logical organization of related items
@@ -375,11 +370,13 @@ export const Grouped: Story = {
     options: fleetOptions,
     placeholder: 'Select robots by fleet',
     defaultValue: ['maira-001', 'lara-001'],
+    onValueChange: () => {},
   },
   parameters: {
     docs: {
       description: {
-        story: 'Robots organized by warehouse/fleet location. Groups are preserved during search and maintain visual separation.',
+        story:
+          'Robots organized by warehouse/fleet location. Groups are preserved during search and maintain visual separation.',
       },
     },
   },
@@ -387,10 +384,10 @@ export const Grouped: Story = {
 
 /**
  * ## With Icons
- * 
+ *
  * Enhance options with visual icons from lucide-react or custom icon libraries.
  * Icons improve recognition and add visual interest.
- * 
+ *
  * **Icon Guidelines:**
  * - Use consistent icon style (outline vs filled)
  * - Ensure icons are semantically meaningful
@@ -403,11 +400,13 @@ export const WithIcons: Story = {
     options: capabilityOptions,
     placeholder: 'Select capabilities',
     defaultValue: ['navigation', 'camera'],
+    onValueChange: () => {},
   },
   parameters: {
     docs: {
       description: {
-        story: 'Each option includes an icon component. Icons are rendered automatically and styled to match the theme.',
+        story:
+          'Each option includes an icon component. Icons are rendered automatically and styled to match the theme.',
       },
     },
   },
@@ -415,10 +414,10 @@ export const WithIcons: Story = {
 
 /**
  * ## Secondary Variant
- * 
+ *
  * Subtle styling variant perfect for secondary actions, sidebars, and supplementary data.
  * Uses muted colors to reduce visual weight.
- * 
+ *
  * **Use cases:**
  * - Sidebar filters and settings
  * - Optional form fields
@@ -432,11 +431,13 @@ export const Secondary: Story = {
     placeholder: 'Select robots',
     variant: 'secondary',
     defaultValue: ['maira-001', 'maira-002'],
+    onValueChange: () => {},
   },
   parameters: {
     docs: {
       description: {
-        story: 'Secondary variant with subtle background colors. Great for de-emphasizing less important selections.',
+        story:
+          'Secondary variant with subtle background colors. Great for de-emphasizing less important selections.',
       },
     },
   },
@@ -444,16 +445,16 @@ export const Secondary: Story = {
 
 /**
  * ## Destructive Variant
- * 
+ *
  * High-contrast red styling for critical actions and error states.
  * Draws immediate attention to dangerous or irreversible operations.
- * 
+ *
  * **Use cases:**
  * - Delete confirmations
- * - Error state selections  
+ * - Error state selections
  * - Critical data removal
  * - Warning-level actions
- * 
+ *
  * **⚠️ Important:** Use sparingly to maintain its attention-grabbing power.
  */
 export const Destructive: Story = {
@@ -463,11 +464,13 @@ export const Destructive: Story = {
     placeholder: 'Select robots to decommission',
     variant: 'destructive',
     defaultValue: ['4ne1-002'],
+    onValueChange: () => {},
   },
   parameters: {
     docs: {
       description: {
-        story: 'Destructive variant with red color scheme. Reserve for delete actions and error states.',
+        story:
+          'Destructive variant with red color scheme. Reserve for delete actions and error states.',
       },
     },
   },
@@ -488,6 +491,7 @@ export const WithAnimations: Story = {
       optionHoverAnimation: 'highlight',
       duration: 0.3,
     },
+    onValueChange: () => {},
   },
 };
 
@@ -501,6 +505,7 @@ export const MaxCount: Story = {
     placeholder: 'Select robots',
     maxCount: 2,
     defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003'],
+    onValueChange: () => {},
   },
 };
 
@@ -514,6 +519,7 @@ export const SingleLine: Story = {
     placeholder: 'Select robots',
     singleLine: true,
     defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003', 'mav-001'],
+    onValueChange: () => {},
   },
 };
 
@@ -527,6 +533,7 @@ export const Disabled: Story = {
     placeholder: 'Disabled select',
     disabled: true,
     defaultValue: ['maira-001', 'maira-002'],
+    onValueChange: () => {},
   },
 };
 
@@ -539,6 +546,7 @@ export const DisabledOptions: Story = {
     options: robotStatusOptions,
     placeholder: 'Some robots are offline',
     defaultValue: ['maira-001'],
+    onValueChange: () => {},
   },
 };
 
@@ -552,6 +560,7 @@ export const NoSearch: Story = {
     placeholder: 'Select (no search)',
     searchable: false,
     defaultValue: ['maira-001'],
+    onValueChange: () => {},
   },
 };
 
@@ -564,6 +573,7 @@ export const NoSelectAll: Story = {
     options: robotOptions,
     placeholder: 'No select all option',
     hideSelectAll: true,
+    onValueChange: () => {},
   },
 };
 
@@ -575,7 +585,14 @@ export const Responsive: Story = {
   args: {
     options: robotOptions,
     placeholder: 'Resize window to see changes',
-    defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003', 'mav-001', 'mipa-001'],
+    defaultValue: [
+      'maira-001',
+      'maira-002',
+      'lara-001',
+      'lara-003',
+      'mav-001',
+      'mipa-001',
+    ],
     responsive: {
       mobile: {
         maxCount: 1,
@@ -588,6 +605,7 @@ export const Responsive: Story = {
         maxCount: 4,
       },
     },
+    onValueChange: () => {},
   },
 };
 
@@ -605,6 +623,7 @@ export const CustomEmptyState: Story = {
         <p className="mt-1 text-xs">Try a different search term</p>
       </div>
     ),
+    onValueChange: () => {},
   },
 };
 
@@ -613,7 +632,7 @@ export const CustomEmptyState: Story = {
  */
 export const Inverted: Story = {
   render: (args) => (
-    <div className="bg-slate-900 p-8 rounded-lg">
+    <div className="rounded-lg bg-slate-900 p-8">
       <MultiSelectWrapper {...args} />
     </div>
   ),
@@ -622,6 +641,7 @@ export const Inverted: Story = {
     placeholder: 'Perfect for dark themes',
     variant: 'inverted',
     defaultValue: ['maira-001', 'maira-002'],
+    onValueChange: () => {},
   },
   parameters: {
     backgrounds: { default: 'dark' },
@@ -645,23 +665,33 @@ export const CustomStyling: Story = {
         label: 'LARA',
         value: 'lara',
         icon: Cpu,
-        style: { badgeColor: '#10b981', gradient: 'from-green-500 to-green-600' },
+        style: {
+          badgeColor: '#10b981',
+          gradient: 'from-green-500 to-green-600',
+        },
       },
       {
         label: 'MAV',
         value: 'mav',
         icon: Navigation,
-        style: { badgeColor: '#8b5cf6', gradient: 'from-purple-500 to-purple-600' },
+        style: {
+          badgeColor: '#8b5cf6',
+          gradient: 'from-purple-500 to-purple-600',
+        },
       },
       {
         label: '4NE1',
         value: '4ne1',
         icon: Camera,
-        style: { badgeColor: '#f59e0b', gradient: 'from-amber-500 to-amber-600' },
+        style: {
+          badgeColor: '#f59e0b',
+          gradient: 'from-amber-500 to-amber-600',
+        },
       },
     ],
     placeholder: 'Select robot model',
     defaultValue: ['maira', 'lara'],
+    onValueChange: () => {},
   },
 };
 
@@ -669,18 +699,13 @@ export const CustomStyling: Story = {
  * All badge animations side by side for comparison
  */
 const AllAnimationsComponent = () => {
-  const animations: Array<'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none'> = [
-    'bounce',
-    'pulse',
-    'wiggle',
-    'fade',
-    'slide',
-    'none',
-  ];
+  const animations: Array<
+    'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none'
+  > = ['bounce', 'pulse', 'wiggle', 'fade', 'slide', 'none'];
 
   return (
     <div className="space-y-6">
-      <div className="text-sm text-muted-foreground">
+      <div className="text-muted-foreground text-sm">
         Hover over badges to see each animation effect
       </div>
       {animations.map((animation) => {
@@ -688,7 +713,7 @@ const AllAnimationsComponent = () => {
         const [, setSelected] = useState<string[]>(['atlas-01', 'atlas-02']);
         return (
           <div key={animation} className="space-y-2">
-            <div className="text-xs font-medium text-muted-foreground uppercase">
+            <div className="text-muted-foreground text-xs font-medium uppercase">
               {animation} Animation
             </div>
             <MultiSelect
@@ -736,8 +761,10 @@ const LayoutComparisonComponent = () => {
   return (
     <div className="space-y-8">
       <div>
-        <div className="mb-2 text-sm font-medium">Single Line (horizontal scroll)</div>
-        <div className="text-xs text-muted-foreground mb-3">
+        <div className="mb-2 text-sm font-medium">
+          Single Line (horizontal scroll)
+        </div>
+        <div className="text-muted-foreground mb-3 text-xs">
           Badges scroll horizontally when container width is exceeded
         </div>
         <MultiSelect
@@ -751,7 +778,7 @@ const LayoutComparisonComponent = () => {
 
       <div>
         <div className="mb-2 text-sm font-medium">Multi Line (default)</div>
-        <div className="text-xs text-muted-foreground mb-3">
+        <div className="text-muted-foreground mb-3 text-xs">
           Badges wrap to multiple lines as needed
         </div>
         <MultiSelect
@@ -781,7 +808,7 @@ export const VariantsShowcase = {
     <div className="space-y-6">
       <div className="space-y-2">
         <div className="text-sm font-medium">Default</div>
-        <div className="text-xs text-muted-foreground mb-2">
+        <div className="text-muted-foreground mb-2 text-xs">
           Perfect for main actions and primary selections
         </div>
         <MultiSelectWrapper
@@ -794,7 +821,7 @@ export const VariantsShowcase = {
 
       <div className="space-y-2">
         <div className="text-sm font-medium">Secondary</div>
-        <div className="text-xs text-muted-foreground mb-2">
+        <div className="text-muted-foreground mb-2 text-xs">
           Great for secondary actions and supplementary data
         </div>
         <MultiSelectWrapper
@@ -807,7 +834,7 @@ export const VariantsShowcase = {
 
       <div className="space-y-2">
         <div className="text-sm font-medium">Destructive</div>
-        <div className="text-xs text-muted-foreground mb-2">
+        <div className="text-muted-foreground mb-2 text-xs">
           Use for critical actions and error states
         </div>
         <MultiSelectWrapper
@@ -820,10 +847,10 @@ export const VariantsShowcase = {
 
       <div className="space-y-2">
         <div className="text-sm font-medium">Inverted</div>
-        <div className="text-xs text-muted-foreground mb-2">
+        <div className="text-muted-foreground mb-2 text-xs">
           Perfect for dark backgrounds and emphasis
         </div>
-        <div className="bg-slate-900 p-4 rounded-lg">
+        <div className="rounded-lg bg-slate-900 p-4">
           <MultiSelectWrapper
             options={robotOptions}
             placeholder="Inverted variant"
@@ -846,7 +873,7 @@ export const PropsReference = {
   render: () => (
     <div className="max-w-4xl space-y-8 text-sm">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Props Reference Guide</h2>
+        <h2 className="mb-2 text-2xl font-bold">Props Reference Guide</h2>
         <p className="text-muted-foreground">
           Complete documentation of all MultiSelect component properties
         </p>
@@ -854,148 +881,157 @@ export const PropsReference = {
 
       {/* Core Props */}
       <div>
-          <h3 className="text-lg font-semibold mb-3">Core Properties</h3>
-          <div className="border rounded-lg divide-y">
-            <PropRow
-              name="options"
-              type="MultiSelectOption[] | MultiSelectGroup[]"
-              required
-              defaultValue="-"
-              description="Array of options or grouped options to display"
-            />
-            <PropRow
-              name="onValueChange"
-              type="(value: string[]) => void"
-              required
-              defaultValue="-"
-              description="Callback function triggered when selected values change"
-            />
-            <PropRow
-              name="defaultValue"
-              type="string[]"
-              defaultValue="[]"
-              description="Initial selected values when component mounts"
-            />
-            <PropRow
-              name="placeholder"
-              type="string"
-              defaultValue='"Select options"'
-              description="Placeholder text displayed when no values selected"
-            />
-          </div>
+        <h3 className="mb-3 text-lg font-semibold">Core Properties</h3>
+        <div className="divide-y rounded-lg border">
+          <PropRow
+            name="options"
+            type="MultiSelectOption[] | MultiSelectGroup[]"
+            required
+            defaultValue="-"
+            description="Array of options or grouped options to display"
+          />
+          <PropRow
+            name="onValueChange"
+            type="(value: string[]) => void"
+            required
+            defaultValue="-"
+            description="Callback function triggered when selected values change"
+          />
+          <PropRow
+            name="defaultValue"
+            type="string[]"
+            defaultValue="[]"
+            description="Initial selected values when component mounts"
+          />
+          <PropRow
+            name="placeholder"
+            type="string"
+            defaultValue='"Select options"'
+            description="Placeholder text displayed when no values selected"
+          />
         </div>
+      </div>
 
       {/* Appearance Props */}
       <div>
-          <h3 className="text-lg font-semibold mb-3">Appearance & Styling</h3>
-          <div className="border rounded-lg divide-y">
-            <PropRow
-              name="variant"
-              type='"default" | "secondary" | "destructive" | "inverted"'
-              defaultValue='"default"'
-              description="Visual style variant of the component"
-            />
-            <PropRow
-              name="maxCount"
-              type="number"
-              defaultValue="3"
-              description='Maximum badges to show before "+N more" summary'
-            />
-            <PropRow
-              name="autoSize"
-              type="boolean"
-              defaultValue="false"
-              description="Allow component to grow and shrink with content"
-            />
-            <PropRow
-              name="singleLine"
-              type="boolean"
-              defaultValue="false"
-              description="Show badges in single line with horizontal scroll"
-            />
-          </div>
+        <h3 className="mb-3 text-lg font-semibold">Appearance & Styling</h3>
+        <div className="divide-y rounded-lg border">
+          <PropRow
+            name="variant"
+            type='"default" | "secondary" | "destructive" | "inverted"'
+            defaultValue='"default"'
+            description="Visual style variant of the component"
+          />
+          <PropRow
+            name="maxCount"
+            type="number"
+            defaultValue="3"
+            description='Maximum badges to show before "+N more" summary'
+          />
+          <PropRow
+            name="autoSize"
+            type="boolean"
+            defaultValue="false"
+            description="Allow component to grow and shrink with content"
+          />
+          <PropRow
+            name="singleLine"
+            type="boolean"
+            defaultValue="false"
+            description="Show badges in single line with horizontal scroll"
+          />
         </div>
+      </div>
 
       {/* Behavior Props */}
       <div>
-          <h3 className="text-lg font-semibold mb-3">Behavior & Interaction</h3>
-          <div className="border rounded-lg divide-y">
-            <PropRow
-              name="searchable"
-              type="boolean"
-              defaultValue="true"
-              description="Enable/disable search functionality"
-            />
-            <PropRow
-              name="hideSelectAll"
-              type="boolean"
-              defaultValue="false"
-              description='Hide "Select All" button in dropdown'
-            />
-            <PropRow
-              name="closeOnSelect"
-              type="boolean"
-              defaultValue="false"
-              description="Close popover after each selection"
-            />
-            <PropRow
-              name="disabled"
-              type="boolean"
-              defaultValue="false"
-              description="Disable the entire component"
-            />
-            <PropRow
-              name="modalPopover"
-              type="boolean"
-              defaultValue="false"
-              description="Make popover modal (blocks outside interaction)"
-            />
-          </div>
+        <h3 className="mb-3 text-lg font-semibold">Behavior & Interaction</h3>
+        <div className="divide-y rounded-lg border">
+          <PropRow
+            name="searchable"
+            type="boolean"
+            defaultValue="true"
+            description="Enable/disable search functionality"
+          />
+          <PropRow
+            name="hideSelectAll"
+            type="boolean"
+            defaultValue="false"
+            description='Hide "Select All" button in dropdown'
+          />
+          <PropRow
+            name="closeOnSelect"
+            type="boolean"
+            defaultValue="false"
+            description="Close popover after each selection"
+          />
+          <PropRow
+            name="disabled"
+            type="boolean"
+            defaultValue="false"
+            description="Disable the entire component"
+          />
+          <PropRow
+            name="modalPopover"
+            type="boolean"
+            defaultValue="false"
+            description="Make popover modal (blocks outside interaction)"
+          />
         </div>
+      </div>
 
       {/* Advanced Props */}
       <div>
-          <h3 className="text-lg font-semibold mb-3">Advanced Configuration</h3>
-          <div className="border rounded-lg divide-y">
-            <PropRow
-              name="animationConfig"
-              type="AnimationConfig"
-              defaultValue="undefined"
-              description="Custom animation settings for badges and popover"
-            />
-            <PropRow
-              name="responsive"
-              type="boolean | ResponsiveConfig"
-              defaultValue="undefined"
-              description="Responsive behavior for different screen sizes"
-            />
-            <PropRow
-              name="emptyIndicator"
-              type="React.ReactNode"
-              defaultValue='"No results found."'
-              description="Custom empty state when no options match search"
-            />
-            <PropRow
-              name="popoverClassName"
-              type="string"
-              defaultValue="undefined"
-              description="Custom CSS class for popover content"
-            />
-          </div>
+        <h3 className="mb-3 text-lg font-semibold">Advanced Configuration</h3>
+        <div className="divide-y rounded-lg border">
+          <PropRow
+            name="animationConfig"
+            type="AnimationConfig"
+            defaultValue="undefined"
+            description="Custom animation settings for badges and popover"
+          />
+          <PropRow
+            name="responsive"
+            type="boolean | ResponsiveConfig"
+            defaultValue="undefined"
+            description="Responsive behavior for different screen sizes"
+          />
+          <PropRow
+            name="emptyIndicator"
+            type="React.ReactNode"
+            defaultValue='"No results found."'
+            description="Custom empty state when no options match search"
+          />
+          <PropRow
+            name="popoverClassName"
+            type="string"
+            defaultValue="undefined"
+            description="Custom CSS class for popover content"
+          />
         </div>
+      </div>
 
       {/* Best Practices */}
-      <div className="bg-muted p-4 rounded-lg space-y-2">
-          <h4 className="font-semibold">💡 Best Practices</h4>
-          <ul className="space-y-1 text-xs text-muted-foreground list-disc list-inside">
-            <li>Always provide <code>onValueChange</code> callback</li>
-            <li>Use meaningful option labels for accessibility</li>
-            <li>Set appropriate <code>maxCount</code> for your UI</li>
-            <li>Test with different data sizes</li>
-            <li>Enable <code>responsive</code> for mobile-friendly layouts</li>
-            <li>Use <code>searchable=false</code> for small option sets (&lt;10 items)</li>
-          </ul>
-        </div>
+      <div className="bg-muted space-y-2 rounded-lg p-4">
+        <h4 className="font-semibold">💡 Best Practices</h4>
+        <ul className="text-muted-foreground list-inside list-disc space-y-1 text-xs">
+          <li>
+            Always provide <code>onValueChange</code> callback
+          </li>
+          <li>Use meaningful option labels for accessibility</li>
+          <li>
+            Set appropriate <code>maxCount</code> for your UI
+          </li>
+          <li>Test with different data sizes</li>
+          <li>
+            Enable <code>responsive</code> for mobile-friendly layouts
+          </li>
+          <li>
+            Use <code>searchable=false</code> for small option sets (&lt;10
+            items)
+          </li>
+        </ul>
+      </div>
     </div>
   ),
   parameters: {
@@ -1024,12 +1060,12 @@ const PropRow = ({
       {required && <span className="text-destructive ml-1">*</span>}
     </div>
     <div className="col-span-3">
-      <code className="font-mono text-muted-foreground">{type}</code>
+      <code className="text-muted-foreground font-mono">{type}</code>
     </div>
     <div className="col-span-2">
-      <code className="font-mono text-muted-foreground">{defaultValue}</code>
+      <code className="text-muted-foreground font-mono">{defaultValue}</code>
     </div>
-    <div className="col-span-4 text-muted-foreground">{description}</div>
+    <div className="text-muted-foreground col-span-4">{description}</div>
   </div>
 );
 
@@ -1053,5 +1089,6 @@ export const Playground: Story = {
       popoverAnimation: 'scale',
       optionHoverAnimation: 'highlight',
     },
+    onValueChange: () => {},
   },
 };

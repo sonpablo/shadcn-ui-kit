@@ -34,7 +34,7 @@ export interface ComboboxProps {
   emptyMessage?: string;
   className?: string;
   disabled?: boolean;
-  size?: "sm" | "default" | "lg";
+  size?: 'sm' | 'default' | 'lg';
   'aria-invalid'?: boolean;
 }
 
@@ -47,7 +47,7 @@ export function Combobox({
   emptyMessage = 'No results found.',
   className,
   disabled = false,
-  size = "default",
+  size = 'default',
   'aria-invalid': ariaInvalid,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
@@ -84,12 +84,10 @@ export function Combobox({
             'w-full justify-between',
             sizeClasses[size],
             !currentValue && 'text-muted-foreground',
-            className
+            className,
           )}
         >
-          <span className="truncate">
-            {selectedItem?.label ?? placeholder}
-          </span>
+          <span className="truncate">{selectedItem?.label ?? placeholder}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -105,7 +103,8 @@ export function Combobox({
                   value={item.value}
                   disabled={item.disabled}
                   onSelect={(selectedValue) => {
-                    const newValue = selectedValue === currentValue ? '' : selectedValue;
+                    const newValue =
+                      selectedValue === currentValue ? '' : selectedValue;
                     handleValueChange(newValue);
                     setOpen(false);
                   }}

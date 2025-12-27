@@ -147,7 +147,8 @@ export const WithDescription: Story = {
         variant="outline"
         onClick={() =>
           toast('Deployment scheduled', {
-            description: 'MAiRA-001 will be deployed to Munich Plant A at 9:00 AM',
+            description:
+              'MAiRA-001 will be deployed to Munich Plant A at 9:00 AM',
           })
         }
       >

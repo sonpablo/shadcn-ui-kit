@@ -88,7 +88,8 @@ function Input({
     'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground h-full w-full min-w-0 flex-1 bg-transparent outline-none file:inline-flex file:border-0 file:bg-transparent file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed',
     size === 'sm' && 'text-sm file:text-xs file:h-6',
     size === 'lg' && 'text-base file:text-sm file:h-7',
-    (!size || size === 'default') && 'text-base md:text-sm file:text-sm file:h-7',
+    (!size || size === 'default') &&
+      'text-base md:text-sm file:text-sm file:h-7',
   );
 
   return (

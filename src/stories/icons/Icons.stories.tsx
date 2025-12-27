@@ -47,7 +47,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Outline: Story = {
   args: {
-    icons: OutlineIcons as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>,
+    icons: OutlineIcons as Record<
+      string,
+      React.ComponentType<React.SVGProps<SVGSVGElement>>
+    >,
     variant: 'outline',
   },
   parameters: {
@@ -71,7 +74,10 @@ function MyComponent() {
 
 export const Filled: Story = {
   args: {
-    icons: FilledIcons as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>,
+    icons: FilledIcons as Record<
+      string,
+      React.ComponentType<React.SVGProps<SVGSVGElement>>
+    >,
     variant: 'filled',
   },
   parameters: {
@@ -92,4 +98,3 @@ function MyComponent() {
     },
   },
 };
-

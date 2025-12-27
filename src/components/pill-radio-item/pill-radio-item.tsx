@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { RadioGroupItem } from '@/components/radio-group/radio-group';
 import { Label } from '@/components/label/label';
 import { Pill, type PillProps } from '@/components/pill/pill';
@@ -30,7 +29,10 @@ function PillRadioItem({
   return (
     <Label
       htmlFor={itemId}
-      className={cn('cursor-pointer', disabled && 'cursor-not-allowed opacity-50')}
+      className={cn(
+        'cursor-pointer',
+        disabled && 'cursor-not-allowed opacity-50',
+      )}
     >
       <Pill
         size={size}
@@ -38,9 +40,9 @@ function PillRadioItem({
           // Base styles for interactive state
           'transition-colors',
           // Checked state - uses has-* to detect RadioGroupItem state
-          'has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground has-[[data-state=checked]]:before:border-primary',
+          'has-data-[state=checked]:bg-primary has-data-[state=checked]:text-primary-foreground has-data-[state=checked]:before:border-primary',
           // Hover state when not checked
-          'has-[[data-state=unchecked]]:hover:bg-muted/50',
+          'has-data-[state=unchecked]:hover:bg-muted/50',
           className,
         )}
         {...props}
@@ -58,4 +60,3 @@ function PillRadioItem({
 }
 
 export { PillRadioItem };
-

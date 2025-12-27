@@ -168,14 +168,15 @@ function TableHead({
   };
 
   // Sort icon classes with animation
-  const iconClass = 'ml-1 inline-block size-4 shrink-0 transition-transform duration-200';
+  const iconClass =
+    'ml-1 inline-block size-4 shrink-0 transition-transform duration-200';
 
   return (
     <th
       data-slot="table-head"
       aria-sort={getAriaSort()}
       className={cn(
-        'text-foreground h-10 px-2 align-middle font-medium [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'text-foreground h-10 px-2 align-middle font-medium [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-[2px]',
         alignmentClass,
         nowrap && 'whitespace-nowrap',
         sortable &&
@@ -203,17 +204,20 @@ function TableHead({
       <span className="inline-flex items-center">
         {children}
         {sortable && (sortDirection === 'asc' || sortDirection === 'desc') && (
-          <ChevronUp 
+          <ChevronUp
             className={cn(
-              iconClass, 
+              iconClass,
               'text-foreground',
-              sortDirection === 'desc' && 'rotate-180'
-            )} 
-            aria-hidden="true" 
+              sortDirection === 'desc' && 'rotate-180',
+            )}
+            aria-hidden="true"
           />
         )}
         {sortable && sortDirection !== 'asc' && sortDirection !== 'desc' && (
-          <ChevronsUpDown className={cn(iconClass, 'text-muted-foreground')} aria-hidden="true" />
+          <ChevronsUpDown
+            className={cn(iconClass, 'text-muted-foreground')}
+            aria-hidden="true"
+          />
         )}
       </span>
     </th>

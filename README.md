@@ -348,7 +348,10 @@ npm install @neura/shadcn-ui-kit-icons
 Usage:
 
 ```tsx
-import { ChevronRightIcon, InfoCircleIcon } from '@neura/shadcn-ui-kit-icons/outline';
+import {
+  ChevronRightIcon,
+  InfoCircleIcon,
+} from '@neura/shadcn-ui-kit-icons/outline';
 import { HeartIcon } from '@neura/shadcn-ui-kit-icons/filled';
 
 function App() {

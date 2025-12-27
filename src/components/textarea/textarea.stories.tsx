@@ -319,7 +319,7 @@ export const CompleteShowcase: Story = {
     };
 
     return (
-      <div className="w-[600px] space-y-6 rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+      <div className="bg-card text-card-foreground w-[600px] space-y-6 rounded-lg border p-6 shadow-sm">
         <div>
           <h3 className="mb-2 text-lg font-semibold">Robot Deployment Form</h3>
           <p className="text-muted-foreground text-sm">
@@ -332,7 +332,7 @@ export const CompleteShowcase: Story = {
             <Label htmlFor="robot-select">Robot Unit</Label>
             <select
               id="robot-select"
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <option>MAiRA-001</option>
               <option>MAiRA-002</option>
@@ -359,7 +359,9 @@ export const CompleteShowcase: Story = {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="additional-notes">Additional Notes (Optional)</Label>
+              <Label htmlFor="additional-notes">
+                Additional Notes (Optional)
+              </Label>
               <span className="text-muted-foreground text-xs">
                 {notes.length}/500
               </span>
@@ -379,7 +381,7 @@ export const CompleteShowcase: Story = {
           </Button>
 
           {submitted && (
-            <div className="bg-green-500/10 text-green-700 dark:text-green-400 rounded-lg border border-green-500/20 p-3 text-sm">
+            <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-sm text-green-700 dark:text-green-400">
               ✓ Robot deployment task submitted successfully!
             </div>
           )}
@@ -471,16 +473,16 @@ export const Accessibility: Story = {
       <div className="bg-muted/30 rounded-lg p-3">
         <h4 className="mb-2 text-sm font-semibold">Best Practices</h4>
         <ul className="text-muted-foreground space-y-1 text-sm">
-          <li>• Always provide a visible <code>Label</code></li>
+          <li>
+            • Always provide a visible <code>Label</code>
+          </li>
           <li>
             • Use <code>aria-describedby</code> to link hints/errors
           </li>
           <li>
             • Set <code>aria-invalid</code> when there's an error
           </li>
-          <li>
-            • Provide clear error messages below the textarea
-          </li>
+          <li>• Provide clear error messages below the textarea</li>
           <li>
             • Use <code>required</code> for mandatory fields
           </li>

@@ -12,7 +12,7 @@ import {
 } from './select';
 import { Label } from '@/components/label/label';
 import { Button } from '@/components/button/button';
-import { Bot, Building2, Cpu, Factory, Briefcase, Package } from 'lucide-react';
+import { Bot, Building2, Cpu, Briefcase, Package } from 'lucide-react';
 
 const meta = {
   title: 'Components/Select',

@@ -13,7 +13,10 @@ npm install @neura/shadcn-ui-kit-icons
 Import icons from either the `outline` or `filled` variant:
 
 ```tsx
-import { ChevronRightIcon, InfoCircleIcon } from '@neura/shadcn-ui-kit-icons/outline';
+import {
+  ChevronRightIcon,
+  InfoCircleIcon,
+} from '@neura/shadcn-ui-kit-icons/outline';
 import { HeartIcon } from '@neura/shadcn-ui-kit-icons/filled';
 
 function MyComponent() {
@@ -100,6 +103,7 @@ npm run build
 ```
 
 This will:
+
 1. Optimize SVGs with SVGO (removes fills, adds `currentColor`)
 2. Convert SVGs to React components with SVGR
 3. Generate TypeScript definitions
@@ -112,4 +116,3 @@ MIT
 ## Related
 
 - [@neura/shadcn-ui-kit](../README.md) - Component library
-

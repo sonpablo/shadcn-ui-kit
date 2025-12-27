@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { Combobox, type ComboboxProps } from './combobox';
+import { Combobox } from './combobox';
 import { Label } from '@/components/label/label';
 import { Button } from '@/components/button/button';
 
@@ -89,6 +89,7 @@ const projectOptions = [
  * Basic combobox with search functionality.
  */
 export const Default: Story = {
+  args: { items: [] },
   render: function DefaultExample() {
     const [value, setValue] = React.useState('');
 
@@ -146,6 +147,7 @@ export const Default: Story = {
  * Three available sizes: sm, default, and lg.
  */
 export const Sizes: Story = {
+  args: { items: [] },
   render: function SizesExample() {
     return (
       <div className="flex flex-col gap-6 p-4">
@@ -209,6 +211,7 @@ export const Sizes: Story = {
  * Combobox with disabled items and full width.
  */
 export const Features: Story = {
+  args: { items: [] },
   render: function FeaturesExample() {
     const [value1, setValue1] = React.useState('');
     const [value2, setValue2] = React.useState('');
@@ -282,6 +285,7 @@ export const Features: Story = {
  * Disabled and error states.
  */
 export const States: Story = {
+  args: { items: [] },
   render: function StatesExample() {
     const [hasError, setHasError] = React.useState(true);
     const [value, setValue] = React.useState('');
@@ -367,6 +371,7 @@ export const States: Story = {
  * Controlled combobox with external state management.
  */
 export const Controlled: Story = {
+  args: { items: [] },
   render: function ControlledExample() {
     const [value, setValue] = React.useState('maira-001');
 
@@ -427,6 +432,7 @@ export const Controlled: Story = {
  * Real-world example: Robot task assignment form with multiple comboboxes.
  */
 export const CompleteShowcase: Story = {
+  args: { items: [] },
   render: function CompleteShowcaseExample() {
     const [robot, setRobot] = React.useState('');
     const [location, setLocation] = React.useState('');
@@ -535,6 +541,7 @@ export const CompleteShowcase: Story = {
  * screen readers.
  */
 export const Accessibility: Story = {
+  args: { items: [] },
   render: function AccessibilityExample() {
     const [value, setValue] = React.useState('');
 

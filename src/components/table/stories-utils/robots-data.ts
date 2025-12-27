@@ -249,4 +249,3 @@ export const robots: Robot[] = [
     status: 'Active',
   },
 ];
-

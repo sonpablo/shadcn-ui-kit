@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import * as React from 'react';
 import {
   Tooltip,
   TooltipTrigger,
@@ -315,9 +314,8 @@ export const ContentVariants: Story = {
         </TooltipTrigger>
         <TooltipContent className="max-w-xs">
           <p>
-            This is a longer tooltip with more detailed information. It wraps
-            to multiple lines for better readability and can contain more
-            context.
+            This is a longer tooltip with more detailed information. It wraps to
+            multiple lines for better readability and can contain more context.
           </p>
         </TooltipContent>
       </Tooltip>
@@ -334,8 +332,8 @@ export const ContentVariants: Story = {
       </Tooltip>
 
       <p className="text-muted-foreground w-full text-xs">
-        💡 <strong>Tip:</strong> Use <code>max-w-xs</code> or similar for
-        longer content to ensure proper wrapping.
+        💡 <strong>Tip:</strong> Use <code>max-w-xs</code> or similar for longer
+        content to ensure proper wrapping.
       </p>
     </div>
   ),
@@ -517,7 +515,7 @@ export const OnButtonVariants: Story = {
  */
 export const CompleteShowcase: Story = {
   render: () => (
-    <div className="w-[500px] space-y-6 rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+    <div className="bg-card text-card-foreground w-[500px] space-y-6 rounded-lg border p-6 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold">Robot Control Panel</h3>
@@ -595,9 +593,7 @@ export const CompleteShowcase: Story = {
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>
-                    Tasks completed without errors or manual intervention
-                  </p>
+                  <p>Tasks completed without errors or manual intervention</p>
                 </TooltipContent>
               </Tooltip>
             </div>

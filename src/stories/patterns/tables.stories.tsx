@@ -287,9 +287,7 @@ export const StickyRightColumn: Story = {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem
-                        onClick={() =>
-                          navigator.clipboard.writeText(robot.id)
-                        }
+                        onClick={() => navigator.clipboard.writeText(robot.id)}
                       >
                         <Copy />
                         Copy ID
@@ -387,9 +385,7 @@ export const MultipleStickyColumns: Story = {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem
-                        onClick={() =>
-                          navigator.clipboard.writeText(robot.id)
-                        }
+                        onClick={() => navigator.clipboard.writeText(robot.id)}
                       >
                         <Copy />
                         Copy ID

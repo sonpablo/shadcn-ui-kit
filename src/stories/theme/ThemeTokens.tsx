@@ -75,7 +75,8 @@ const colorGroups: ColorGroup[] = [
   },
   {
     title: 'Brand Colors',
-    description: 'Primary brand colors and semantic variants with extended palettes',
+    description:
+      'Primary brand colors and semantic variants with extended palettes',
     tokens: [
       {
         name: 'Primary',
@@ -187,7 +188,11 @@ const colorGroups: ColorGroup[] = [
         name: 'Destructive',
         cssVar: '--color-destructive',
         description: 'Danger/error color (red-600)',
-        tailwindClasses: ['bg-destructive', 'text-destructive', 'border-destructive'],
+        tailwindClasses: [
+          'bg-destructive',
+          'text-destructive',
+          'border-destructive',
+        ],
         usage: 'Error messages, delete buttons',
         palette: {
           lighter: [
@@ -263,11 +268,11 @@ const colorGroups: ColorGroup[] = [
     title: 'Chart Colors',
     description: 'Colors for data visualization with extended palettes',
     tokens: [
-      { 
-        name: 'Chart 1', 
-        cssVar: '--color-chart-1', 
-        description: 'First chart color (orange-500)', 
-        tailwindClasses: ['bg-chart-1', 'text-chart-1'], 
+      {
+        name: 'Chart 1',
+        cssVar: '--color-chart-1',
+        description: 'First chart color (orange-500)',
+        tailwindClasses: ['bg-chart-1', 'text-chart-1'],
         usage: 'Graphs, charts',
         palette: {
           lighter: [
@@ -280,11 +285,11 @@ const colorGroups: ColorGroup[] = [
           ],
         },
       },
-      { 
-        name: 'Chart 2', 
-        cssVar: '--color-chart-2', 
-        description: 'Second chart color (teal-500)', 
-        tailwindClasses: ['bg-chart-2', 'text-chart-2'], 
+      {
+        name: 'Chart 2',
+        cssVar: '--color-chart-2',
+        description: 'Second chart color (teal-500)',
+        tailwindClasses: ['bg-chart-2', 'text-chart-2'],
         usage: 'Graphs, charts',
         palette: {
           lighter: [
@@ -297,11 +302,11 @@ const colorGroups: ColorGroup[] = [
           ],
         },
       },
-      { 
-        name: 'Chart 3', 
-        cssVar: '--color-chart-3', 
-        description: 'Third chart color (slate-600)', 
-        tailwindClasses: ['bg-chart-3', 'text-chart-3'], 
+      {
+        name: 'Chart 3',
+        cssVar: '--color-chart-3',
+        description: 'Third chart color (slate-600)',
+        tailwindClasses: ['bg-chart-3', 'text-chart-3'],
         usage: 'Graphs, charts',
         palette: {
           lighter: [
@@ -314,11 +319,11 @@ const colorGroups: ColorGroup[] = [
           ],
         },
       },
-      { 
-        name: 'Chart 4', 
-        cssVar: '--color-chart-4', 
-        description: 'Fourth chart color (yellow-400)', 
-        tailwindClasses: ['bg-chart-4', 'text-chart-4'], 
+      {
+        name: 'Chart 4',
+        cssVar: '--color-chart-4',
+        description: 'Fourth chart color (yellow-400)',
+        tailwindClasses: ['bg-chart-4', 'text-chart-4'],
         usage: 'Graphs, charts',
         palette: {
           lighter: [
@@ -331,11 +336,11 @@ const colorGroups: ColorGroup[] = [
           ],
         },
       },
-      { 
-        name: 'Chart 5', 
-        cssVar: '--color-chart-5', 
-        description: 'Fifth chart color (amber-400)', 
-        tailwindClasses: ['bg-chart-5', 'text-chart-5'], 
+      {
+        name: 'Chart 5',
+        cssVar: '--color-chart-5',
+        description: 'Fifth chart color (amber-400)',
+        tailwindClasses: ['bg-chart-5', 'text-chart-5'],
         usage: 'Graphs, charts',
         palette: {
           lighter: [
@@ -354,14 +359,62 @@ const colorGroups: ColorGroup[] = [
     title: 'Sidebar Colors',
     description: 'Navigation and sidebar specific colors',
     tokens: [
-      { name: 'Sidebar', cssVar: '--color-sidebar', description: 'Sidebar background', tailwindClasses: ['bg-sidebar'], usage: 'Sidebar background' },
-      { name: 'Sidebar Foreground', cssVar: '--color-sidebar-foreground', description: 'Sidebar text', tailwindClasses: ['text-sidebar-foreground'], usage: 'Sidebar text' },
-      { name: 'Sidebar Primary', cssVar: '--color-sidebar-primary', description: 'Sidebar active item', tailwindClasses: ['bg-sidebar-primary'], usage: 'Active nav items' },
-      { name: 'Sidebar Primary Foreground', cssVar: '--color-sidebar-primary-foreground', description: 'Text on active items', tailwindClasses: ['text-sidebar-primary-foreground'], usage: 'Active nav text' },
-      { name: 'Sidebar Accent', cssVar: '--color-sidebar-accent', description: 'Sidebar hover state', tailwindClasses: ['bg-sidebar-accent'], usage: 'Hover states' },
-      { name: 'Sidebar Accent Foreground', cssVar: '--color-sidebar-accent-foreground', description: 'Text on hover', tailwindClasses: ['text-sidebar-accent-foreground'], usage: 'Hover text' },
-      { name: 'Sidebar Border', cssVar: '--color-sidebar-border', description: 'Sidebar borders', tailwindClasses: ['border-sidebar-border'], usage: 'Sidebar dividers' },
-      { name: 'Sidebar Ring', cssVar: '--color-sidebar-ring', description: 'Sidebar focus ring', tailwindClasses: ['ring-sidebar-ring'], usage: 'Sidebar focus states' },
+      {
+        name: 'Sidebar',
+        cssVar: '--color-sidebar',
+        description: 'Sidebar background',
+        tailwindClasses: ['bg-sidebar'],
+        usage: 'Sidebar background',
+      },
+      {
+        name: 'Sidebar Foreground',
+        cssVar: '--color-sidebar-foreground',
+        description: 'Sidebar text',
+        tailwindClasses: ['text-sidebar-foreground'],
+        usage: 'Sidebar text',
+      },
+      {
+        name: 'Sidebar Primary',
+        cssVar: '--color-sidebar-primary',
+        description: 'Sidebar active item',
+        tailwindClasses: ['bg-sidebar-primary'],
+        usage: 'Active nav items',
+      },
+      {
+        name: 'Sidebar Primary Foreground',
+        cssVar: '--color-sidebar-primary-foreground',
+        description: 'Text on active items',
+        tailwindClasses: ['text-sidebar-primary-foreground'],
+        usage: 'Active nav text',
+      },
+      {
+        name: 'Sidebar Accent',
+        cssVar: '--color-sidebar-accent',
+        description: 'Sidebar hover state',
+        tailwindClasses: ['bg-sidebar-accent'],
+        usage: 'Hover states',
+      },
+      {
+        name: 'Sidebar Accent Foreground',
+        cssVar: '--color-sidebar-accent-foreground',
+        description: 'Text on hover',
+        tailwindClasses: ['text-sidebar-accent-foreground'],
+        usage: 'Hover text',
+      },
+      {
+        name: 'Sidebar Border',
+        cssVar: '--color-sidebar-border',
+        description: 'Sidebar borders',
+        tailwindClasses: ['border-sidebar-border'],
+        usage: 'Sidebar dividers',
+      },
+      {
+        name: 'Sidebar Ring',
+        cssVar: '--color-sidebar-ring',
+        description: 'Sidebar focus ring',
+        tailwindClasses: ['ring-sidebar-ring'],
+        usage: 'Sidebar focus states',
+      },
     ],
   },
 ];
@@ -370,13 +423,13 @@ const colorGroups: ColorGroup[] = [
 
 export const ThemeTokens: React.FC = () => {
   return (
-    <div className="p-8 space-y-12 bg-background text-foreground">
+    <div className="bg-background text-foreground space-y-12 p-8">
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-4xl font-bold">Design Tokens</h1>
         <p className="text-muted-foreground text-lg">
-          Complete color palette and design tokens used across the shadcn-ui-kit.
-          Toggle dark mode to see both themes.
+          Complete color palette and design tokens used across the
+          shadcn-ui-kit. Toggle dark mode to see both themes.
         </p>
       </div>
 
@@ -384,22 +437,27 @@ export const ThemeTokens: React.FC = () => {
       {colorGroups.map((group) => (
         <section key={group.title} className="space-y-4">
           <div>
-            <h2 className="text-2xl font-semibold mb-1">{group.title}</h2>
+            <h2 className="mb-1 text-2xl font-semibold">{group.title}</h2>
             <p className="text-muted-foreground">{group.description}</p>
           </div>
           <div className="grid grid-cols-1 gap-4">
             {group.tokens.map((token) => (
-              <div key={token.name} className="border border-border rounded-lg p-4 space-y-3">
-                <div className="flex flex-col lg:flex-row gap-4">
+              <div
+                key={token.name}
+                className="border-border space-y-3 rounded-lg border p-4"
+              >
+                <div className="flex flex-col gap-4 lg:flex-row">
                   {/* Left: Color Preview */}
                   <div className="flex items-center gap-3 lg:w-1/3">
                     <div
-                      className="w-16 h-16 rounded-md border-2 border-border flex-shrink-0"
+                      className="border-border h-16 w-16 flex-shrink-0 rounded-md border-2"
                       style={{ backgroundColor: `var(${token.cssVar})` }}
                     />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm">{token.name}</h3>
-                      <p className="text-xs text-muted-foreground">{token.description}</p>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-semibold">{token.name}</h3>
+                      <p className="text-muted-foreground text-xs">
+                        {token.description}
+                      </p>
                     </div>
                   </div>
 
@@ -407,17 +465,19 @@ export const ThemeTokens: React.FC = () => {
                   <div className="flex-1 space-y-3">
                     {/* CSS Variable */}
                     <div className="bg-muted rounded px-2 py-1">
-                      <code className="text-xs font-mono">{token.cssVar}</code>
+                      <code className="font-mono text-xs">{token.cssVar}</code>
                     </div>
 
                     {/* Tailwind Classes */}
                     <div className="space-y-1">
-                      <p className="text-xs font-medium text-muted-foreground">Tailwind Classes:</p>
+                      <p className="text-muted-foreground text-xs font-medium">
+                        Tailwind Classes:
+                      </p>
                       <div className="flex flex-wrap gap-1">
                         {token.tailwindClasses.map((cls) => (
                           <code
                             key={cls}
-                            className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded"
+                            className="bg-secondary text-secondary-foreground rounded px-2 py-0.5 text-xs"
                           >
                             {cls}
                           </code>
@@ -427,8 +487,9 @@ export const ThemeTokens: React.FC = () => {
 
                     {/* Usage */}
                     {token.usage && (
-                      <div className="text-xs text-muted-foreground">
-                        <span className="font-medium">Usage:</span> {token.usage}
+                      <div className="text-muted-foreground text-xs">
+                        <span className="font-medium">Usage:</span>{' '}
+                        {token.usage}
                       </div>
                     )}
                   </div>
@@ -436,28 +497,37 @@ export const ThemeTokens: React.FC = () => {
 
                 {/* Extended Palette */}
                 {token.palette && (
-                  <div className="pt-3 border-t border-border space-y-2">
-                    <p className="text-xs font-medium text-muted-foreground">Extended Palette:</p>
+                  <div className="border-border space-y-2 border-t pt-3">
+                    <p className="text-muted-foreground text-xs font-medium">
+                      Extended Palette:
+                    </p>
                     <div className="flex gap-1">
                       {token.palette.lighter.map((shade, idx) => (
-                        <div key={`lighter-${idx}`} className="flex-1 text-center space-y-1">
+                        <div
+                          key={`lighter-${idx}`}
+                          className="flex-1 space-y-1 text-center"
+                        >
                           <div
-                            className="h-12 rounded border border-border"
+                            className="border-border h-12 rounded border"
                             style={{ backgroundColor: shade.color }}
                           />
-                          <code className="text-[10px] font-mono">{shade.label}</code>
+                          <code className="font-mono text-[10px]">
+                            {shade.label}
+                          </code>
                         </div>
                       ))}
                       {token.palette.darker.map((shade, idx) => (
-                        <div 
-                          key={`darker-${idx}`} 
-                          className={`flex-1 text-center space-y-1 ${idx === 0 ? 'ring-2 ring-primary ring-offset-2' : ''}`}
+                        <div
+                          key={`darker-${idx}`}
+                          className={`flex-1 space-y-1 text-center ${idx === 0 ? 'ring-primary ring-2 ring-offset-2' : ''}`}
                         >
                           <div
-                            className="h-12 rounded border border-border"
+                            className="border-border h-12 rounded border"
                             style={{ backgroundColor: shade.color }}
                           />
-                          <code className="text-[10px] font-mono font-bold">{shade.label}</code>
+                          <code className="font-mono text-[10px] font-bold">
+                            {shade.label}
+                          </code>
                         </div>
                       ))}
                     </div>
@@ -472,74 +542,84 @@ export const ThemeTokens: React.FC = () => {
       {/* Border Radius */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-2xl font-semibold mb-1">Border Radius</h2>
-          <p className="text-muted-foreground">Consistent border radius values across components</p>
+          <h2 className="mb-1 text-2xl font-semibold">Border Radius</h2>
+          <p className="text-muted-foreground">
+            Consistent border radius values across components
+          </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {/* Small */}
           <div className="space-y-3">
-            <div 
-              className="border-2 border-primary bg-primary/10 p-6 flex items-center justify-center min-h-32"
+            <div
+              className="border-primary bg-primary/10 flex min-h-32 items-center justify-center border-2 p-6"
               style={{ borderRadius: '4px' }}
             >
               <span className="text-sm font-medium">4px</span>
             </div>
-            <div className="text-center space-y-1">
-              <h3 className="font-semibold text-sm">Small</h3>
-              <p className="text-xs text-muted-foreground">Border radius: 4px</p>
+            <div className="space-y-1 text-center">
+              <h3 className="text-sm font-semibold">Small</h3>
+              <p className="text-muted-foreground text-xs">
+                Border radius: 4px
+              </p>
             </div>
-            <code className="block text-xs bg-muted rounded px-2 py-1 font-mono text-center">
+            <code className="bg-muted block rounded px-2 py-1 text-center font-mono text-xs">
               rounded-sm
             </code>
           </div>
 
           {/* Medium */}
           <div className="space-y-3">
-            <div 
-              className="border-2 border-primary bg-primary/10 p-6 flex items-center justify-center min-h-32"
+            <div
+              className="border-primary bg-primary/10 flex min-h-32 items-center justify-center border-2 p-6"
               style={{ borderRadius: '6px' }}
             >
               <span className="text-sm font-medium">6px</span>
             </div>
-            <div className="text-center space-y-1">
-              <h3 className="font-semibold text-sm">Medium</h3>
-              <p className="text-xs text-muted-foreground">Border radius: 6px</p>
+            <div className="space-y-1 text-center">
+              <h3 className="text-sm font-semibold">Medium</h3>
+              <p className="text-muted-foreground text-xs">
+                Border radius: 6px
+              </p>
             </div>
-            <code className="block text-xs bg-muted rounded px-2 py-1 font-mono text-center">
+            <code className="bg-muted block rounded px-2 py-1 text-center font-mono text-xs">
               rounded-md
             </code>
           </div>
 
           {/* Large */}
           <div className="space-y-3">
-            <div 
-              className="border-2 border-primary bg-primary/10 p-6 flex items-center justify-center min-h-32"
+            <div
+              className="border-primary bg-primary/10 flex min-h-32 items-center justify-center border-2 p-6"
               style={{ borderRadius: '8px' }}
             >
               <span className="text-sm font-medium">8px</span>
             </div>
-            <div className="text-center space-y-1">
-              <h3 className="font-semibold text-sm">Large</h3>
-              <p className="text-xs text-muted-foreground">Border radius: 8px</p>
+            <div className="space-y-1 text-center">
+              <h3 className="text-sm font-semibold">Large</h3>
+              <p className="text-muted-foreground text-xs">
+                Border radius: 8px
+              </p>
             </div>
-            <code className="block text-xs bg-muted rounded px-2 py-1 font-mono text-center">
+            <code className="bg-muted block rounded px-2 py-1 text-center font-mono text-xs">
               rounded-lg
             </code>
           </div>
 
           {/* Extra Large */}
           <div className="space-y-3">
-            <div 
-              className="border-2 border-primary bg-primary/10 p-6 flex items-center justify-center min-h-32"
+            <div
+              className="border-primary bg-primary/10 flex min-h-32 items-center justify-center border-2 p-6"
               style={{ borderRadius: '12px' }}
             >
               <span className="text-sm font-medium">12px</span>
             </div>
-            <div className="text-center space-y-1">
-              <h3 className="font-semibold text-sm">Extra Large</h3>
-              <p className="text-xs text-muted-foreground">Border radius: 12px</p>
+            <div className="space-y-1 text-center">
+              <h3 className="text-sm font-semibold">Extra Large</h3>
+              <p className="text-muted-foreground text-xs">
+                Border radius: 12px
+              </p>
             </div>
-            <code className="block text-xs bg-muted rounded px-2 py-1 font-mono text-center">
+            <code className="bg-muted block rounded px-2 py-1 text-center font-mono text-xs">
               rounded-xl
             </code>
           </div>
@@ -549,24 +629,27 @@ export const ThemeTokens: React.FC = () => {
       {/* Color Palette Overview */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-2xl font-semibold mb-1">Color Palette Overview</h2>
-          <p className="text-muted-foreground">Quick visual reference of all color tokens</p>
+          <h2 className="mb-1 text-2xl font-semibold">
+            Color Palette Overview
+          </h2>
+          <p className="text-muted-foreground">
+            Quick visual reference of all color tokens
+          </p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {colorGroups.flatMap((group) =>
             group.tokens.map((token) => (
-              <div key={token.name} className="text-center space-y-2">
+              <div key={token.name} className="space-y-2 text-center">
                 <div
-                  className="w-full h-20 rounded-lg border border-border"
+                  className="border-border h-20 w-full rounded-lg border"
                   style={{ backgroundColor: `var(${token.cssVar})` }}
                 />
-                <p className="text-xs font-medium truncate">{token.name}</p>
+                <p className="truncate text-xs font-medium">{token.name}</p>
               </div>
-            ))
+            )),
           )}
         </div>
       </section>
     </div>
   );
 };
-

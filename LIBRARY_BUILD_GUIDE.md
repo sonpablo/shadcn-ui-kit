@@ -21,11 +21,13 @@ npm run build
 ```
 
 This will:
+
 1. Build JavaScript (ESM + CJS) using Vite
 2. Generate TypeScript declarations using `tsc`
 3. Copy `theme.css` to `dist/styles.css`
 
 **Output:**
+
 ```
 dist/
 ├── index.mjs          # ES Module
@@ -43,27 +45,32 @@ dist/
 Before publishing, test your library locally using `npm link`:
 
 ### 1. Build the library
+
 ```bash
 npm run build
 ```
 
 ### 2. Create a global link
+
 ```bash
 npm link
 ```
 
 ### 3. In your test project
+
 ```bash
 npm link shadcn-ui-kit
 ```
 
 ### 4. Test and verify
+
 - Components render correctly
 - Styles apply properly
 - TypeScript types work
 - Dark mode works
 
 ### 5. When done testing
+
 ```bash
 # In test project
 npm unlink shadcn-ui-kit
@@ -84,15 +91,15 @@ Edit these fields in `package.json`:
 
 ```json
 {
-  "name": "@neura/shadcn-ui-kit",  // Your package name
-  "version": "1.0.0",                  // Semantic versioning
-  "description": "...",                // Your description
-  "author": "Your Name",               // Your name
+  "name": "@neura/shadcn-ui-kit", // Your package name
+  "version": "1.0.0", // Semantic versioning
+  "description": "...", // Your description
+  "author": "Your Name", // Your name
   "repository": {
     "type": "git",
     "url": "https://github.com/your-username/shadcn-ui-kit"
   },
-  "private": false  // IMPORTANT: Change from true to false
+  "private": false // IMPORTANT: Change from true to false
 }
 ```
 
@@ -160,6 +167,7 @@ npm pack --dry-run
 ```
 
 Current size breakdown:
+
 - JavaScript: ~14 KB (ESM) + ~12 KB (CJS)
 - CSS: ~4.4 KB (unprocessed)
 - Types: ~500 B + component types
@@ -189,6 +197,7 @@ Based on `"files": ["dist", "README.md"]` in `package.json`:
 ### "You do not have permission to publish"
 
 Make sure:
+
 - You're logged in: `npm whoami`
 - Package name is available or you own it
 - For scoped packages: use `--access public`
@@ -196,6 +205,7 @@ Make sure:
 ### "prepublishOnly script failed"
 
 Build manually first:
+
 ```bash
 npm run build
 ```
@@ -205,11 +215,13 @@ Fix any errors, then try publishing again.
 ### "Cannot find module after npm link"
 
 Make sure you've built the library:
+
 ```bash
 npm run build
 ```
 
 Then re-link:
+
 ```bash
 npm unlink -g && npm link
 ```

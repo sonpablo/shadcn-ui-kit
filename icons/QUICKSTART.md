@@ -20,6 +20,7 @@ cp ~/Downloads/icons-filled/*.svg icons/src/filled/
 ```
 
 **Requirements:**
+
 - ✅ Files must use kebab-case naming (e.g., `chevron-right.svg`)
 - ✅ SVGs must have `viewBox="0 0 24 24"`
 - ✅ No hardcoded colors (SVGO will clean them)
@@ -32,6 +33,7 @@ npm run build:icons
 ```
 
 This will:
+
 1. Optimize SVGs (remove fills, add `currentColor`)
 2. Convert to React components
 3. Generate TypeScript definitions
@@ -83,6 +85,7 @@ npm publish --access public
 ---
 
 **Current Example Icons:**
+
 - `chevron-right.svg` → `ChevronRightIcon`
 - `info-circle.svg` → `InfoCircleIcon`
 - `heart.svg` (filled) → `HeartIcon`
@@ -90,10 +93,9 @@ npm publish --access public
 **Import them:**
 
 ```tsx
-import { 
-  ChevronRightIcon, 
-  InfoCircleIcon 
+import {
+  ChevronRightIcon,
+  InfoCircleIcon,
 } from '@neura/shadcn-ui-kit-icons/outline';
 import { HeartIcon } from '@neura/shadcn-ui-kit-icons/filled';
 ```
-

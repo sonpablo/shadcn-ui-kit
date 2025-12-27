@@ -15,10 +15,8 @@ const pillVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'bg-transparent text-foreground before:border-input',
-        selected:
-          'bg-primary text-primary-foreground before:border-primary',
+        default: 'bg-transparent text-foreground before:border-input',
+        selected: 'bg-primary text-primary-foreground before:border-primary',
       },
       size: {
         sm: 'h-7 px-2.5 text-xs',
@@ -59,4 +57,3 @@ function Pill({
 }
 
 export { Pill, pillVariants };
-

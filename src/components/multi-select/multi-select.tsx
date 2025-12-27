@@ -856,12 +856,16 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 getAllOptions().length
               } options selected. ${placeholder}`}
               className={cn(
-                'flex h-auto items-center justify-between rounded-md border bg-inherit hover:!bg-inherit focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px] [&_svg]:pointer-events-auto',
+                'focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 flex h-auto items-center justify-between rounded-md border bg-inherit hover:!bg-inherit focus-visible:!ring-[3px] [&_svg]:pointer-events-auto',
                 sizeClasses.trigger,
                 autoSize ? 'w-auto' : 'w-full',
                 // Responsive overrides (only when not explicitly sized)
-                responsiveSettings.compactMode && size === 'default' && 'min-h-8 text-sm',
-                screenSize === 'mobile' && size === 'default' && 'min-h-12 text-base',
+                responsiveSettings.compactMode &&
+                  size === 'default' &&
+                  'min-h-8 text-sm',
+                screenSize === 'mobile' &&
+                  size === 'default' &&
+                  'min-h-12 text-base',
                 disabled && 'cursor-not-allowed opacity-50',
                 className,
               )}
@@ -879,7 +883,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       singleLine
                         ? 'multiselect-singleline-scroll overflow-x-auto'
                         : 'flex-wrap',
-                      responsiveSettings.compactMode && size === 'default' && 'gap-0.5',
+                      responsiveSettings.compactMode &&
+                        size === 'default' &&
+                        'gap-0.5',
                     )}
                     style={
                       singleLine
@@ -917,7 +923,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                               sizeClasses.badge,
                               customStyle?.gradient &&
                                 'border-transparent text-white',
-                              responsiveSettings.compactMode && size === 'default' &&
+                              responsiveSettings.compactMode &&
+                                size === 'default' &&
                                 'px-1.5 py-0.5 text-xs',
                               screenSize === 'mobile' &&
                                 'max-w-[120px] truncate',
@@ -936,7 +943,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                               <IconComponent
                                 className={cn(
                                   sizeClasses.badgeIcon,
-                                  responsiveSettings.compactMode && size === 'default' &&
+                                  responsiveSettings.compactMode &&
+                                    size === 'default' &&
                                     'mr-1 h-3 w-3',
                                   customStyle?.iconColor && 'text-current',
                                 )}
@@ -975,7 +983,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                               <XCircle
                                 className={cn(
                                   sizeClasses.badgeRemove,
-                                  responsiveSettings.compactMode && size === 'default' &&
+                                  responsiveSettings.compactMode &&
+                                    size === 'default' &&
                                     'h-2.5 w-2.5',
                                 )}
                               />
@@ -991,7 +1000,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           getBadgeAnimationClass(),
                           multiSelectVariants({ variant }),
                           sizeClasses.badge,
-                          responsiveSettings.compactMode && size === 'default' &&
+                          responsiveSettings.compactMode &&
+                            size === 'default' &&
                             'px-1.5 py-0.5 text-xs',
                           singleLine && 'flex-shrink-0 whitespace-nowrap',
                           '[&>svg]:pointer-events-auto',
@@ -1010,7 +1020,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           className={cn(
                             'ml-2 cursor-pointer',
                             sizeClasses.icon,
-                            responsiveSettings.compactMode && size === 'default' && 'ml-1 h-3 w-3',
+                            responsiveSettings.compactMode &&
+                              size === 'default' &&
+                              'ml-1 h-3 w-3',
                           )}
                           onClick={(event) => {
                             event.stopPropagation();
@@ -1045,17 +1057,30 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       className={cn('flex h-full', sizeClasses.separator)}
                     />
                     <ChevronDown
-                      className={cn('text-muted-foreground mx-2 cursor-pointer', sizeClasses.icon)}
+                      className={cn(
+                        'text-muted-foreground mx-2 cursor-pointer',
+                        sizeClasses.icon,
+                      )}
                       aria-hidden="true"
                     />
                   </div>
                 </div>
               ) : (
                 <div className="mx-auto flex w-full items-center justify-between">
-                  <span className={cn('text-muted-foreground mx-3', sizeClasses.placeholder)}>
+                  <span
+                    className={cn(
+                      'text-muted-foreground mx-3',
+                      sizeClasses.placeholder,
+                    )}
+                  >
                     {placeholder}
                   </span>
-                  <ChevronDown className={cn('text-muted-foreground mx-2 cursor-pointer', sizeClasses.icon)} />
+                  <ChevronDown
+                    className={cn(
+                      'text-muted-foreground mx-2 cursor-pointer',
+                      sizeClasses.icon,
+                    )}
+                  />
                 </div>
               )}
             </Button>

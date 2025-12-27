@@ -53,6 +53,7 @@ shadcn-ui-kit/
    - `icons/src/filled/` for filled variants
 
 **⚠️ Important Requirements:**
+
 - ✅ All icons must use `viewBox="0 0 24 24"`
 - ✅ Use consistent kebab-case naming
 - ✅ Avoid hardcoded colors (SVGO will remove them)
@@ -150,19 +151,23 @@ npm publish --access public
 ### After SVGR: `dist/outline/ChevronRightIcon.js`
 
 ```javascript
-const React = require("react");
+const React = require('react');
 function ChevronRightIcon({ title, titleId, ...props }, svgRef) {
-  return React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 24 24",
-    fill: "currentColor",
-    "aria-hidden": "true",
-    "data-slot": "icon",
-    ref: svgRef,
-    "aria-labelledby": titleId,
-    ...props
-  }, title ? React.createElement("title", { id: titleId }, title) : null,
-  React.createElement("path", { d: "M9 18l6-6-6-6" }));
+  return React.createElement(
+    'svg',
+    {
+      xmlns: 'http://www.w3.org/2000/svg',
+      viewBox: '0 0 24 24',
+      fill: 'currentColor',
+      'aria-hidden': 'true',
+      'data-slot': 'icon',
+      ref: svgRef,
+      'aria-labelledby': titleId,
+      ...props,
+    },
+    title ? React.createElement('title', { id: titleId }, title) : null,
+    React.createElement('path', { d: 'M9 18l6-6-6-6' }),
+  );
 }
 module.exports = React.forwardRef(ChevronRightIcon);
 ```
@@ -172,9 +177,10 @@ module.exports = React.forwardRef(ChevronRightIcon);
 ```typescript
 import * as React from 'react';
 declare const ChevronRightIcon: React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & 
-  { title?: string, titleId?: string } & 
-  React.RefAttributes<SVGSVGElement>
+  React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
+    title?: string;
+    titleId?: string;
+  } & React.RefAttributes<SVGSVGElement>
 >;
 export default ChevronRightIcon;
 ```
@@ -193,7 +199,10 @@ npm install @neura/shadcn-ui-kit @neura/shadcn-ui-kit-icons
 
 ```tsx
 import { Button } from '@neura/shadcn-ui-kit';
-import { ChevronRightIcon, InfoCircleIcon } from '@neura/shadcn-ui-kit-icons/outline';
+import {
+  ChevronRightIcon,
+  InfoCircleIcon,
+} from '@neura/shadcn-ui-kit-icons/outline';
 import { HeartIcon } from '@neura/shadcn-ui-kit-icons/filled';
 
 function App() {
@@ -258,6 +267,7 @@ npm install
 ### `svgo.outline.mjs` / `svgo.filled.mjs`
 
 SVGO plugins configuration:
+
 - `preset-default`: Standard optimizations
 - `removeDimensions`: Removes `width`/`height` (use CSS instead)
 - `removeAttrs`: Removes hardcoded `fill`
@@ -266,6 +276,7 @@ SVGO plugins configuration:
 ### `build.js`
 
 Node.js script that:
+
 1. Reads optimized SVGs from `dist/outline` and `dist/filled`
 2. Converts to React components using SVGR
 3. Transpiles JSX with Babel
@@ -275,6 +286,7 @@ Node.js script that:
 ### `build.sh`
 
 Bash script that orchestrates:
+
 1. Clean `dist/`
 2. Run SVGO on `src/outline` → `dist/outline`
 3. Run SVGO on `src/filled` → `dist/filled`
@@ -288,11 +300,13 @@ Bash script that orchestrates:
 ### Naming Conventions
 
 ✅ **Good:**
+
 - `chevron-right.svg`
 - `info-circle.svg`
 - `arrow-up.svg`
 
 ❌ **Bad:**
+
 - `ChevronRight.svg` (PascalCase)
 - `chevron_right.svg` (snake_case)
 - `chevron right.svg` (spaces)
@@ -366,4 +380,3 @@ npm run build
 ---
 
 **Questions?** Check the [main README](./README.md) or [component library docs](./INTEGRATION_GUIDE.md).
-

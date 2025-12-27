@@ -68,7 +68,7 @@ export const Default: Story = {
       </PopoverTrigger>
       <PopoverContent>
         <div className="space-y-2">
-          <h4 className="font-medium leading-none">Robot Status</h4>
+          <h4 className="leading-none font-medium">Robot Status</h4>
           <p className="text-muted-foreground text-sm">
             MAiRA-001 is currently operational at Munich Plant A.
           </p>
@@ -200,7 +200,7 @@ export const WithForms: Story = {
         <PopoverContent className="w-80">
           <div className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-medium leading-none">Robot Configuration</h4>
+              <h4 className="leading-none font-medium">Robot Configuration</h4>
               <p className="text-muted-foreground text-sm">
                 Adjust robot operational parameters.
               </p>
@@ -286,7 +286,7 @@ export const RichContent: Story = {
           </PopoverTrigger>
           <PopoverContent className="w-64">
             <div className="space-y-2">
-              <h4 className="font-medium text-sm">Available Robots</h4>
+              <h4 className="text-sm font-medium">Available Robots</h4>
               <div className="space-y-1">
                 {['MAiRA-001', 'MAiRA-002', 'LARA-001', 'LARA-003'].map(
                   (robot) => (
@@ -336,11 +336,15 @@ export const Controlled: Story = {
           </PopoverTrigger>
           <PopoverContent>
             <div className="space-y-2">
-              <h4 className="font-medium leading-none">Controlled Popover</h4>
+              <h4 className="leading-none font-medium">Controlled Popover</h4>
               <p className="text-muted-foreground text-sm">
                 This popover is controlled externally.
               </p>
-              <Button onClick={() => setOpen(false)} size="sm" className="w-full">
+              <Button
+                onClick={() => setOpen(false)}
+                size="sm"
+                className="w-full"
+              >
                 Close
               </Button>
             </div>
@@ -424,10 +428,8 @@ export const WithAnchor: Story = {
  */
 export const CompleteShowcase: Story = {
   render: function CompleteShowcaseExample() {
-    const [selectedRobot, setSelectedRobot] = React.useState('');
-
     return (
-      <div className="w-[600px] space-y-6 rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+      <div className="bg-card text-card-foreground w-[600px] space-y-6 rounded-lg border p-6 shadow-sm">
         <div>
           <h3 className="mb-2 text-lg font-semibold">Robot Fleet Dashboard</h3>
           <p className="text-muted-foreground text-sm">
@@ -445,15 +447,27 @@ export const CompleteShowcase: Story = {
             </PopoverTrigger>
             <PopoverContent className="w-56">
               <div className="space-y-2">
-                <h4 className="font-medium text-sm">Robot Actions</h4>
+                <h4 className="text-sm font-medium">Robot Actions</h4>
                 <div className="space-y-1">
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start"
+                  >
                     Deploy Robot
                   </Button>
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start"
+                  >
                     Schedule Maintenance
                   </Button>
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start"
+                  >
                     View Analytics
                   </Button>
                 </div>
@@ -471,7 +485,7 @@ export const CompleteShowcase: Story = {
             <PopoverContent className="w-80">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium leading-none">Fleet Settings</h4>
+                  <h4 className="leading-none font-medium">Fleet Settings</h4>
                   <p className="text-muted-foreground text-sm">
                     Configure fleet-wide parameters.
                   </p>
@@ -584,7 +598,8 @@ export const Accessibility: Story = {
             focus
           </li>
           <li>
-            ✓ <strong>Focus management</strong>: Focus returns to trigger on close
+            ✓ <strong>Focus management</strong>: Focus returns to trigger on
+            close
           </li>
           <li>
             ✓ <strong>ARIA attributes</strong>: Proper roles and states

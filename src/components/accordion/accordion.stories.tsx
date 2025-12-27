@@ -71,6 +71,7 @@ export const Basic: Story = {
 export const MultipleOpen: Story = {
   args: {
     type: 'multiple',
+    collapsible: false, // collapsible only applies to type="single"
   },
   render: (args) => (
     <Accordion {...args}>
@@ -150,7 +151,7 @@ export const DisabledItem: Story = {
   render: (args) => (
     <Accordion {...args}>
       <AccordionItem value="item-1" disabled={true}>
-        <AccordionTrigger>Option one</AccordionTrigger>
+        <AccordionTrigger>Option one (Disabled)</AccordionTrigger>
         <AccordionContent>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates,
           distinctio assumenda ipsam labore impedit quis error. Aut harum iure,
@@ -179,5 +180,56 @@ export const DisabledItem: Story = {
         </AccordionContent>
       </AccordionItem>
     </Accordion>
+  ),
+};
+
+export const CollapsibleBehavior: Story = {
+  render: () => (
+    <div className="space-y-8">
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">
+          With collapsible=true (default)
+        </h3>
+        <p className="text-muted-foreground text-sm">
+          Click an open item to close it. All items can be closed.
+        </p>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Can be closed</AccordionTrigger>
+            <AccordionContent>
+              This accordion has collapsible=true, so you can close this item by
+              clicking it again.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Click to expand</AccordionTrigger>
+            <AccordionContent>More content here...</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">With collapsible=false</h3>
+        <p className="text-muted-foreground text-sm">
+          At least one item must always be open. Clicking an open item won't
+          close it.
+        </p>
+        <Accordion type="single" collapsible={false} defaultValue="item-1">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Always one open</AccordionTrigger>
+            <AccordionContent>
+              This accordion has collapsible=false, so one item must always be
+              open. Try clicking this while it's open - nothing happens!
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Click to switch</AccordionTrigger>
+            <AccordionContent>
+              Clicking a closed item will open it and close the other.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </div>
   ),
 };

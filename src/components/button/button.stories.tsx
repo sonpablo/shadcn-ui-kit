@@ -267,9 +267,8 @@ export const WithIcons: Story = {
       </div>
 
       <p className="text-muted-foreground text-xs">
-        💡 <strong>Tip:</strong> Icons improve recognition and scannability.
-        Use <code>mr-2</code> for leading icons, <code>ml-2</code> for
-        trailing.
+        💡 <strong>Tip:</strong> Icons improve recognition and scannability. Use{' '}
+        <code>mr-2</code> for leading icons, <code>ml-2</code> for trailing.
       </p>
     </div>
   ),
@@ -341,8 +340,8 @@ export const IconOnly: Story = {
       </div>
 
       <p className="text-muted-foreground text-xs">
-        💡 <strong>Tip:</strong> Use icon sizes that match button size
-        (icon-sm → size-3, icon → size-4, icon-lg → size-5).
+        💡 <strong>Tip:</strong> Use icon sizes that match button size (icon-sm
+        → size-3, icon → size-4, icon-lg → size-5).
       </p>
     </div>
   ),
@@ -447,7 +446,7 @@ export const CompleteShowcase: Story = {
     };
 
     return (
-      <div className="w-[700px] space-y-6 rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+      <div className="bg-card text-card-foreground w-[700px] space-y-6 rounded-lg border p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold">Robot Deployment Center</h3>
@@ -608,8 +607,9 @@ export const Accessibility: Story = {
         </div>
         <p className="text-muted-foreground text-xs">
           Press <kbd className="bg-background rounded border px-1">Tab</kbd> to
-          navigate, <kbd className="bg-background rounded border px-1">Enter</kbd>{' '}
-          or <kbd className="bg-background rounded border px-1">Space</kbd> to
+          navigate,{' '}
+          <kbd className="bg-background rounded border px-1">Enter</kbd> or{' '}
+          <kbd className="bg-background rounded border px-1">Space</kbd> to
           activate.
         </p>
       </div>
@@ -621,13 +621,12 @@ export const Accessibility: Story = {
           <li>
             • Add <code>aria-label</code> for icon-only buttons
           </li>
+          <li>• Provide feedback for loading states (text + spinner)</li>
           <li>
-            • Provide feedback for loading states (text + spinner)
+            • Use clear, action-oriented labels (e.g., "Deploy Robot" not
+            "Submit")
           </li>
-          <li>• Use clear, action-oriented labels (e.g., "Deploy Robot" not "Submit")</li>
-          <li>
-            • Group related actions together visually
-          </li>
+          <li>• Group related actions together visually</li>
         </ul>
       </div>
 

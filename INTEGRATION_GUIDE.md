@@ -167,7 +167,7 @@ Create `styles/globals.css` with ONLY this:
 @import 'tailwindcss';
 ```
 
-#### 3. Import Styles in _app
+#### 3. Import Styles in \_app
 
 Update `pages/_app.tsx`:
 
@@ -355,7 +355,13 @@ export default defineConfig({
 ### Form Example
 
 ```tsx
-import { Field, FieldLabel, FieldDescription, Input, Button } from '@neura/shadcn-ui-kit';
+import {
+  Field,
+  FieldLabel,
+  FieldDescription,
+  Input,
+  Button,
+} from '@neura/shadcn-ui-kit';
 
 function LoginForm() {
   return (
@@ -365,12 +371,12 @@ function LoginForm() {
         <Input id="email" type="email" placeholder="you@example.com" />
         <FieldDescription>We'll never share your email.</FieldDescription>
       </Field>
-      
+
       <Field orientation="vertical">
         <FieldLabel htmlFor="password">Password</FieldLabel>
         <Input id="password" type="password" />
       </Field>
-      
+
       <Button type="submit" className="w-full">
         Sign In
       </Button>

@@ -682,7 +682,7 @@ export const CompleteShowcase: Story = {
           ].map((plan) => (
             <Field
               key={plan.id}
-              className="has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/5 flex-row items-start gap-3 rounded-lg border p-4"
+              className="has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5 flex-row items-start gap-3 rounded-lg border p-4"
             >
               <Checkbox id={plan.id} />
               <FieldContent className="gap-0.5">

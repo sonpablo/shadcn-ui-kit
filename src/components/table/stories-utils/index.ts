@@ -5,4 +5,3 @@
 
 export * from './robots-data';
 export * from './mock-api';
-

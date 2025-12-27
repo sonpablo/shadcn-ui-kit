@@ -62,4 +62,3 @@ const Toaster = ({ position = 'top-center', ...props }: ToasterProps) => {
 };
 
 export { Toaster };
-
