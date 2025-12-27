@@ -178,9 +178,7 @@ function NeuraBreadcrumb({
   };
 
   const renderSeparator = (key: string) => (
-    <BreadcrumbSeparator key={key}>
-      {separator}
-    </BreadcrumbSeparator>
+    <BreadcrumbSeparator key={key}>{separator}</BreadcrumbSeparator>
   );
 
   const renderCollapsedDropdown = () => {
@@ -248,9 +246,7 @@ function NeuraBreadcrumb({
               const isLast = index === visibleItems.length - 2;
               return (
                 <React.Fragment key={item.to}>
-                  <BreadcrumbItem>
-                    {renderLink(item, isLast)}
-                  </BreadcrumbItem>
+                  <BreadcrumbItem>{renderLink(item, isLast)}</BreadcrumbItem>
                   {!isLast && renderSeparator(`sep-${index}`)}
                 </React.Fragment>
               );
@@ -262,9 +258,7 @@ function NeuraBreadcrumb({
             const isLast = index === items.length - 1;
             return (
               <React.Fragment key={item.to}>
-                <BreadcrumbItem>
-                  {renderLink(item, isLast)}
-                </BreadcrumbItem>
+                <BreadcrumbItem>{renderLink(item, isLast)}</BreadcrumbItem>
                 {!isLast && renderSeparator(`sep-${index}`)}
               </React.Fragment>
             );
@@ -276,4 +270,3 @@ function NeuraBreadcrumb({
 }
 
 export { NeuraBreadcrumb };
-

@@ -32,7 +32,9 @@ function formatDateNative(
   if (!(date instanceof Date) || isNaN(date.getTime())) {
     return '';
   }
-  return new Intl.DateTimeFormat(locale, options ?? defaultDateFormat).format(date);
+  return new Intl.DateTimeFormat(locale, options ?? defaultDateFormat).format(
+    date,
+  );
 }
 
 /* -----------------------------------------------------------------------------
@@ -107,7 +109,7 @@ function DatePicker({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
+            'data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 w-[280px] justify-start text-left font-normal focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -177,7 +179,7 @@ function DatePickerWithPresets({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
+            'data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 w-[280px] justify-start text-left font-normal focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -273,7 +275,7 @@ function DateRangePicker({
           disabled={disabled}
           data-empty={!value?.from}
           className={cn(
-            'w-[300px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
+            'data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 w-[300px] justify-start text-left font-normal focus-visible:!ring-[3px]',
             className,
           )}
         >
@@ -352,7 +354,7 @@ function DatePickerButton({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'w-48 justify-between font-normal data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 focus-visible:!ring-[3px]',
+            'data-[empty=true]:text-muted-foreground focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 w-48 justify-between font-normal focus-visible:!ring-[3px]',
             className,
           )}
         >

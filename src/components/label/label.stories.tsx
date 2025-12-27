@@ -346,4 +346,3 @@ export const CompleteShowcase: Story = {
     layout: 'fullscreen',
   },
 };
-

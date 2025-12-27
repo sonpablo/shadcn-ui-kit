@@ -246,7 +246,9 @@ export const SiblingComparison: Story = {
     return (
       <div className="space-y-6">
         <div>
-          <p className="text-muted-foreground mb-2 text-sm">No siblings (all pages)</p>
+          <p className="text-muted-foreground mb-2 text-sm">
+            No siblings (all pages)
+          </p>
           <NeuraPagination
             currentPage={page1}
             totalPages={9}
@@ -275,4 +277,3 @@ export const SiblingComparison: Story = {
     );
   },
 };
-

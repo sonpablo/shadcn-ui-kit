@@ -883,8 +883,8 @@ function Overview() {
               </Card>
 
               {/* --- Quick Robot Search (Combobox) --- */}
-              <Card className="border-2 border-primary/20 shadow-lg">
-                <CardHeader className="bg-gradient-to-br from-primary/5 to-primary/10">
+              <Card className="border-primary/20 border-2 shadow-lg">
+                <CardHeader className="from-primary/5 to-primary/10 bg-gradient-to-br">
                   <CardTitle className="flex items-center gap-2">
                     <Search className="size-5" />
                     Quick Robot Search
@@ -921,7 +921,7 @@ function Overview() {
                           Active
                         </Badge>
                       </div>
-                      <div className="space-y-1 text-xs text-muted-foreground">
+                      <div className="text-muted-foreground space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span>Location:</span>
                           <span className="font-medium">Production Line A</span>
@@ -982,7 +982,7 @@ function Overview() {
                     />
                   </div>
                   {maintenanceDate && (
-                    <div className="bg-blue-500/5 border-blue-500/20 rounded-lg border p-3">
+                    <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-3">
                       <p className="text-sm">
                         <span className="font-semibold text-blue-700 dark:text-blue-400">
                           Scheduled:
@@ -1013,8 +1013,8 @@ function Overview() {
                 <CardContent className="space-y-4 pt-6">
                   <div className="flex items-center justify-between rounded-lg border p-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                        <Bot className="size-5 text-primary" />
+                      <div className="bg-primary/10 flex size-10 items-center justify-center rounded-lg">
+                        <Bot className="text-primary size-5" />
                       </div>
                       <div>
                         <p className="text-sm font-semibold">MAiRA-001</p>
@@ -1067,7 +1067,8 @@ function Overview() {
                           className="text-destructive focus:text-destructive"
                           onClick={() =>
                             toast.error('Deactivation', {
-                              description: 'Robot MAiRA-001 will be deactivated',
+                              description:
+                                'Robot MAiRA-001 will be deactivated',
                             })
                           }
                         >
@@ -1142,7 +1143,7 @@ function Overview() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between rounded-lg border p-3">
                       <div className="flex items-center gap-2">
-                        <Cpu className="size-4 text-muted-foreground" />
+                        <Cpu className="text-muted-foreground size-4" />
                         <span className="text-sm font-medium">
                           CPU Optimization
                         </span>
@@ -1191,7 +1192,7 @@ function Overview() {
 
                     <div className="flex items-center justify-between rounded-lg border p-3">
                       <div className="flex items-center gap-2">
-                        <Shield className="size-4 text-muted-foreground" />
+                        <Shield className="text-muted-foreground size-4" />
                         <span className="text-sm font-medium">
                           Safety Protocols
                         </span>
@@ -1237,7 +1238,7 @@ function Overview() {
 
                     <div className="flex items-center justify-between rounded-lg border p-3">
                       <div className="flex items-center gap-2">
-                        <Zap className="size-4 text-muted-foreground" />
+                        <Zap className="text-muted-foreground size-4" />
                         <span className="text-sm font-medium">
                           Power Management
                         </span>
@@ -1263,7 +1264,7 @@ function Overview() {
                                 <span className="text-xs">245W / 500W</span>
                               </div>
                               <div className="bg-background h-2 overflow-hidden rounded-full">
-                                <div className="h-full w-[49%] bg-primary" />
+                                <div className="bg-primary h-full w-[49%]" />
                               </div>
                             </div>
                           </div>
@@ -1281,7 +1282,7 @@ function Overview() {
 
               {/* --- Fleet Settings (Switch) --- */}
               <Card className="border-2 border-green-500/20 shadow-lg">
-                <CardHeader className="bg-gradient-to-br from-green-500/5 to-green-500/10">
+                <CardHeader className="bg-linear-to-br from-green-500/5 to-green-500/10">
                   <CardTitle className="flex items-center gap-2">
                     <Settings className="size-5 text-green-500" />
                     Fleet Settings
@@ -1305,7 +1306,10 @@ function Overview() {
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label htmlFor="collision-avoid" className="cursor-pointer">
+                      <Label
+                        htmlFor="collision-avoid"
+                        className="cursor-pointer"
+                      >
                         Collision Avoidance
                       </Label>
                       <p className="text-muted-foreground text-xs">
@@ -1329,7 +1333,10 @@ function Overview() {
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label htmlFor="maintenance-mode" className="cursor-pointer">
+                      <Label
+                        htmlFor="maintenance-mode"
+                        className="cursor-pointer"
+                      >
                         Maintenance Mode
                       </Label>
                       <p className="text-muted-foreground text-xs">

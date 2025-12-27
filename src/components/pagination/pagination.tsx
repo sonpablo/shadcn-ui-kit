@@ -54,8 +54,8 @@ function PaginationLink({
       className={cn(
         // Base styles
         'inline-flex items-center justify-center px-3 py-2 text-sm font-medium',
-        'border border-border text-muted-foreground',
-        'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'border-border text-muted-foreground border',
+        'focus-visible:ring-ring transition-colors focus-visible:ring-2 focus-visible:outline-none',
         // Conditional styles
         isActive
           ? 'bg-muted text-foreground cursor-default'
@@ -83,7 +83,7 @@ function PaginationPrevious({
   return (
     <PaginationLink
       aria-label={ariaLabel}
-      className={cn('rounded-l-md gap-1', className)}
+      className={cn('gap-1 rounded-l-md', className)}
       {...props}
     >
       <ChevronLeftIcon className="size-4" />
@@ -108,7 +108,7 @@ function PaginationNext({
   return (
     <PaginationLink
       aria-label={ariaLabel}
-      className={cn('rounded-r-md gap-1', className)}
+      className={cn('gap-1 rounded-r-md', className)}
       {...props}
     >
       {label && <span className="hidden sm:block">{label}</span>}
@@ -132,7 +132,7 @@ function PaginationEllipsis({
       aria-hidden
       data-slot="pagination-ellipsis"
       className={cn(
-        'flex items-center justify-center px-3 py-2 text-muted-foreground select-none',
+        'text-muted-foreground flex items-center justify-center px-3 py-2 select-none',
         className,
       )}
       {...props}

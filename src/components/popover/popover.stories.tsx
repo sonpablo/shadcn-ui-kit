@@ -9,12 +9,41 @@ import {
 import { Button } from '@/components/button/button';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label/label';
+import { Calendar } from '@/components/calendar/calendar';
+import { Settings, Info, HelpCircle, Bot } from 'lucide-react';
 
 const meta = {
   title: 'Components/Popover',
   component: Popover,
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: `
+A popover component for displaying rich content in a floating panel.
+
+## Features
+- Flexible positioning (sides and alignments)
+- Custom width and content
+- Controlled and uncontrolled modes
+- Anchor support
+- Keyboard accessible (Escape to close)
+- Click outside to close
+
+## Common Use Cases
+- Forms and inputs
+- Settings panels
+- Help/info tooltips
+- Date pickers
+- Action menus
+- Context-sensitive information
+
+## vs Tooltip
+Use **Popover** for interactive content (forms, buttons, links).  
+Use **Tooltip** for simple, read-only text hints.
+        `,
+      },
+    },
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof Popover>;
@@ -22,8 +51,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// =============================================================================
+// BASIC EXAMPLES
+// =============================================================================
+
 /**
- * Default popover with simple content
+ * ## Default
+ *
+ * Basic popover with simple content.
  */
 export const Default: Story = {
   render: () => (
@@ -33,9 +68,9 @@ export const Default: Story = {
       </PopoverTrigger>
       <PopoverContent>
         <div className="space-y-2">
-          <h4 className="font-medium leading-none">Popover</h4>
-          <p className="text-sm text-muted-foreground">
-            This is a simple popover component.
+          <h4 className="font-medium leading-none">Robot Status</h4>
+          <p className="text-muted-foreground text-sm">
+            MAiRA-001 is currently operational at Munich Plant A.
           </p>
         </div>
       </PopoverContent>
@@ -43,404 +78,604 @@ export const Default: Story = {
   ),
 };
 
+// =============================================================================
+// POSITIONING
+// =============================================================================
+
 /**
- * Popover with form fields
+ * ## Positioning
+ *
+ * Popover can be positioned on different sides and alignments.
  */
-export const WithForm: Story = {
+export const Positioning: Story = {
   render: () => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Edit Profile</h4>
-            <p className="text-sm text-muted-foreground">
-              Update your profile information.
-            </p>
-          </div>
+    <div className="flex flex-col gap-8 p-4">
+      <div>
+        <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+          Sides
+        </h4>
+        <div className="flex flex-wrap gap-4">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Top</Button>
+            </PopoverTrigger>
+            <PopoverContent side="top">
+              <p className="text-sm">Positioned on top</p>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Bottom</Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom">
+              <p className="text-sm">Positioned on bottom</p>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Left</Button>
+            </PopoverTrigger>
+            <PopoverContent side="left">
+              <p className="text-sm">Positioned on left</p>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Right</Button>
+            </PopoverTrigger>
+            <PopoverContent side="right">
+              <p className="text-sm">Positioned on right</p>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+
+      <div>
+        <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+          Alignments
+        </h4>
+        <div className="flex flex-wrap gap-4">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Align Start</Button>
+            </PopoverTrigger>
+            <PopoverContent align="start">
+              <p className="text-sm">Aligned to start</p>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Align Center</Button>
+            </PopoverTrigger>
+            <PopoverContent align="center">
+              <p className="text-sm">Aligned to center</p>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Align End</Button>
+            </PopoverTrigger>
+            <PopoverContent align="end">
+              <p className="text-sm">Aligned to end</p>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+
+      <p className="text-muted-foreground text-xs">
+        💡 <strong>Tip:</strong> Use <code>side</code> and <code>align</code>{' '}
+        props to control positioning.
+      </p>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// =============================================================================
+// WITH FORMS
+// =============================================================================
+
+/**
+ * ## With Forms
+ *
+ * Popover with form fields and interactive content.
+ */
+export const WithForms: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4 p-4">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">
+            <Settings className="mr-2 size-4" />
+            Robot Settings
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="John Doe" />
+              <h4 className="font-medium leading-none">Robot Configuration</h4>
+              <p className="text-muted-foreground text-sm">
+                Adjust robot operational parameters.
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="john@example.com" />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="robot-name">Robot Name</Label>
+                <Input id="robot-name" placeholder="MAiRA-001" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="max-speed">Max Speed (km/h)</Label>
+                <Input id="max-speed" type="number" placeholder="5.0" />
+              </div>
+              <Button className="w-full">Save Changes</Button>
             </div>
-            <Button className="w-full">Save Changes</Button>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  ),
-};
-
-/**
- * Popover with different alignments
- */
-export const Alignments: Story = {
-  render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Align Start</Button>
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <p className="text-sm">Aligned to start</p>
         </PopoverContent>
       </Popover>
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">Align Center</Button>
-        </PopoverTrigger>
-        <PopoverContent align="center">
-          <p className="text-sm">Aligned to center</p>
-        </PopoverContent>
-      </Popover>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Align End</Button>
-        </PopoverTrigger>
-        <PopoverContent align="end">
-          <p className="text-sm">Aligned to end</p>
-        </PopoverContent>
-      </Popover>
-    </div>
-  ),
-};
-
-/**
- * Popover with different sides
- */
-export const Sides: Story = {
-  render: () => (
-    <div className="flex gap-4 items-center flex-wrap">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Top</Button>
-        </PopoverTrigger>
-        <PopoverContent side="top">
-          <p className="text-sm">Popover on top</p>
-        </PopoverContent>
-      </Popover>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Right</Button>
-        </PopoverTrigger>
-        <PopoverContent side="right">
-          <p className="text-sm">Popover on right</p>
-        </PopoverContent>
-      </Popover>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Bottom</Button>
-        </PopoverTrigger>
-        <PopoverContent side="bottom">
-          <p className="text-sm">Popover on bottom</p>
-        </PopoverContent>
-      </Popover>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Left</Button>
-        </PopoverTrigger>
-        <PopoverContent side="left">
-          <p className="text-sm">Popover on left</p>
-        </PopoverContent>
-      </Popover>
-    </div>
-  ),
-};
-
-/**
- * Popover with custom width
- */
-export const CustomWidth: Story = {
-  render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Small (w-40)</Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-40">
-          <p className="text-sm">Small popover content</p>
-        </PopoverContent>
-      </Popover>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Default (w-72)</Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <p className="text-sm">Default width popover content</p>
-        </PopoverContent>
-      </Popover>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Large (w-96)</Button>
+          <Button variant="outline">
+            <HelpCircle className="mr-2 size-4" />
+            Need Help?
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="w-96">
-          <p className="text-sm">Large popover with more content space</p>
+          <div className="space-y-3">
+            <h4 className="font-medium">Quick Help</h4>
+            <ul className="text-muted-foreground space-y-2 text-sm">
+              <li>• Click the robot ID to view details</li>
+              <li>• Use the status filter to narrow results</li>
+              <li>• Right-click for more actions</li>
+            </ul>
+            <Button variant="link" className="p-0">
+              View full documentation →
+            </Button>
+          </div>
         </PopoverContent>
       </Popover>
+
+      <p className="text-muted-foreground w-full text-xs">
+        💡 <strong>Tip:</strong> Use custom widths with{' '}
+        <code>className="w-80"</code> for forms.
+      </p>
     </div>
   ),
+  parameters: {
+    layout: 'padded',
+  },
 };
 
+// =============================================================================
+// RICH CONTENT
+// =============================================================================
+
 /**
- * Popover with controlled state
+ * ## Rich Content
+ *
+ * Popover with complex content like calendars, lists, and more.
  */
-export const Controlled: Story = {
-  render: function ControlledComponent() {
-    const [open, setOpen] = React.useState(false);
+export const RichContent: Story = {
+  render: function RichContentExample() {
+    const [date, setDate] = React.useState<Date | undefined>(new Date());
 
     return (
-      <div className="space-y-4">
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setOpen(true)}>
-            Open
-          </Button>
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            Close
-          </Button>
-          <Button variant="outline" onClick={() => setOpen(!open)}>
-            Toggle
-          </Button>
-        </div>
-
-        <Popover open={open} onOpenChange={setOpen}>
+      <div className="flex flex-wrap gap-4 p-4">
+        <Popover>
           <PopoverTrigger asChild>
-            <Button>Controlled Popover</Button>
+            <Button variant="outline">Pick a Date</Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent className="w-auto p-0">
+            <Calendar mode="single" selected={date} onSelect={setDate} />
+          </PopoverContent>
+        </Popover>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">
+              <Bot className="mr-2 size-4" />
+              Select Robot
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-64">
             <div className="space-y-2">
-              <h4 className="font-medium">Controlled State</h4>
-              <p className="text-sm text-muted-foreground">
-                This popover's state is controlled externally.
-              </p>
-              <Button
-                size="sm"
-                className="w-full"
-                onClick={() => setOpen(false)}
-              >
-                Close from inside
-              </Button>
+              <h4 className="font-medium text-sm">Available Robots</h4>
+              <div className="space-y-1">
+                {['MAiRA-001', 'MAiRA-002', 'LARA-001', 'LARA-003'].map(
+                  (robot) => (
+                    <button
+                      key={robot}
+                      className="hover:bg-muted flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors"
+                    >
+                      <Bot className="size-4" />
+                      <span>{robot}</span>
+                    </button>
+                  ),
+                )}
+              </div>
             </div>
           </PopoverContent>
         </Popover>
 
-        <p className="text-sm text-muted-foreground">
-          State: {open ? 'Open' : 'Closed'}
+        <p className="text-muted-foreground w-full text-xs">
+          💡 <strong>Tip:</strong> Popovers can contain any React components.
         </p>
       </div>
     );
   },
-};
-
-/**
- * Popover with anchor element
- */
-export const WithAnchor: Story = {
-  render: () => (
-    <div className="space-y-8">
-      <div className="text-center space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Click the button to show a popover anchored to the text below
-        </p>
-        <Popover>
-          <PopoverAnchor>
-            <div className="inline-block px-4 py-2 bg-accent rounded-md">
-              📍 Anchor Point
-            </div>
-          </PopoverAnchor>
-          <PopoverTrigger asChild>
-            <Button variant="outline">Show Popover at Anchor</Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <p className="text-sm">
-              This popover is anchored to the element above, not the trigger.
-            </p>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
-  ),
-};
-
-/**
- * Popover with rich content
- */
-export const RichContent: Story = {
-  render: () => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">View Details</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-96">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="size-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold">
-              JD
-            </div>
-            <div>
-              <h4 className="font-medium">John Doe</h4>
-              <p className="text-sm text-muted-foreground">Software Engineer</p>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Email:</span>
-              <span>john@example.com</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Location:</span>
-              <span>San Francisco, CA</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Member since:</span>
-              <span>Jan 2024</span>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button size="sm" className="flex-1">
-              View Profile
-            </Button>
-            <Button size="sm" variant="outline" className="flex-1">
-              Send Message
-            </Button>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  ),
-};
-
-/**
- * Popover with list content
- */
-export const WithList: Story = {
-  render: () => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Quick Actions</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64 p-2">
-        <div className="space-y-1">
-          <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
-            📄 Create Document
-          </button>
-          <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
-            📁 Create Folder
-          </button>
-          <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
-            📤 Upload File
-          </button>
-          <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
-            🔗 Create Link
-          </button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  ),
-};
-
-/**
- * Complete showcase with all features
- */
-export const CompleteShowcase: Story = {
-  render: () => (
-    <div className="space-y-8 p-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Basic Popover</h3>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button>Click me</Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <p className="text-sm">Simple popover content</p>
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Form Popover</h3>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">Add Item</Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="space-y-4">
-              <h4 className="font-medium">Add New Item</h4>
-              <div className="space-y-2">
-                <Label htmlFor="item-name">Item Name</Label>
-                <Input id="item-name" placeholder="Enter name..." />
-              </div>
-              <Button className="w-full">Add</Button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Different Positions</h3>
-        <div className="flex gap-2 flex-wrap">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="secondary">
-                Top
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="top">
-              <p className="text-sm">Content on top</p>
-            </PopoverContent>
-          </Popover>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="secondary">
-                Bottom
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom">
-              <p className="text-sm">Content on bottom</p>
-            </PopoverContent>
-          </Popover>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="secondary">
-                Left
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="left">
-              <p className="text-sm">Content on left</p>
-            </PopoverContent>
-          </Popover>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="secondary">
-                Right
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="right">
-              <p className="text-sm">Content on right</p>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    </div>
-  ),
   parameters: {
-    layout: 'fullscreen',
+    layout: 'padded',
   },
 };
 
+// =============================================================================
+// CONTROLLED
+// =============================================================================
 
+/**
+ * ## Controlled
+ *
+ * Controlled popover with external state management.
+ */
+export const Controlled: Story = {
+  render: function ControlledExample() {
+    const [open, setOpen] = React.useState(false);
+
+    return (
+      <div className="flex flex-col gap-4 p-4">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline">Toggle Popover</Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="space-y-2">
+              <h4 className="font-medium leading-none">Controlled Popover</h4>
+              <p className="text-muted-foreground text-sm">
+                This popover is controlled externally.
+              </p>
+              <Button onClick={() => setOpen(false)} size="sm" className="w-full">
+                Close
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+            Open
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setOpen(false)}>
+            Close
+          </Button>
+        </div>
+
+        <p className="text-muted-foreground text-sm">
+          Status: <strong>{open ? 'Open' : 'Closed'}</strong>
+        </p>
+
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Use controlled mode for complex logic or
+          analytics tracking.
+        </p>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// =============================================================================
+// WITH ANCHOR
+// =============================================================================
+
+/**
+ * ## With Anchor
+ *
+ * Popover with custom anchor positioning.
+ */
+export const WithAnchor: Story = {
+  render: () => (
+    <div className="space-y-4 p-4">
+      <p className="text-muted-foreground text-sm">
+        Hover over the{' '}
+        <Popover>
+          <PopoverAnchor asChild>
+            <span className="text-primary underline">highlighted text</span>
+          </PopoverAnchor>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-auto p-0">
+              <Info className="size-3" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <p className="text-sm">This is additional information.</p>
+          </PopoverContent>
+        </Popover>{' '}
+        to see the popover.
+      </p>
+
+      <p className="text-muted-foreground text-xs">
+        💡 <strong>Tip:</strong> Use <code>PopoverAnchor</code> to position
+        relative to a different element.
+      </p>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// =============================================================================
+// COMPLETE SHOWCASE
+// =============================================================================
+
+/**
+ * ## Complete Showcase
+ *
+ * Real-world example: Robot management dashboard with multiple popovers.
+ */
+export const CompleteShowcase: Story = {
+  render: function CompleteShowcaseExample() {
+    const [selectedRobot, setSelectedRobot] = React.useState('');
+
+    return (
+      <div className="w-[600px] space-y-6 rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+        <div>
+          <h3 className="mb-2 text-lg font-semibold">Robot Fleet Dashboard</h3>
+          <p className="text-muted-foreground text-sm">
+            Manage your robot fleet with quick actions
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <Bot className="mr-2 size-4" />
+                Quick Actions
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-56">
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm">Robot Actions</h4>
+                <div className="space-y-1">
+                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                    Deploy Robot
+                  </Button>
+                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                    Schedule Maintenance
+                  </Button>
+                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                    View Analytics
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <Settings className="mr-2 size-4" />
+                Settings
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">Fleet Settings</h4>
+                  <p className="text-muted-foreground text-sm">
+                    Configure fleet-wide parameters.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fleet-name">Fleet Name</Label>
+                    <Input id="fleet-name" placeholder="Munich Fleet" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="max-robots">Max Active Robots</Label>
+                    <Input id="max-robots" type="number" placeholder="10" />
+                  </div>
+                  <Button className="w-full">Update Settings</Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <HelpCircle className="mr-2 size-4" />
+                Help
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-96">
+              <div className="space-y-3">
+                <h4 className="font-medium">Getting Started</h4>
+                <div className="text-muted-foreground space-y-2 text-sm">
+                  <p>
+                    <strong>Quick Tips:</strong>
+                  </p>
+                  <ul className="list-disc space-y-1 pl-4">
+                    <li>Click robot IDs to view detailed status</li>
+                    <li>Use filters to narrow down the fleet view</li>
+                    <li>Schedule maintenance during off-peak hours</li>
+                  </ul>
+                </div>
+                <Button variant="link" className="p-0">
+                  View full documentation →
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h4 className="mb-2 text-sm font-medium">Active Robots</h4>
+          <div className="flex flex-wrap gap-2">
+            {['MAiRA-001', 'LARA-003', '4NE1-002'].map((robot) => (
+              <Popover key={robot}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setSelectedRobot(robot)}
+                  >
+                    {robot}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="space-y-2">
+                    <h4 className="font-medium">{robot}</h4>
+                    <div className="text-muted-foreground space-y-1 text-sm">
+                      <p>Status: Operational</p>
+                      <p>Location: Munich Plant A</p>
+                      <p>Uptime: 98.5%</p>
+                    </div>
+                    <Button size="sm" className="w-full">
+                      View Details
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          💡 This dashboard demonstrates popovers for quick actions, settings,
+          help, and robot details.
+        </p>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// =============================================================================
+// ACCESSIBILITY
+// =============================================================================
+
+/**
+ * ## Accessibility
+ *
+ * Popover components follow accessibility best practices for keyboard navigation
+ * and screen readers.
+ */
+export const Accessibility: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6 p-4">
+      <div className="bg-muted/50 rounded-lg p-4">
+        <h4 className="mb-2 text-sm font-semibold">Accessibility Features</h4>
+        <ul className="text-muted-foreground space-y-1 text-sm">
+          <li>
+            ✓ <strong>Keyboard navigation</strong>: Escape to close, Tab to move
+            focus
+          </li>
+          <li>
+            ✓ <strong>Focus management</strong>: Focus returns to trigger on close
+          </li>
+          <li>
+            ✓ <strong>ARIA attributes</strong>: Proper roles and states
+          </li>
+          <li>
+            ✓ <strong>Click outside</strong>: Closes when clicking outside
+          </li>
+          <li>
+            ✓ <strong>Form labels</strong>: All inputs have associated labels
+          </li>
+          <li>
+            ✓ <strong>Interactive content</strong>: All buttons and links are
+            keyboard accessible
+          </li>
+        </ul>
+      </div>
+
+      <div className="w-[350px]">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">Accessible Popover</Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h4 className="font-medium">Robot Configuration</h4>
+                <p className="text-muted-foreground text-sm">
+                  All fields are keyboard accessible.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="accessible-input">Robot Name</Label>
+                <Input id="accessible-input" placeholder="MAiRA-001" />
+              </div>
+              <Button className="w-full">Save</Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="bg-muted/30 rounded-lg p-3">
+        <h4 className="mb-2 text-sm font-semibold">Keyboard Shortcuts</h4>
+        <ul className="text-muted-foreground space-y-1 text-sm">
+          <li>
+            <kbd className="bg-background rounded border px-1 text-xs">
+              Enter/Space
+            </kbd>{' '}
+            - Open popover
+          </li>
+          <li>
+            <kbd className="bg-background rounded border px-1 text-xs">Esc</kbd>{' '}
+            - Close popover
+          </li>
+          <li>
+            <kbd className="bg-background rounded border px-1 text-xs">Tab</kbd>{' '}
+            - Move focus through interactive elements
+          </li>
+        </ul>
+      </div>
+
+      <p className="text-muted-foreground text-xs">
+        💡 <strong>Tip:</strong> Always provide labels for form inputs and test
+        with keyboard-only navigation.
+      </p>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story: `
+### Accessibility Best Practices
+
+**Keyboard Support:**
+- Escape key closes the popover
+- Tab moves focus through interactive elements
+- Focus returns to trigger on close
+
+**Form Labels:**
+\`\`\`tsx
+<Label htmlFor="input-id">Label Text</Label>
+<Input id="input-id" />
+\`\`\`
+
+**Testing:**
+- Test keyboard-only navigation
+- Verify Escape closes the popover
+- Check focus returns to trigger
+- Ensure all interactive elements are reachable via Tab
+        `,
+      },
+    },
+  },
+};

@@ -1,38 +1,48 @@
-import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Combobox } from './combobox';
+import * as React from 'react';
+import { Combobox, type ComboboxProps } from './combobox';
 import { Label } from '@/components/label/label';
+import { Button } from '@/components/button/button';
 
 const meta = {
   title: 'Components/Combobox',
   component: Combobox,
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: `
+A searchable combobox component for selecting from a list of options with filtering.
+
+## Features
+- Search/filter functionality
+- Keyboard navigation
+- Three sizes (sm, default, lg)
+- Disabled items support
+- Empty state message
+- Controlled and uncontrolled
+- Error states
+
+## When to Use
+- **Long lists** (> 10 items): Searchability is essential
+- **Unknown options**: Users need to search/discover
+- **Faster selection**: Type to filter quickly
+
+## Common Use Cases
+- Robot selection from large fleet
+- Location search
+- User/operator search
+- Project search
+- Any searchable dropdown
+
+## vs Select
+Use **Combobox** for long, searchable lists.  
+Use **Select** for short, simple dropdowns.
+        `,
+      },
+    },
   },
   tags: ['autodocs'],
-  argTypes: {
-    disabled: {
-      control: 'boolean',
-      description: 'Whether the combobox is disabled',
-    },
-    placeholder: {
-      control: 'text',
-      description: 'Placeholder text when no value is selected',
-    },
-    searchPlaceholder: {
-      control: 'text',
-      description: 'Placeholder text for the search input',
-    },
-    emptyMessage: {
-      control: 'text',
-      description: 'Message shown when no results are found',
-    },
-    size: {
-      control: 'select',
-      options: ['sm', 'default', 'lg'],
-      description: 'Size of the combobox',
-    },
-  },
 } satisfies Meta<typeof Combobox>;
 
 export default meta;
@@ -44,10 +54,12 @@ const robotOptions = [
   { value: 'maira-002', label: 'MAiRA-002' },
   { value: 'lara-001', label: 'LARA-001' },
   { value: 'lara-003', label: 'LARA-003' },
-  { value: 'mav-001', label: 'MAV-001' },
-  { value: 'mipa-001', label: 'MiPA-001' },
   { value: '4ne1-001', label: '4NE1-001' },
   { value: '4ne1-002', label: '4NE1-002' },
+  { value: 'mav-001', label: 'MAV-001' },
+  { value: 'mipa-001', label: 'MiPA-001' },
+  { value: 'sentinel-001', label: 'Sentinel-001' },
+  { value: 'guardian-001', label: 'Guardian-001' },
 ];
 
 const fleetOptions = [
@@ -59,450 +71,584 @@ const fleetOptions = [
 ];
 
 const projectOptions = [
-  { value: 'proj-automation-2024', label: 'Automation Initiative 2024' },
-  { value: 'proj-quality-control', label: 'Quality Control System' },
-  { value: 'proj-warehouse-optimization', label: 'Warehouse Optimization' },
-  { value: 'proj-predictive-maintenance', label: 'Predictive Maintenance' },
-  { value: 'proj-fleet-expansion', label: 'Fleet Expansion Q1' },
+  { value: 'automation-2024', label: 'Automation Initiative 2024' },
+  { value: 'quality-control', label: 'Quality Control System' },
+  { value: 'warehouse-opt', label: 'Warehouse Optimization' },
+  { value: 'predictive-maint', label: 'Predictive Maintenance' },
+  { value: 'fleet-expansion', label: 'Fleet Expansion Q1' },
+  { value: 'safety-upgrade', label: 'Safety Systems Upgrade' },
 ];
 
-const robotStatusOptions = [
-  { value: 'maira-001', label: 'MAiRA-001 (Active)' },
-  { value: 'maira-002', label: 'MAiRA-002 (Active)' },
-  { value: 'lara-003', label: 'LARA-003 (Maintenance)', disabled: true },
-  { value: '4ne1-001', label: '4NE1-001 (Active)' },
-  { value: 'mav-001', label: 'MAV-001 (Offline)', disabled: true },
-];
+// =============================================================================
+// BASIC EXAMPLES
+// =============================================================================
 
 /**
- * ## Default Combobox
+ * ## Default
  *
- * Basic searchable combobox for selecting robots from your fleet.
- * Features real-time search and keyboard navigation.
+ * Basic combobox with search functionality.
  */
 export const Default: Story = {
-  render: function Render() {
+  render: function DefaultExample() {
     const [value, setValue] = React.useState('');
 
     return (
-      <Combobox
-        items={robotOptions}
-        value={value}
-        onValueChange={setValue}
-        placeholder="Select robot..."
-        searchPlaceholder="Search robots..."
-        className="w-[300px]"
-      />
-    );
-  },
-  args: {
-    items: [],
-  },
-};
-
-/**
- * ## Controlled State
- *
- * Fully controlled combobox with external state management.
- * Perfect for forms and workflows requiring validation.
- */
-export const Controlled: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [value, setValue] = React.useState('');
-
-    return (
-      <div className="space-y-4">
-        <Combobox
-          items={robotOptions}
-          value={value}
-          onValueChange={setValue}
-          placeholder="Select robot..."
-          searchPlaceholder="Search robots..."
-          className="w-[300px]"
-        />
-        <p className="text-muted-foreground text-sm">
-          Selected: <strong>{value || 'None'}</strong>
-        </p>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setValue('maira-001')}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-3 py-1.5 text-sm"
-          >
-            Select MAiRA-001
-          </button>
-          <button
-            onClick={() => setValue('')}
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-md px-3 py-1.5 text-sm"
-          >
-            Clear
-          </button>
+      <div className="flex flex-col gap-6 p-4">
+        <div>
+          <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+            Basic Usage
+          </h4>
+          <Combobox
+            items={robotOptions}
+            value={value}
+            onValueChange={setValue}
+            placeholder="Select robot..."
+            searchPlaceholder="Search robots..."
+            emptyMessage="No robot found."
+            className="w-[300px]"
+          />
         </div>
-      </div>
-    );
-  },
-};
 
-/**
- * ## With Label
- *
- * Combobox with an accessible label for form fields.
- * Essential for proper form accessibility and usability.
- */
-export const WithLabel: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [value, setValue] = React.useState('');
+        <div>
+          <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+            With Label
+          </h4>
+          <div className="space-y-2">
+            <Label htmlFor="robot-combo">Robot Unit</Label>
+            <Combobox
+              items={robotOptions}
+              placeholder="Select robot..."
+              searchPlaceholder="Search robots..."
+              className="w-[300px]"
+            />
+          </div>
+        </div>
 
-    return (
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="robot">Robot Unit</Label>
-        <Combobox
-          items={robotOptions}
-          value={value}
-          onValueChange={setValue}
-          placeholder="Select robot..."
-          searchPlaceholder="Search robots..."
-          className="w-[300px]"
-        />
-      </div>
-    );
-  },
-};
-
-/**
- * ## Fleet Selection
- *
- * Select from available fleet locations across your facilities.
- * Search helps quickly find the right location in large deployments.
- */
-export const FleetSelection: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [value, setValue] = React.useState('');
-
-    return (
-      <div className="space-y-4">
-        <Combobox
-          items={fleetOptions}
-          value={value}
-          onValueChange={setValue}
-          placeholder="Select fleet location..."
-          searchPlaceholder="Search locations..."
-          emptyMessage="No location found."
-          className="w-[300px]"
-        />
-        <p className="text-muted-foreground text-sm">
-          Selected: <strong>{value || 'None'}</strong>
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Combobox is ideal for lists with 10+ items
+          where users benefit from search.
         </p>
       </div>
     );
   },
-};
-
-/**
- * ## With Disabled Items
- *
- * Show robot status with disabled options for units in maintenance or offline.
- * Provides visual feedback while preventing selection of unavailable robots.
- */
-export const WithDisabledItems: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [value, setValue] = React.useState('');
-
-    return (
-      <Combobox
-        items={robotStatusOptions}
-        value={value}
-        onValueChange={setValue}
-        placeholder="Select robot..."
-        searchPlaceholder="Search robots..."
-        emptyMessage="No robot found."
-        className="w-[300px]"
-      />
-    );
+  parameters: {
+    layout: 'padded',
   },
 };
 
-/**
- * ## Disabled State
- *
- * Completely disabled combobox for read-only contexts.
- * Use when selection is temporarily unavailable or permissions prevent editing.
- */
-export const Disabled: Story = {
-  args: { items: [] },
-  render: () => {
-    return (
-      <Combobox
-        items={robotOptions}
-        disabled
-        placeholder="Select robot..."
-        className="w-[300px]"
-      />
-    );
-  },
-};
+// =============================================================================
+// SIZES
+// =============================================================================
 
 /**
  * ## Sizes
  *
- * Three size variants matching other form components.
- *
- * **Size Reference:**
- * - sm: h-8 (32px) - Compact interfaces, toolbars, filters
- * - default: h-9 (36px) - Standard forms
- * - lg: h-10 (40px) - Landing pages, emphasis
+ * Three available sizes: sm, default, and lg.
  */
 export const Sizes: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [valueSm, setValueSm] = React.useState('');
-    const [valueDefault, setValueDefault] = React.useState('');
-    const [valueLg, setValueLg] = React.useState('');
-
+  render: function SizesExample() {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6 p-4">
         <div className="space-y-2">
           <Label className="text-muted-foreground text-xs">
             Size: sm (h-8 / 32px)
           </Label>
           <Combobox
             items={robotOptions.slice(0, 5)}
-            value={valueSm}
-            onValueChange={setValueSm}
-            placeholder="Small combobox..."
+            placeholder="Select robot..."
             searchPlaceholder="Search..."
             size="sm"
             className="w-[250px]"
           />
         </div>
+
         <div className="space-y-2">
           <Label className="text-muted-foreground text-xs">
             Size: default (h-9 / 36px)
           </Label>
           <Combobox
             items={robotOptions.slice(0, 5)}
-            value={valueDefault}
-            onValueChange={setValueDefault}
-            placeholder="Default combobox..."
+            placeholder="Select robot..."
             searchPlaceholder="Search..."
-            size="default"
             className="w-[250px]"
           />
         </div>
+
         <div className="space-y-2">
           <Label className="text-muted-foreground text-xs">
             Size: lg (h-10 / 40px)
           </Label>
           <Combobox
             items={robotOptions.slice(0, 5)}
-            value={valueLg}
-            onValueChange={setValueLg}
-            placeholder="Large combobox..."
+            placeholder="Select robot..."
             searchPlaceholder="Search..."
             size="lg"
             className="w-[250px]"
           />
         </div>
+
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Use <code>size</code> prop to match input
+          heights in forms.
+        </p>
       </div>
     );
   },
+  parameters: {
+    layout: 'padded',
+  },
 };
 
+// =============================================================================
+// FEATURES
+// =============================================================================
+
 /**
- * ## Full Width
+ * ## Features
  *
- * Combobox that fills its container width.
- * Perfect for forms and responsive layouts.
+ * Combobox with disabled items and full width.
  */
-export const FullWidth: Story = {
-  args: { items: [] },
-  render: function Render() {
+export const Features: Story = {
+  render: function FeaturesExample() {
+    const [value1, setValue1] = React.useState('');
+    const [value2, setValue2] = React.useState('');
+
+    const robotsWithDisabled = [
+      { value: 'maira-001', label: 'MAiRA-001' },
+      { value: 'maira-002', label: 'MAiRA-002 (Maintenance)', disabled: true },
+      { value: 'lara-001', label: 'LARA-001' },
+      { value: 'lara-003', label: 'LARA-003 (Offline)', disabled: true },
+      { value: '4ne1-001', label: '4NE1-001' },
+    ];
+
+    return (
+      <div className="flex flex-col gap-8 p-4">
+        <div>
+          <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+            With Disabled Items
+          </h4>
+          <div className="space-y-2">
+            <Label>Robot Selection</Label>
+            <Combobox
+              items={robotsWithDisabled}
+              value={value1}
+              onValueChange={setValue1}
+              placeholder="Select robot..."
+              searchPlaceholder="Search robots..."
+              className="w-[300px]"
+            />
+            <p className="text-muted-foreground text-xs">
+              Robots in maintenance or offline are disabled
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+            Full Width
+          </h4>
+          <div className="space-y-2">
+            <Label>Project Assignment</Label>
+            <Combobox
+              items={projectOptions}
+              value={value2}
+              onValueChange={setValue2}
+              placeholder="Select project..."
+              searchPlaceholder="Search projects..."
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Use <code>disabled</code> property on items
+          to prevent selection of unavailable options.
+        </p>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// =============================================================================
+// STATES
+// =============================================================================
+
+/**
+ * ## States
+ *
+ * Disabled and error states.
+ */
+export const States: Story = {
+  render: function StatesExample() {
+    const [hasError, setHasError] = React.useState(true);
     const [value, setValue] = React.useState('');
 
     return (
-      <div className="w-80">
+      <div className="flex flex-col gap-8 p-4">
+        <div>
+          <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+            Disabled
+          </h4>
+          <div className="space-y-2">
+            <Label>Robot Selection</Label>
+            <Combobox
+              items={robotOptions.slice(0, 5)}
+              placeholder="Select robot..."
+              disabled
+              className="w-[300px]"
+            />
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+            Error State
+          </h4>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="toggle-error"
+                checked={hasError}
+                onChange={(e) => setHasError(e.target.checked)}
+                className="size-4"
+              />
+              <Label htmlFor="toggle-error">Show error state</Label>
+            </div>
+            <div className="border-t pt-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="robot"
+                  className={hasError ? 'text-destructive' : ''}
+                >
+                  Robot Unit
+                </Label>
+                <Combobox
+                  items={robotOptions}
+                  value={value}
+                  onValueChange={setValue}
+                  placeholder="Select robot..."
+                  searchPlaceholder="Search robots..."
+                  aria-invalid={hasError}
+                  className="w-[300px]"
+                />
+                {hasError && (
+                  <p className="text-destructive text-sm">
+                    Please select a robot unit.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Use <code>aria-invalid</code> for error
+          states and provide clear error messages.
+        </p>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'padded',
+  },
+};
+
+// =============================================================================
+// CONTROLLED
+// =============================================================================
+
+/**
+ * ## Controlled
+ *
+ * Controlled combobox with external state management.
+ */
+export const Controlled: Story = {
+  render: function ControlledExample() {
+    const [value, setValue] = React.useState('maira-001');
+
+    return (
+      <div className="flex flex-col gap-4 p-4">
         <Combobox
           items={robotOptions}
           value={value}
           onValueChange={setValue}
           placeholder="Select robot..."
           searchPlaceholder="Search robots..."
+          className="w-[300px]"
         />
+
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setValue('maira-001')}
+          >
+            Set MAiRA-001
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setValue('lara-001')}
+          >
+            Set LARA-001
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setValue('')}>
+            Clear
+          </Button>
+        </div>
+
+        <p className="text-muted-foreground text-sm">
+          Selected: <strong>{value || 'None'}</strong>
+        </p>
+
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Use controlled mode for complex form logic or
+          validation requirements.
+        </p>
       </div>
     );
   },
+  parameters: {
+    layout: 'padded',
+  },
 };
 
+// =============================================================================
+// COMPLETE SHOWCASE
+// =============================================================================
+
 /**
- * ## Project Selection
+ * ## Complete Showcase
  *
- * Select from active robotics projects across your organization.
- * Useful for task assignment and project tracking interfaces.
+ * Real-world example: Robot task assignment form with multiple comboboxes.
  */
-export const ProjectSelection: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [value, setValue] = React.useState('');
+export const CompleteShowcase: Story = {
+  render: function CompleteShowcaseExample() {
+    const [robot, setRobot] = React.useState('');
+    const [location, setLocation] = React.useState('');
+    const [project, setProject] = React.useState('');
 
     return (
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label>Active Project</Label>
-          <Combobox
-            items={projectOptions}
-            value={value}
-            onValueChange={setValue}
-            placeholder="Select project..."
-            searchPlaceholder="Search projects..."
-            emptyMessage="No project found."
-            className="w-[350px]"
-          />
-        </div>
-        {value && (
+      <div className="bg-card text-card-foreground w-[500px] space-y-6 rounded-lg border p-6 shadow-sm">
+        <div>
+          <h3 className="mb-2 text-lg font-semibold">Robot Task Assignment</h3>
           <p className="text-muted-foreground text-sm">
-            You selected: <strong className="text-foreground">{value}</strong>
+            Assign a robot to a project at a specific location
           </p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="grid gap-2">
+            <Label htmlFor="showcase-robot">Select Robot</Label>
+            <Combobox
+              items={robotOptions}
+              value={robot}
+              onValueChange={setRobot}
+              placeholder="Search robots..."
+              searchPlaceholder="Type to search..."
+              emptyMessage="No robot found."
+              className="w-full"
+            />
+            <p className="text-muted-foreground text-xs">
+              Search from {robotOptions.length} available robots
+            </p>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="showcase-location">Deployment Location</Label>
+            <Combobox
+              items={fleetOptions}
+              value={location}
+              onValueChange={setLocation}
+              placeholder="Search locations..."
+              searchPlaceholder="Type to search..."
+              emptyMessage="No location found."
+              className="w-full"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="showcase-project">Assign to Project</Label>
+            <Combobox
+              items={projectOptions}
+              value={project}
+              onValueChange={setProject}
+              placeholder="Search projects..."
+              searchPlaceholder="Type to search..."
+              emptyMessage="No project found."
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        {robot && location && project && (
+          <div className="bg-muted/50 rounded-lg p-4 text-sm">
+            <h4 className="mb-2 font-medium">Assignment Summary</h4>
+            <ul className="text-muted-foreground space-y-1 text-sm">
+              <li>
+                <strong>Robot:</strong>{' '}
+                {robotOptions.find((r) => r.value === robot)?.label}
+              </li>
+              <li>
+                <strong>Location:</strong>{' '}
+                {fleetOptions.find((f) => f.value === location)?.label}
+              </li>
+              <li>
+                <strong>Project:</strong>{' '}
+                {projectOptions.find((p) => p.value === project)?.label}
+              </li>
+            </ul>
+          </div>
         )}
+
+        <div className="flex justify-end gap-3 border-t pt-4">
+          <Button variant="outline">Cancel</Button>
+          <Button disabled={!robot || !location || !project}>
+            Assign Task
+          </Button>
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          💡 This form demonstrates combobox for searching and selecting from
+          large lists.
+        </p>
       </div>
     );
   },
+  parameters: {
+    layout: 'padded',
+  },
 };
 
+// =============================================================================
+// ACCESSIBILITY
+// =============================================================================
+
 /**
- * ## Error State
+ * ## Accessibility
  *
- * Display validation errors for required or invalid selections.
- * Toggle the error state to see visual feedback with aria-invalid support.
+ * Combobox follows accessibility best practices for keyboard navigation and
+ * screen readers.
  */
-export const ErrorState: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [hasError, setHasError] = React.useState(true);
+export const Accessibility: Story = {
+  render: function AccessibilityExample() {
     const [value, setValue] = React.useState('');
 
     return (
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="toggle-error"
-            checked={hasError}
-            onChange={(e) => setHasError(e.target.checked)}
-            className="size-4"
-          />
-          <Label htmlFor="toggle-error">Show error state</Label>
+      <div className="flex flex-col gap-6 p-4">
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h4 className="mb-2 text-sm font-semibold">Accessibility Features</h4>
+          <ul className="text-muted-foreground space-y-1 text-sm">
+            <li>
+              ✓ <strong>Keyboard navigation</strong>: Arrow keys to navigate,
+              Enter to select
+            </li>
+            <li>
+              ✓ <strong>Search</strong>: Type to filter options immediately
+            </li>
+            <li>
+              ✓ <strong>Labels</strong>: Always use proper label association
+            </li>
+            <li>
+              ✓ <strong>ARIA attributes</strong>: Built-in roles and states
+            </li>
+            <li>
+              ✓ <strong>Focus management</strong>: Clear focus indicators
+            </li>
+            <li>
+              ✓ <strong>Error states</strong>: Announced to screen readers
+            </li>
+          </ul>
         </div>
-        <div className="border-t pt-4">
+
+        <div className="w-[300px]">
           <div className="space-y-2">
-            <Label
-              htmlFor="robot"
-              className={hasError ? 'text-destructive' : ''}
-            >
-              Robot Unit
-            </Label>
+            <Label htmlFor="accessible-combo">Robot Selection</Label>
             <Combobox
               items={robotOptions}
               value={value}
               onValueChange={setValue}
               placeholder="Select robot..."
               searchPlaceholder="Search robots..."
-              aria-invalid={hasError}
-              className="w-[300px]"
+              className="w-full"
             />
-            {hasError && (
-              <p className="text-destructive text-sm">
-                Please select a robot unit.
-              </p>
-            )}
           </div>
         </div>
+
+        <div className="bg-muted/30 rounded-lg p-3">
+          <h4 className="mb-2 text-sm font-semibold">Keyboard Shortcuts</h4>
+          <ul className="text-muted-foreground space-y-1 text-sm">
+            <li>
+              <kbd className="bg-background rounded border px-1 text-xs">
+                Click/Space
+              </kbd>{' '}
+              - Open dropdown
+            </li>
+            <li>
+              <kbd className="bg-background rounded border px-1 text-xs">
+                Type
+              </kbd>{' '}
+              - Filter options
+            </li>
+            <li>
+              <kbd className="bg-background rounded border px-1 text-xs">
+                Arrow keys
+              </kbd>{' '}
+              - Navigate options
+            </li>
+            <li>
+              <kbd className="bg-background rounded border px-1 text-xs">
+                Enter
+              </kbd>{' '}
+              - Select focused option
+            </li>
+            <li>
+              <kbd className="bg-background rounded border px-1 text-xs">
+                Esc
+              </kbd>{' '}
+              - Close dropdown
+            </li>
+          </ul>
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          💡 <strong>Tip:</strong> Always provide labels, ensure search is
+          keyboard accessible, and test with screen readers.
+        </p>
       </div>
     );
   },
-};
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story: `
+### Accessibility Best Practices
 
-/**
- * ## Form Example
- *
- * Complete form demonstrating multiple comboboxes working together.
- * Shows real-world usage for task assignment and fleet management.
- */
-export const FormExample: Story = {
-  args: { items: [] },
-  render: function Render() {
-    const [robot, setRobot] = React.useState('');
-    const [fleet, setFleet] = React.useState('');
-    const [project, setProject] = React.useState('');
+**Label Association:**
+\`\`\`tsx
+<Label htmlFor="robot">Robot Unit</Label>
+<Combobox items={items} placeholder="Select..." />
+\`\`\`
 
-    return (
-      <div className="w-96 space-y-6">
-        <div>
-          <h3 className="mb-4 text-lg font-semibold">Assign Robot to Task</h3>
-          <p className="text-muted-foreground mb-6 text-sm">
-            Configure robot assignment for automated workflow execution.
-          </p>
-        </div>
+**Error Handling:**
+\`\`\`tsx
+<Label className={hasError ? 'text-destructive' : ''}>Label</Label>
+<Combobox aria-invalid={hasError} ... />
+<p className="text-destructive text-sm">{errorMessage}</p>
+\`\`\`
 
-        <div className="space-y-2">
-          <Label htmlFor="robot">Robot Unit</Label>
-          <Combobox
-            items={robotOptions}
-            value={robot}
-            onValueChange={setRobot}
-            placeholder="Select robot..."
-            searchPlaceholder="Search robots..."
-          />
-          <p className="text-muted-foreground text-xs">
-            Choose the robot to assign to this task.
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="fleet">Fleet Location</Label>
-          <Combobox
-            items={fleetOptions}
-            value={fleet}
-            onValueChange={setFleet}
-            placeholder="Select location..."
-            searchPlaceholder="Search locations..."
-          />
-          <p className="text-muted-foreground text-xs">
-            Deployment location for the robot.
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="project">Project</Label>
-          <Combobox
-            items={projectOptions}
-            value={project}
-            onValueChange={setProject}
-            placeholder="Select project..."
-            searchPlaceholder="Search projects..."
-          />
-          <p className="text-muted-foreground text-xs">
-            Associated project for tracking and reporting.
-          </p>
-        </div>
-
-        <div className="border-t pt-4">
-          <h3 className="mb-2 text-sm font-medium">Assignment Data:</h3>
-          <pre className="bg-muted text-muted-foreground rounded-md p-3 text-xs">
-            {JSON.stringify(
-              {
-                robot: robot || null,
-                fleet: fleet || null,
-                project: project || null,
-              },
-              null,
-              2,
-            )}
-          </pre>
-        </div>
-      </div>
-    );
+**Testing:**
+- Test keyboard navigation and search
+- Verify screen reader announces options and filtering
+- Check focus indicators are visible
+- Test with long lists (100+ items)
+        `,
+      },
+    },
   },
 };
