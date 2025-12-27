@@ -44,6 +44,7 @@ type PaginationLinkProps = {
 function PaginationLink({
   className,
   isActive,
+  children,
   ...props
 }: PaginationLinkProps) {
   return (
@@ -63,7 +64,9 @@ function PaginationLink({
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </a>
   );
 }
 
