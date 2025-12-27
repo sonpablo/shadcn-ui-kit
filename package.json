@@ -58,13 +58,16 @@
     "build:all": "npm run build && npm run build:icons",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint-staged": "lint-staged",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:fix": "npm run lint:fix && npm run format",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -121,6 +124,8 @@
     "eslint-plugin-storybook": "^10.1.10",
     "glob": "^13.0.0",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "playwright": "^1.57.0",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
