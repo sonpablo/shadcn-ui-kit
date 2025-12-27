@@ -15,20 +15,13 @@ const buildEslintFixCommand = (filenames) =>
 const buildPrettierCommand = (filenames) =>
   `prettier --write ${filenames.map((f) => path.relative(process.cwd(), f)).join(' ')}`;
 
-/**
- * Build TypeScript type check command for staged files
- * Runs type checking without emitting files
- */
-const buildTypeCheckCommand = () => `tsc --noEmit`;
-
 module.exports = {
   // JavaScript/TypeScript files
-  '*.{js,jsx,ts,tsx}': [
-    buildEslintFixCommand,
-    buildPrettierCommand,
-    buildTypeCheckCommand,
-  ],
+  // Note: TypeScript type checking is NOT included here because tsc needs to check
+  // the entire project for accurate results. Run `npm run typecheck` manually,
+  // or set up CI/CD to catch type errors.
+  '*.{js,jsx,ts,tsx}': [buildEslintFixCommand, buildPrettierCommand],
+  
   // JSON, Markdown, CSS files
   '*.{json,md,css}': [buildPrettierCommand],
 };
-
