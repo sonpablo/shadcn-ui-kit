@@ -19,32 +19,57 @@ import {
   PopoverTrigger,
 } from '@/components/popover/popover';
 
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js',
-  },
-  {
-    value: 'remix',
-    label: 'Remix',
-  },
-  {
-    value: 'astro',
-    label: 'Astro',
-  },
-];
+export interface ComboboxItem {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
 
-export function ComboboxDemo() {
+export interface ComboboxProps {
+  items: ComboboxItem[];
+  value?: string;
+  onValueChange?: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  className?: string;
+  disabled?: boolean;
+  size?: "sm" | "default" | "lg";
+  'aria-invalid'?: boolean;
+}
+
+export function Combobox({
+  items,
+  value,
+  onValueChange,
+  placeholder = 'Select an option...',
+  searchPlaceholder = 'Search...',
+  emptyMessage = 'No results found.',
+  className,
+  disabled = false,
+  size = "default",
+  'aria-invalid': ariaInvalid,
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [internalValue, setInternalValue] = React.useState('');
+
+  const isControlled = value !== undefined;
+  const currentValue = isControlled ? value : internalValue;
+
+  const handleValueChange = (newValue: string) => {
+    if (!isControlled) {
+      setInternalValue(newValue);
+    }
+    onValueChange?.(newValue);
+  };
+
+  const selectedItem = items.find((item) => item.value === currentValue);
+
+  const sizeClasses = {
+    sm: 'h-8 px-2.5',
+    default: 'h-9 px-3',
+    lg: 'h-10 px-3.5',
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,36 +78,45 @@ export function ComboboxDemo() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-50 justify-between"
+          aria-invalid={ariaInvalid}
+          disabled={disabled}
+          className={cn(
+            'w-full justify-between',
+            sizeClasses[size],
+            !currentValue && 'text-muted-foreground',
+            className
+          )}
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : 'Select framework...'}
+          <span className="truncate">
+            {selectedItem?.label ?? placeholder}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-50 p-0">
+      <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {items.map((item) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? '' : currentValue);
+                  key={item.value}
+                  value={item.value}
+                  disabled={item.disabled}
+                  onSelect={(selectedValue) => {
+                    const newValue = selectedValue === currentValue ? '' : selectedValue;
+                    handleValueChange(newValue);
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',
-                      value === framework.value ? 'opacity-100' : 'opacity-0',
+                      currentValue === item.value ? 'opacity-100' : 'opacity-0',
                     )}
                   />
-                  {framework.label}
+                  {item.label}
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -70,33 +70,61 @@ export const AllVariants: Story = {
 
 // Icon buttons
 export const Icon: Story = {
-  args: {
-    children: <ChevronRight />,
-    size: 'icon',
-    variant: 'icon',
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" size="icon-sm">
+          <Mail />
+        </Button>
+        <Button variant="outline" size="icon">
+          <Mail />
+        </Button>
+        <Button variant="outline" size="icon-lg">
+          <Mail />
+        </Button>
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
   },
 };
 
 // With icons
 export const WithIcon: Story = {
-  args: {
-    children: (
-      <>
-        <Mail />
-        Login with Email
-      </>
-    ),
-  },
-};
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-2">
+        <Button variant="default">
+          Right <Download />
+        </Button>
+        <Button variant="destructive">
+          <Download />
+          Left
+        </Button>
+        <Button variant="outline" className="h-16">
+          <div className="flex flex-col items-center gap-2">
+            <Download />
+            Top
+          </div>
+        </Button>
+        <Button variant="secondary" className="h-16">
+          <div className="flex flex-col items-center gap-2">
+            Botton
+            <Download />
+          </div>
+        </Button>
 
-export const WithIconRight: Story = {
-  args: {
-    children: (
-      <>
-        Download
-        <Download />
-      </>
-    ),
+        <Button variant="link">
+          <Download />
+          Aside
+          <Download />
+        </Button>
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: 'padded',
   },
 };
 

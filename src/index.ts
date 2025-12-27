@@ -4,6 +4,7 @@ export * from './components/breadcrumb/breadcrumb';
 export * from './components/breadcrumb/neura-breadcrumb';
 export * from './components/button/button';
 export * from './components/calendar/calendar';
+export * from './components/combobox/combobox';
 export * from './components/command/command';
 export * from './components/dialog/dialog';
 export * from './components/dropdown-menu/dropdown-menu';

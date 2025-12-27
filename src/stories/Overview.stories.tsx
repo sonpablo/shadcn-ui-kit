@@ -6,18 +6,23 @@ import {
   Bell,
   Bot,
   Calendar,
+  CalendarDays,
+  Clock,
   Cpu,
   FileText,
   Globe,
   HelpCircle,
   Layers,
   Lock,
+  MoreHorizontal,
   Palette,
   Play,
+  Search,
   Send,
   Settings,
   Shield,
   Sparkles,
+  Trash2,
   Users,
   Wrench,
   Zap,
@@ -106,12 +111,49 @@ import {
 } from '@/components/pagination/pagination';
 import { Toaster } from '@/components/sonner/sonner';
 import { toast } from 'sonner';
+import { Combobox } from '@/components/combobox/combobox';
+import {
+  DatePicker,
+  DateRangePicker,
+} from '@/components/date-picker/date-picker';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/dropdown-menu/dropdown-menu';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/popover/popover';
+import type { DateRange } from 'react-day-picker';
 
 // --- Overview Component ---
 function Overview() {
   const [selectedPlan, setSelectedPlan] = React.useState('fleet');
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [selectedRobot, setSelectedRobot] = React.useState('');
+  const [maintenanceDate, setMaintenanceDate] = React.useState<
+    Date | undefined
+  >();
+  const [deploymentPeriod, setDeploymentPeriod] = React.useState<
+    DateRange | undefined
+  >();
+
+  const robotOptions = [
+    { value: 'maira-001', label: 'MAiRA-001' },
+    { value: 'maira-002', label: 'MAiRA-002' },
+    { value: 'lara-001', label: 'LARA-001' },
+    { value: 'lara-003', label: 'LARA-003' },
+    { value: '4ne1-001', label: '4NE1-001' },
+    { value: '4ne1-002', label: '4NE1-002' },
+    { value: 'mav-001', label: 'MAV-001' },
+    { value: 'mipa-001', label: 'MiPA-001' },
+  ];
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="neura-ui-theme">
@@ -836,6 +878,403 @@ function Overview() {
                       placeholder="Select sensors..."
                     />
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* --- Quick Robot Search (Combobox) --- */}
+              <Card className="border-2 border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-br from-primary/5 to-primary/10">
+                  <CardTitle className="flex items-center gap-2">
+                    <Search className="size-5" />
+                    Quick Robot Search
+                  </CardTitle>
+                  <CardDescription>
+                    Find any robot in your fleet instantly with searchable
+                    dropdown
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Bot className="size-4" />
+                      Search Robot
+                    </Label>
+                    <Combobox
+                      items={robotOptions}
+                      value={selectedRobot}
+                      onValueChange={setSelectedRobot}
+                      placeholder="Search by name or ID..."
+                      searchPlaceholder="Type to search..."
+                      emptyMessage="No robot found"
+                      className="w-full"
+                    />
+                  </div>
+                  {selectedRobot && (
+                    <div className="bg-muted rounded-lg border p-4">
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="text-sm font-semibold">
+                          {robotOptions.find((r) => r.value === selectedRobot)
+                            ?.label || selectedRobot}
+                        </span>
+                        <Badge className="bg-green-500/10 text-green-500">
+                          Active
+                        </Badge>
+                      </div>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <div className="flex justify-between">
+                          <span>Location:</span>
+                          <span className="font-medium">Production Line A</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Uptime:</span>
+                          <span className="font-medium">99.7%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Last Task:</span>
+                          <span className="font-medium">2 min ago</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-muted-foreground text-xs">
+                    💡 <strong>Tip:</strong> Use Combobox for searchable lists
+                    with many options
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* --- Maintenance Scheduler (DatePicker) --- */}
+              <Card className="border-2 border-blue-500/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-br from-blue-500/5 to-blue-500/10">
+                  <CardTitle className="flex items-center gap-2">
+                    <CalendarDays className="size-5 text-blue-500" />
+                    Maintenance Scheduler
+                  </CardTitle>
+                  <CardDescription>
+                    Schedule preventive maintenance with our calendar components
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Clock className="size-4" />
+                      Next Maintenance Date
+                    </Label>
+                    <DatePicker
+                      value={maintenanceDate}
+                      onChange={setMaintenanceDate}
+                      placeholder="Select date..."
+                      className="w-full"
+                      calendarProps={{
+                        disabled: { before: new Date() },
+                      }}
+                    />
+                  </div>
+                  <Separator />
+                  <div className="space-y-2">
+                    <Label>Deployment Period</Label>
+                    <DateRangePicker
+                      value={deploymentPeriod}
+                      onChange={setDeploymentPeriod}
+                      placeholder="Select date range..."
+                      className="w-full"
+                    />
+                  </div>
+                  {maintenanceDate && (
+                    <div className="bg-blue-500/5 border-blue-500/20 rounded-lg border p-3">
+                      <p className="text-sm">
+                        <span className="font-semibold text-blue-700 dark:text-blue-400">
+                          Scheduled:
+                        </span>{' '}
+                        {maintenanceDate.toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* --- Robot Actions Menu (DropdownMenu) --- */}
+              <Card className="border-2 border-violet-500/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-br from-violet-500/5 to-violet-500/10">
+                  <CardTitle className="flex items-center gap-2">
+                    <MoreHorizontal className="size-5 text-violet-500" />
+                    Robot Actions Menu
+                  </CardTitle>
+                  <CardDescription>
+                    Contextual actions with dropdown menus
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+                        <Bot className="size-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold">MAiRA-001</p>
+                        <p className="text-muted-foreground text-xs">
+                          Production Line A
+                        </p>
+                      </div>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuLabel>Robot Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() =>
+                            toast.success('Robot Details', {
+                              description: 'Opening robot information panel',
+                            })
+                          }
+                        >
+                          <Activity className="mr-2 size-4" />
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            toast.info('Settings', {
+                              description: 'Opening configuration panel',
+                            })
+                          }
+                        >
+                          <Settings className="mr-2 size-4" />
+                          Configure
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            toast.info('Maintenance', {
+                              description: 'Scheduling maintenance',
+                            })
+                          }
+                        >
+                          <Wrench className="mr-2 size-4" />
+                          Schedule Maintenance
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={() =>
+                            toast.error('Deactivation', {
+                              description: 'Robot MAiRA-001 will be deactivated',
+                            })
+                          }
+                        >
+                          <Trash2 className="mr-2 size-4" />
+                          Deactivate
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10">
+                        <Bot className="size-5 text-blue-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold">LARA-003</p>
+                        <p className="text-muted-foreground text-xs">
+                          Assembly Station
+                        </p>
+                      </div>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuLabel>Robot Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          <Activity className="mr-2 size-4" />
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Settings className="mr-2 size-4" />
+                          Configure
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Wrench className="mr-2 size-4" />
+                          Schedule Maintenance
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="text-destructive focus:text-destructive">
+                          <Trash2 className="mr-2 size-4" />
+                          Deactivate
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  <p className="text-muted-foreground text-xs">
+                    💡 <strong>Tip:</strong> Perfect for contextual actions
+                    without cluttering the UI
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* --- Configuration Helper (Popover) --- */}
+              <Card className="border-2 border-amber-500/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-br from-amber-500/5 to-amber-500/10">
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="size-5 text-amber-500" />
+                    Configuration Helper
+                  </CardTitle>
+                  <CardDescription>
+                    Rich contextual information with popovers
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                      <div className="flex items-center gap-2">
+                        <Cpu className="size-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          CPU Optimization
+                        </span>
+                      </div>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <HelpCircle className="size-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80">
+                          <div className="space-y-3">
+                            <h4 className="font-semibold">CPU Optimization</h4>
+                            <p className="text-muted-foreground text-sm">
+                              Adjusts the robot's processing power allocation
+                              for optimal performance based on task complexity.
+                            </p>
+                            <Separator />
+                            <div className="space-y-2 text-xs">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Performance Mode:
+                                </span>
+                                <span className="font-medium">High</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Cores Used:
+                                </span>
+                                <span className="font-medium">4 / 8</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Power Consumption:
+                                </span>
+                                <span className="font-medium">65W</span>
+                              </div>
+                            </div>
+                            <Button size="sm" className="w-full">
+                              Adjust Settings
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                      <div className="flex items-center gap-2">
+                        <Shield className="size-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          Safety Protocols
+                        </span>
+                      </div>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <HelpCircle className="size-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80">
+                          <div className="space-y-3">
+                            <h4 className="font-semibold">Safety Protocols</h4>
+                            <p className="text-muted-foreground text-sm">
+                              Comprehensive safety measures including collision
+                              detection, emergency stops, and operator proximity
+                              sensors.
+                            </p>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="size-2 rounded-full bg-green-500" />
+                                <span className="text-xs">
+                                  Collision Detection: Active
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="size-2 rounded-full bg-green-500" />
+                                <span className="text-xs">
+                                  E-Stop System: Operational
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="size-2 rounded-full bg-green-500" />
+                                <span className="text-xs">
+                                  Safety Zone: Monitored
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                      <div className="flex items-center gap-2">
+                        <Zap className="size-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          Power Management
+                        </span>
+                      </div>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <HelpCircle className="size-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80">
+                          <div className="space-y-3">
+                            <h4 className="font-semibold">Power Management</h4>
+                            <p className="text-muted-foreground text-sm">
+                              Smart power distribution and energy-saving modes
+                              during idle periods.
+                            </p>
+                            <div className="bg-muted rounded-lg p-3">
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="text-xs font-medium">
+                                  Current Draw
+                                </span>
+                                <span className="text-xs">245W / 500W</span>
+                              </div>
+                              <div className="bg-background h-2 overflow-hidden rounded-full">
+                                <div className="h-full w-[49%] bg-primary" />
+                              </div>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
+
+                  <p className="text-muted-foreground text-xs">
+                    💡 <strong>Tip:</strong> Use Popovers for detailed
+                    information without leaving the current view
+                  </p>
                 </CardContent>
               </Card>
 

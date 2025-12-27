@@ -1,1266 +1,1430 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
-import {
-  Field,
-  FieldSet,
-  FieldLegend,
-  FieldGroup,
-  FieldContent,
-  FieldLabel,
-  FieldDescription,
-  FieldError,
-} from '@/components/field/field';
-import { Input } from '@/components/input/input';
-import { Textarea } from '@/components/textarea/textarea';
-import { Button } from '@/components/button/button';
-import { Checkbox } from '@/components/checkbox/checkbox';
+
+// Components
+import { Button } from '../../components/button/button';
+import { Input } from '../../components/input/input';
+import { Textarea } from '../../components/textarea/textarea';
+import { Checkbox } from '../../components/checkbox/checkbox';
+import { Label } from '../../components/label/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/select/select';
+} from '../../components/select/select';
 import {
   RadioGroup,
   RadioGroupItem,
-} from '@/components/radio-group/radio-group';
-import { Label } from '@/components/label/label';
+} from '../../components/radio-group/radio-group';
 import {
-  DatePicker,
-  DatePickerButton,
-  DateRangePicker,
-} from '@/components/date-picker/date-picker';
+  Field,
+  FieldSet,
+  FieldLegend,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+  FieldError,
+} from '../../components/field/field';
+import { DatePicker } from '../../components/date-picker/date-picker';
+import { DateRangePicker } from '../../components/date-picker/date-picker';
+import { Combobox } from '../../components/combobox/combobox';
+import { MultiSelect } from '../../components/multi-select/multi-select';
 import type { DateRange } from 'react-day-picker';
 
-const meta = {
+const meta: Meta = {
   title: 'Patterns/Forms',
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: `
+# Form Patterns
+
+This guide demonstrates three different approaches to building forms in React, 
+showcasing best practices for validation, accessibility, and user experience.
+
+## Approaches Covered
+
+1. **Native HTML + React** - Built-in browser validation with React state
+2. **React Hook Form** - Performance-optimized with uncontrolled components
+3. **React Hook Form + Zod** - Type-safe validation with schema definitions
+
+Each approach demonstrates the same comprehensive form using all available form components.
+        `,
+      },
+    },
   },
-} satisfies Meta;
+};
 
 export default meta;
 type Story = StoryObj;
 
 /* =============================================================================
- * Native HTML Forms
+ * Shared Data & Types
  * ============================================================================= */
 
-// Support Request Form (Native HTML)
-export const ContactForm: Story = {
-  name: 'Support Request (Native)',
-  render: function ContactFormExample() {
-    const [submitted, setSubmitted] = React.useState(false);
-    const [errors, setErrors] = React.useState<Record<string, string>>({});
+// Robot options for Combobox
+const robotOptions = [
+  { value: 'maira-001', label: 'MAiRA-001' },
+  { value: 'maira-002', label: 'MAiRA-002' },
+  { value: 'lara-001', label: 'LARA-001' },
+  { value: 'lara-003', label: 'LARA-003' },
+  { value: '4ne1-001', label: '4NE1-001' },
+  { value: 'mav-001', label: 'MAV-001' },
+  { value: 'mipa-001', label: 'MiPA-001' },
+];
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const newErrors: Record<string, string> = {};
-
-      const name = formData.get('name') as string;
-      const email = formData.get('email') as string;
-
-      if (!name || name.length < 2) {
-        newErrors.name = 'Name must be at least 2 characters.';
-      }
-      if (!email || !email.includes('@')) {
-        newErrors.email = 'Please enter a valid email address.';
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-
-      setErrors({});
-      setSubmitted(true);
-    };
-
-    if (submitted) {
-      return (
-        <div className="w-[400px] rounded-lg border border-green-500 bg-green-50 p-4 text-green-700 dark:bg-green-950 dark:text-green-300">
-          Support request submitted successfully!
-          <Button
-            variant="link"
-            onClick={() => setSubmitted(false)}
-            className="ml-2"
-          >
-            Reset
-          </Button>
-        </div>
-      );
-    }
-
-    return (
-      <form onSubmit={handleSubmit} className="w-[400px]">
-        <FieldSet>
-          <FieldLegend>Support Request</FieldLegend>
-          <FieldGroup>
-            <Field data-invalid={!!errors.name}>
-              <FieldLabel htmlFor="name">Operator Name</FieldLabel>
-              <Input
-                id="name"
-                name="name"
-                placeholder="Anna Schmidt"
-                aria-invalid={!!errors.name}
-              />
-              <FieldError errors={errors.name} />
-            </Field>
-
-            <Field data-invalid={!!errors.email}>
-              <FieldLabel htmlFor="email-native">Email</FieldLabel>
-              <Input
-                id="email-native"
-                name="email"
-                type="email"
-                placeholder="anna@neura-robotics.com"
-                aria-invalid={!!errors.email}
-              />
-              <FieldDescription>
-                We'll send a ticket confirmation to this email.
-              </FieldDescription>
-              <FieldError errors={errors.email} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="message" optional>
-                Issue Description
-              </FieldLabel>
-              <Textarea
-                id="message"
-                name="message"
-                placeholder="Describe the robot issue or support needed..."
-                className="min-h-[80px]"
-              />
-            </Field>
-
-            <Field className="flex-row items-center gap-3">
-              <Checkbox id="newsletter" name="newsletter" />
-              <FieldLabel htmlFor="newsletter" className="cursor-pointer">
-                Subscribe to fleet updates
-              </FieldLabel>
-            </Field>
-
-            <Button type="submit" className="w-full">
-              Submit Request
-            </Button>
-          </FieldGroup>
-        </FieldSet>
-      </form>
-    );
-  },
-};
-
-// Fleet Portal Login (Native HTML)
-export const LoginForm: Story = {
-  name: 'Fleet Portal Login (Native)',
-  render: function LoginFormExample() {
-    const [errors, setErrors] = React.useState<Record<string, string>>({});
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const newErrors: Record<string, string> = {};
-
-      const email = formData.get('login-email') as string;
-      const password = formData.get('login-password') as string;
-
-      if (!email) newErrors.email = 'Email is required.';
-      if (!password) newErrors.password = 'Password is required.';
-
-      setErrors(newErrors);
-    };
-
-    return (
-      <form onSubmit={handleSubmit} className="w-[350px] space-y-6">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">Fleet Portal</h2>
-          <p className="text-muted-foreground text-sm">
-            Sign in to manage your robots
-          </p>
-        </div>
-
-        <FieldGroup>
-          <Field data-invalid={!!errors.email}>
-            <FieldLabel htmlFor="login-email">Email</FieldLabel>
-            <Input
-              id="login-email"
-              name="login-email"
-              type="email"
-              placeholder="operator@neura-robotics.com"
-              aria-invalid={!!errors.email}
-            />
-            <FieldError errors={errors.email} />
-          </Field>
-
-          <Field data-invalid={!!errors.password}>
-            <FieldLabel htmlFor="login-password">Password</FieldLabel>
-            <Input
-              id="login-password"
-              name="login-password"
-              type="password"
-              aria-invalid={!!errors.password}
-            />
-            <FieldError errors={errors.password} />
-          </Field>
-
-          <Field className="flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Checkbox id="remember" />
-              <FieldLabel htmlFor="remember" className="cursor-pointer text-sm">
-                Remember me
-              </FieldLabel>
-            </div>
-            <Button variant="link" className="h-auto p-0 text-sm">
-              Forgot password?
-            </Button>
-          </Field>
-
-          <Button type="submit" className="w-full">
-            Access Fleet
-          </Button>
-        </FieldGroup>
-      </form>
-    );
-  },
-};
+// Facility options for MultiSelect
+const facilityOptions = [
+  { value: 'munich-a', label: 'Munich Plant A' },
+  { value: 'stuttgart', label: 'Stuttgart Factory' },
+  { value: 'berlin', label: 'Berlin Warehouse' },
+  { value: 'hamburg', label: 'Hamburg Distribution' },
+  { value: 'frankfurt', label: 'Frankfurt Assembly' },
+];
 
 /* =============================================================================
- * React Hook Form + Zod
+ * Story 1: Native HTML + React
  * ============================================================================= */
 
-// Robot Registration with RHF + Zod
-const basicFormSchema = z.object({
-  robotName: z
-    .string()
-    .min(3, 'Robot name must be at least 3 characters.')
-    .max(20, 'Robot name must be at most 20 characters.'),
-  serialNumber: z.string().min(5, 'Please enter a valid serial number.'),
-});
+export const NativeHTMLForm: Story = {
+  name: '1. Native HTML + React',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Native HTML Form with React State
 
-export const BasicRHFForm: Story = {
-  name: 'Robot Registration (RHF + Zod)',
-  render: function RHFBasicExample() {
-    const [submitted, setSubmitted] = React.useState<z.infer<
-      typeof basicFormSchema
+This approach uses native HTML5 validation attributes combined with React state management.
+
+**Strengths:**
+- No external dependencies
+- Built-in browser validation
+- Simple and straightforward for basic forms
+
+**Considerations:**
+- Manual state management for each field
+- Browser-dependent validation UI
+- More verbose for complex validation logic
+- Requires manual error tracking
+
+**Accessibility Features:**
+- \`aria-invalid\` for error states
+- \`aria-describedby\` linking descriptions to inputs
+- Required fields marked with \`required\` attribute
+- Proper label associations with \`htmlFor\`
+- Error messages announced to screen readers
+        `,
+      },
+    },
+  },
+  render: function NativeFormExample() {
+    // State for form fields
+    const [projectName, setProjectName] = React.useState('');
+    const [primaryRobot, setPrimaryRobot] = React.useState('');
+    const [facilities, setFacilities] = React.useState<string[]>([]);
+    const [projectType, setProjectType] = React.useState('');
+    const [priority, setPriority] = React.useState('');
+    const [startDate, setStartDate] = React.useState<Date | undefined>();
+    const [deploymentPeriod, setDeploymentPeriod] = React.useState<
+      DateRange | undefined
+    >();
+    const [autoStart, setAutoStart] = React.useState(false);
+    const [notifyOnComplete, setNotifyOnComplete] = React.useState(false);
+
+    // State for validation errors
+    const [errors, setErrors] = React.useState<Record<string, string>>({});
+
+    // State for submitted data
+    const [submittedData, setSubmittedData] = React.useState<Record<
+      string,
+      string | string[] | boolean | object
     > | null>(null);
 
-    const form = useForm<z.infer<typeof basicFormSchema>>({
-      resolver: zodResolver(basicFormSchema),
-      defaultValues: {
-        robotName: '',
-        serialNumber: '',
-      },
-    });
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      const newErrors: Record<string, string> = {};
 
-    function onSubmit(data: z.infer<typeof basicFormSchema>) {
-      setSubmitted(data);
-    }
+      // Manual validation
+      const name = formData.get('projectName') as string;
+      const description = formData.get('description') as string;
+      const operatorEmail = formData.get('operatorEmail') as string;
 
-    if (submitted) {
-      return (
-        <div className="w-[400px] space-y-4">
-          <div className="rounded-lg border border-green-500 bg-green-50 p-4 text-green-700 dark:bg-green-950 dark:text-green-300">
-            <p className="font-medium">Robot registered successfully!</p>
-            <pre className="mt-2 text-xs">
-              {JSON.stringify(submitted, null, 2)}
-            </pre>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSubmitted(null);
-              form.reset();
-            }}
-          >
-            Register Another
-          </Button>
-        </div>
-      );
-    }
+      if (!name || name.length < 3) {
+        newErrors.projectName = 'Project name must be at least 3 characters.';
+      }
 
-    return (
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-[400px] space-y-6"
-      >
-        <FieldGroup>
-          <Controller
-            name="robotName"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-robotname">Robot Name</FieldLabel>
-                <Input
-                  {...field}
-                  id="rhf-robotname"
-                  placeholder="MAiRA Alpha"
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
-                />
-                <FieldDescription>
-                  A unique identifier for this robot unit.
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
-                )}
-              </Field>
-            )}
-          />
+      if (!primaryRobot) {
+        newErrors.primaryRobot = 'Please select a primary robot.';
+      }
 
-          <Controller
-            name="serialNumber"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-serial">Serial Number</FieldLabel>
-                <Input
-                  {...field}
-                  id="rhf-serial"
-                  placeholder="NR-2025-MAI-0001"
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
-                )}
-              </Field>
-            )}
-          />
+      if (!facilities || facilities.length === 0) {
+        newErrors.facilities = 'Please select at least one facility.';
+      }
 
-          <div className="flex gap-2">
-            <Button type="submit">Register Robot</Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => form.reset()}
-            >
-              Reset
-            </Button>
-          </div>
-        </FieldGroup>
-      </form>
-    );
-  },
-};
+      if (!projectType) {
+        newErrors.projectType = 'Please select a project type.';
+      }
 
-// Operator Registration with RHF + Zod
-const registrationSchema = z
-  .object({
-    firstName: z.string().min(2, 'First name must be at least 2 characters.'),
-    lastName: z.string().min(2, 'Last name must be at least 2 characters.'),
-    email: z.string().email('Please enter a valid email.'),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters.')
-      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
-      .regex(/[0-9]/, 'Password must contain at least one number.'),
-    confirmPassword: z.string(),
-    terms: z.boolean().refine((val) => val === true, {
-      message: 'You must accept the terms and conditions.',
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match.',
-    path: ['confirmPassword'],
-  });
+      if (!priority) {
+        newErrors.priority = 'Please select a priority level.';
+      }
 
-export const RegistrationForm: Story = {
-  name: 'Operator Registration (RHF + Zod)',
-  render: function RHFRegistrationExample() {
-    const [submitted, setSubmitted] = React.useState(false);
+      if (!startDate) {
+        newErrors.startDate = 'Please select a start date.';
+      }
 
-    const form = useForm<z.infer<typeof registrationSchema>>({
-      resolver: zodResolver(registrationSchema),
-      defaultValues: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        terms: false,
-      },
-    });
+      if (!deploymentPeriod?.from || !deploymentPeriod?.to) {
+        newErrors.deploymentPeriod = 'Please select deployment period.';
+      }
 
-    function onSubmit() {
-      setSubmitted(true);
-    }
+      if (
+        !operatorEmail ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(operatorEmail)
+      ) {
+        newErrors.operatorEmail = 'Please enter a valid email address.';
+      }
 
-    if (submitted) {
-      return (
-        <div className="w-[450px] space-y-4 text-center">
-          <div className="rounded-lg border border-green-500 bg-green-50 p-6 dark:bg-green-950">
-            <h3 className="text-lg font-semibold text-green-700 dark:text-green-300">
-              Registration Successful!
-            </h3>
-            <p className="text-muted-foreground mt-2 text-sm">
-              Check your email for access credentials.
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSubmitted(false);
-              form.reset();
-            }}
-          >
-            Register Another Operator
-          </Button>
-        </div>
-      );
-    }
+      // If there are errors, set them and stop
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      // Clear errors and submit
+      setErrors({});
+      setSubmittedData({
+        projectName: name,
+        description,
+        primaryRobot,
+        facilities,
+        projectType,
+        priority,
+        startDate: startDate?.toLocaleDateString() || '',
+        deploymentPeriod: {
+          from: deploymentPeriod?.from?.toLocaleDateString() || '',
+          to: deploymentPeriod?.to?.toLocaleDateString() || '',
+        },
+        operatorEmail,
+        autoStart,
+        notifyOnComplete,
+      });
+    };
 
     return (
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-[450px] space-y-6"
-      >
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">Register as Operator</h2>
+      <div className="w-full max-w-2xl space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">Native HTML + React</h2>
           <p className="text-muted-foreground text-sm">
-            Join the Neuraverse fleet management platform
+            Uses native HTML5 validation with React state. Best for simple forms
+            without complex validation requirements.
           </p>
         </div>
 
-        <FieldGroup>
-          <div className="grid grid-cols-2 gap-4">
-            <Controller
-              name="firstName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="rhf-firstname">First Name</FieldLabel>
-                  <Input
-                    {...field}
-                    id="rhf-firstname"
-                    placeholder="Anna"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="lastName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="rhf-lastname">Last Name</FieldLabel>
-                  <Input
-                    {...field}
-                    id="rhf-lastname"
-                    placeholder="Schmidt"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-
-          <Controller
-            name="email"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-reg-email">Email</FieldLabel>
-                <Input
-                  {...field}
-                  id="rhf-reg-email"
-                  type="email"
-                  placeholder="anna@neura-robotics.com"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
-                )}
-              </Field>
-            )}
-          />
-
-          <Controller
-            name="password"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-password">Password</FieldLabel>
-                <Input
-                  {...field}
-                  id="rhf-password"
-                  type="password"
-                  aria-invalid={fieldState.invalid}
-                />
-                <FieldDescription>
-                  At least 8 characters, one uppercase letter, and one number.
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
-                )}
-              </Field>
-            )}
-          />
-
-          <Controller
-            name="confirmPassword"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-confirm-password">
-                  Confirm Password
+        <form onSubmit={handleSubmit} noValidate>
+          <FieldSet>
+            <FieldLegend>Robot Deployment Configuration</FieldLegend>
+            <FieldGroup>
+              {/* Text Input */}
+              <Field data-invalid={!!errors.projectName}>
+                <FieldLabel htmlFor="projectName">
+                  Project Name <span className="text-destructive">*</span>
                 </FieldLabel>
                 <Input
-                  {...field}
-                  id="rhf-confirm-password"
-                  type="password"
-                  aria-invalid={fieldState.invalid}
+                  id="projectName"
+                  name="projectName"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  placeholder="Warehouse Automation 2024"
+                  aria-invalid={!!errors.projectName}
+                  aria-describedby={
+                    errors.projectName
+                      ? 'projectName-error'
+                      : 'projectName-description'
+                  }
+                  required
                 />
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
+                <FieldDescription id="projectName-description">
+                  A unique name to identify this deployment project.
+                </FieldDescription>
+                {errors.projectName && (
+                  <FieldError id="projectName-error" errors={errors.projectName} />
                 )}
               </Field>
-            )}
-          />
 
-          <Controller
-            name="terms"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="flex-row items-start gap-3"
-              >
-                <Checkbox
-                  id="rhf-terms"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  aria-invalid={fieldState.invalid}
+              {/* Textarea */}
+              <Field>
+                <FieldLabel htmlFor="description">
+                  Project Description
+                </FieldLabel>
+                <Textarea
+                  id="description"
+                  name="description"
+                  placeholder="Describe the goals and scope of this deployment..."
+                  className="min-h-[100px]"
+                  aria-describedby="description-hint"
                 />
-                <FieldContent className="gap-1">
-                  <FieldLabel htmlFor="rhf-terms" className="cursor-pointer">
-                    I accept the terms and conditions
-                  </FieldLabel>
-                  <FieldDescription>
-                    By registering, you agree to our Terms of Service and
-                    Privacy Policy.
-                  </FieldDescription>
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
-                </FieldContent>
+                <FieldDescription id="description-hint">
+                  Optional. Provide context for the deployment team.
+                </FieldDescription>
               </Field>
-            )}
-          />
 
-          <Button type="submit" className="w-full">
-            Create Account
-          </Button>
-        </FieldGroup>
-      </form>
-    );
-  },
-};
+              {/* Combobox - Searchable Select */}
+              <Field data-invalid={!!errors.primaryRobot}>
+                <FieldLabel htmlFor="primaryRobot">
+                  Primary Robot <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Combobox
+                  items={robotOptions}
+                  value={primaryRobot}
+                  onValueChange={setPrimaryRobot}
+                  placeholder="Select primary robot..."
+                  searchPlaceholder="Search robots..."
+                  aria-invalid={!!errors.primaryRobot}
+                  className="w-full"
+                />
+                <FieldDescription>
+                  The main robot unit for this deployment. Use Combobox for
+                  searchable lists.
+                </FieldDescription>
+                {errors.primaryRobot && (
+                  <FieldError errors={errors.primaryRobot} />
+                )}
+              </Field>
 
-// Fleet Configuration with Select and RadioGroup
-const preferencesSchema = z.object({
-  facility: z.string().min(1, 'Please select a facility.'),
-  alertPreference: z.enum(['email', 'sms', 'push'], {
-    message: 'Please select an alert preference.',
-  }),
-  notes: z
-    .string()
-    .max(200, 'Notes must be at most 200 characters.')
-    .optional(),
-});
+              {/* MultiSelect */}
+              <Field data-invalid={!!errors.facilities}>
+                <FieldLabel>
+                  Deployment Facilities{' '}
+                  <span className="text-destructive">*</span>
+                </FieldLabel>
+                <MultiSelect
+                  options={facilityOptions}
+                  onValueChange={setFacilities}
+                  defaultValue={facilities}
+                  placeholder="Select facilities..."
+                  className="w-full"
+                  aria-invalid={!!errors.facilities}
+                />
+                <FieldDescription>
+                  Select all facilities where robots will be deployed.
+                </FieldDescription>
+                {errors.facilities && (
+                  <FieldError errors={errors.facilities} />
+                )}
+              </Field>
 
-export const PreferencesForm: Story = {
-  name: 'Fleet Configuration (RHF + Select/Radio)',
-  render: function RHFSelectExample() {
-    const form = useForm<z.infer<typeof preferencesSchema>>({
-      resolver: zodResolver(preferencesSchema),
-      defaultValues: {
-        facility: '',
-        alertPreference: undefined,
-        notes: '',
-      },
-    });
-
-    function onSubmit(data: z.infer<typeof preferencesSchema>) {
-      alert(JSON.stringify(data, null, 2));
-    }
-
-    return (
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-[400px] space-y-6"
-      >
-        <FieldSet>
-          <FieldLegend>Fleet Configuration</FieldLegend>
-          <FieldGroup>
-            <Controller
-              name="facility"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="rhf-facility">Facility</FieldLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      id="rhf-facility"
-                      aria-invalid={fieldState.invalid}
-                    >
-                      <SelectValue placeholder="Select a facility" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="munich">Munich Plant A</SelectItem>
-                      <SelectItem value="stuttgart">
-                        Stuttgart Factory
-                      </SelectItem>
-                      <SelectItem value="berlin">Berlin Warehouse</SelectItem>
-                      <SelectItem value="hamburg">Hamburg Line B</SelectItem>
-                      <SelectItem value="metzingen">Metzingen HQ</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="alertPreference"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Alert Preference</FieldLabel>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Radio Group */}
+                <Field data-invalid={!!errors.projectType}>
+                  <FieldLabel>
+                    Project Type <span className="text-destructive">*</span>
+                  </FieldLabel>
                   <RadioGroup
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="mt-2"
+                    value={projectType}
+                    onValueChange={setProjectType}
+                    aria-invalid={!!errors.projectType}
                   >
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem value="email" id="rhf-alert-email" />
-                      <Label htmlFor="rhf-alert-email">Email</Label>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="production" id="production" />
+                      <Label htmlFor="production" className="font-normal">
+                        Production
+                      </Label>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem value="sms" id="rhf-alert-sms" />
-                      <Label htmlFor="rhf-alert-sms">SMS</Label>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="testing" id="testing" />
+                      <Label htmlFor="testing" className="font-normal">
+                        Testing
+                      </Label>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem value="push" id="rhf-alert-push" />
-                      <Label htmlFor="rhf-alert-push">Push Notifications</Label>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="demo" id="demo" />
+                      <Label htmlFor="demo" className="font-normal">
+                        Demo
+                      </Label>
                     </div>
                   </RadioGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
+                  {errors.projectType && (
+                    <FieldError errors={errors.projectType} />
                   )}
                 </Field>
-              )}
-            />
 
-            <Controller
-              name="notes"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="rhf-notes" optional>
-                    Configuration Notes
+                {/* Select Dropdown */}
+                <Field data-invalid={!!errors.priority}>
+                  <FieldLabel htmlFor="priority">
+                    Priority Level <span className="text-destructive">*</span>
                   </FieldLabel>
-                  <Textarea
-                    {...field}
-                    id="rhf-notes"
-                    placeholder="Add notes about this fleet configuration..."
-                    className="min-h-[80px]"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  <FieldDescription>
-                    {field.value?.length || 0}/200 characters
-                  </FieldDescription>
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
+                  <Select value={priority} onValueChange={setPriority}>
+                    <SelectTrigger
+                      id="priority"
+                      aria-invalid={!!errors.priority}
+                    >
+                      <SelectValue placeholder="Select priority" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.priority && <FieldError errors={errors.priority} />}
                 </Field>
-              )}
-            />
+              </div>
 
-            <div className="flex gap-2">
-              <Button type="submit">Save Configuration</Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => form.reset()}
-              >
-                Reset
-              </Button>
-            </div>
-          </FieldGroup>
-        </FieldSet>
-      </form>
-    );
-  },
-};
-
-// Real-time Validation Form
-const realtimeSchema = z.object({
-  operatorEmail: z.string().email('Invalid email format.'),
-  accessCode: z.string().min(8, 'Access code too short.'),
-});
-
-export const RealtimeValidation: Story = {
-  name: 'Real-time Validation (onChange)',
-  render: function RHFRealtimeExample() {
-    const form = useForm<z.infer<typeof realtimeSchema>>({
-      resolver: zodResolver(realtimeSchema),
-      mode: 'onChange',
-      defaultValues: {
-        operatorEmail: '',
-        accessCode: '',
-      },
-    });
-
-    const { isValid, isDirty } = form.formState;
-
-    function onSubmit(data: z.infer<typeof realtimeSchema>) {
-      alert(`Access granted for: ${data.operatorEmail}`);
-    }
-
-    return (
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-[350px] space-y-6"
-      >
-        <div className="text-center">
-          <h2 className="text-xl font-bold">Real-time Validation</h2>
-          <p className="text-muted-foreground text-sm">
-            Errors appear as you type (mode: onChange)
-          </p>
-        </div>
-
-        <FieldGroup>
-          <Controller
-            name="operatorEmail"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-realtime-email">
-                  Operator Email
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id="rhf-realtime-email"
-                  type="email"
-                  placeholder="operator@neura-robotics.com"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
-                )}
-              </Field>
-            )}
-          />
-
-          <Controller
-            name="accessCode"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="rhf-realtime-accesscode">
-                  Access Code
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id="rhf-realtime-accesscode"
-                  type="password"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={fieldState.error?.message} />
-                )}
-              </Field>
-            )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!isValid || !isDirty}
-          >
-            {isValid && isDirty ? 'Submit' : 'Fill all fields correctly'}
-          </Button>
-        </FieldGroup>
-      </form>
-    );
-  },
-};
-
-/* =============================================================================
- * Date Picker Forms
- * ============================================================================= */
-
-// Maintenance Schedule Form with Date Picker
-export const EventForm: Story = {
-  name: 'Maintenance Schedule (with DatePicker)',
-  render: function EventFormExample() {
-    const [date, setDate] = React.useState<Date | undefined>(undefined);
-    const [errors, setErrors] = React.useState<Record<string, string>>({});
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const newErrors: Record<string, string> = {};
-
-      const robotId = formData.get('title') as string;
-
-      if (!robotId || robotId.length < 3) {
-        newErrors.title = 'Robot ID must be at least 3 characters.';
-      }
-      if (!date) {
-        newErrors.date = 'Please select a date.';
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-
-      alert(
-        `Maintenance scheduled for: ${robotId} on ${date?.toLocaleDateString()}`,
-      );
-    };
-
-    return (
-      <form onSubmit={handleSubmit} className="w-[400px]">
-        <FieldSet>
-          <FieldLegend>Schedule Maintenance</FieldLegend>
-          <FieldGroup>
-            <Field data-invalid={!!errors.title}>
-              <FieldLabel htmlFor="event-title">Robot ID</FieldLabel>
-              <Input
-                id="event-title"
-                name="title"
-                placeholder="MAiRA-001"
-                aria-invalid={!!errors.title}
-              />
-              <FieldError errors={errors.title} />
-            </Field>
-
-            <Field data-invalid={!!errors.date}>
-              <FieldLabel>Maintenance Date</FieldLabel>
-              <DatePicker
-                value={date}
-                onChange={setDate}
-                placeholder="Select maintenance date"
-                className="w-full"
-              />
-              <FieldDescription>
-                When should the maintenance be performed?
-              </FieldDescription>
-              <FieldError errors={errors.date} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="event-description" optional>
-                Notes
-              </FieldLabel>
-              <Textarea
-                id="event-description"
-                name="description"
-                placeholder="Maintenance details or special instructions..."
-                className="min-h-[80px]"
-              />
-            </Field>
-
-            <Button type="submit" className="w-full">
-              Schedule Maintenance
-            </Button>
-          </FieldGroup>
-        </FieldSet>
-      </form>
-    );
-  },
-};
-
-// Date and Time Picker Pattern
-export const DateTimeForm: Story = {
-  name: 'Date & Time Picker',
-  render: function DateTimeFormExample() {
-    const [date, setDate] = React.useState<Date | undefined>(undefined);
-    const [time, setTime] = React.useState('10:00');
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (date) {
-        const [hours, minutes] = time.split(':').map(Number);
-        const dateTime = new Date(date);
-        dateTime.setHours(hours, minutes);
-        alert(`Scheduled for: ${dateTime.toLocaleString()}`);
-      }
-    };
-
-    return (
-      <form onSubmit={handleSubmit} className="w-[400px]">
-        <FieldSet>
-          <FieldLegend>Schedule Appointment</FieldLegend>
-          <FieldGroup>
-            <div className="flex gap-4">
-              <Field className="flex-1">
-                <FieldLabel>Date</FieldLabel>
-                <DatePickerButton
-                  value={date}
-                  onChange={setDate}
-                  placeholder="Select date"
-                  className="w-full"
-                  captionLayout="dropdown"
-                />
-              </Field>
-
-              <Field className="w-[120px]">
-                <FieldLabel htmlFor="time-picker">Time</FieldLabel>
-                <Input
-                  type="time"
-                  id="time-picker"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                />
-              </Field>
-            </div>
-
-            <FieldDescription>
-              {date && time
-                ? `Scheduled for ${date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} at ${time}`
-                : 'Select a date and time for your appointment.'}
-            </FieldDescription>
-
-            <Button type="submit" className="w-full" disabled={!date}>
-              Schedule
-            </Button>
-          </FieldGroup>
-        </FieldSet>
-      </form>
-    );
-  },
-};
-
-// Date of Birth Form
-export const DateOfBirthForm: Story = {
-  name: 'Date of Birth Form',
-  render: function DateOfBirthFormExample() {
-    const [dob, setDob] = React.useState<Date | undefined>(undefined);
-    const [errors, setErrors] = React.useState<Record<string, string>>({});
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const newErrors: Record<string, string> = {};
-
-      const name = formData.get('name') as string;
-
-      if (!name || name.length < 2) {
-        newErrors.name = 'Name must be at least 2 characters.';
-      }
-      if (!dob) {
-        newErrors.dob = 'Please select your date of birth.';
-      } else if (dob > new Date()) {
-        newErrors.dob = 'Date of birth cannot be in the future.';
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-
-      alert(`Profile saved for ${name}, born on ${dob?.toLocaleDateString()}`);
-    };
-
-    return (
-      <form onSubmit={handleSubmit} className="w-[350px]">
-        <FieldSet>
-          <FieldLegend>Personal Information</FieldLegend>
-          <FieldGroup>
-            <Field data-invalid={!!errors.name}>
-              <FieldLabel htmlFor="user-name">Full Name</FieldLabel>
-              <Input
-                id="user-name"
-                name="name"
-                placeholder="John Doe"
-                aria-invalid={!!errors.name}
-              />
-              <FieldError errors={errors.name} />
-            </Field>
-
-            <Field data-invalid={!!errors.dob}>
-              <FieldLabel>Date of Birth</FieldLabel>
-              <DatePickerButton
-                value={dob}
-                onChange={setDob}
-                placeholder="Select date"
-                dateFormat={{ year: 'numeric', month: 'short', day: 'numeric' }}
-                className="w-full"
-                captionLayout="dropdown"
-                calendarProps={{
-                  disabled: { after: new Date() },
-                }}
-              />
-              <FieldError errors={errors.dob} />
-            </Field>
-
-            <Button type="submit" className="w-full">
-              Save Profile
-            </Button>
-          </FieldGroup>
-        </FieldSet>
-      </form>
-    );
-  },
-};
-
-// Date Range Form (Robot Deployment Period)
-export const DateRangeForm: Story = {
-  name: 'Robot Deployment Period (Date Range)',
-  render: function DateRangeFormExample() {
-    const [dateRange, setDateRange] = React.useState<DateRange | undefined>(
-      undefined,
-    );
-    const [errors, setErrors] = React.useState<Record<string, string>>({});
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const newErrors: Record<string, string> = {};
-
-      const description = formData.get('reason') as string;
-
-      if (!description || description.length < 5) {
-        newErrors.reason =
-          'Please provide a description (at least 5 characters).';
-      }
-      if (!dateRange?.from || !dateRange?.to) {
-        newErrors.dates = 'Please select both start and end dates.';
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-
-      const days =
-        dateRange?.from && dateRange?.to
-          ? Math.ceil(
-              (dateRange.to.getTime() - dateRange.from.getTime()) /
-                (1000 * 60 * 60 * 24),
-            ) + 1
-          : 0;
-
-      alert(
-        `Deployment scheduled: ${days} days from ${dateRange?.from?.toLocaleDateString()} to ${dateRange?.to?.toLocaleDateString()}`,
-      );
-    };
-
-    return (
-      <form onSubmit={handleSubmit} className="w-[400px]">
-        <FieldSet>
-          <FieldLegend>Robot Deployment Period</FieldLegend>
-          <FieldGroup>
-            <Field data-invalid={!!errors.dates}>
-              <FieldLabel>Deployment Dates</FieldLabel>
-              <DateRangePicker
-                value={dateRange}
-                onChange={setDateRange}
-                placeholder="Select date range"
-                className="w-full"
-                calendarProps={{
-                  disabled: { before: new Date() },
-                }}
-              />
-              <FieldDescription>
-                Select the start and end dates for the robot deployment.
-              </FieldDescription>
-              <FieldError errors={errors.dates} />
-            </Field>
-
-            <Field data-invalid={!!errors.reason}>
-              <FieldLabel htmlFor="vacation-reason">
-                Project Description
-              </FieldLabel>
-              <Textarea
-                id="vacation-reason"
-                name="reason"
-                placeholder="Describe the deployment project or mission..."
-                aria-invalid={!!errors.reason}
-              />
-              <FieldError errors={errors.reason} />
-            </Field>
-
-            <Button type="submit" className="w-full">
-              Schedule Deployment
-            </Button>
-          </FieldGroup>
-        </FieldSet>
-      </form>
-    );
-  },
-};
-
-// Robot Service Appointment with RHF + Zod
-const appointmentSchema = z.object({
-  robotId: z.string().min(2, 'Robot ID must be at least 2 characters.'),
-  date: z.date({ message: 'Please select a date.' }),
-  time: z.string().min(1, 'Please select a time.'),
-  notes: z.string().optional(),
-});
-
-export const DatePickerRHF: Story = {
-  name: 'Service Appointment (RHF + Zod)',
-  render: function DatePickerRHFExample() {
-    const [submitted, setSubmitted] = React.useState(false);
-
-    const form = useForm<z.infer<typeof appointmentSchema>>({
-      resolver: zodResolver(appointmentSchema),
-      defaultValues: {
-        robotId: '',
-        date: undefined,
-        time: '',
-        notes: '',
-      },
-    });
-
-    function onSubmit(data: z.infer<typeof appointmentSchema>) {
-      console.log(data);
-      setSubmitted(true);
-    }
-
-    if (submitted) {
-      return (
-        <div className="w-[400px] space-y-4 text-center">
-          <div className="rounded-lg border border-green-500 bg-green-50 p-6 dark:bg-green-950">
-            <h3 className="text-lg font-semibold text-green-700 dark:text-green-300">
-              Service Scheduled!
-            </h3>
-            <p className="text-muted-foreground mt-2 text-sm">
-              A technician will arrive at the scheduled time.
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSubmitted(false);
-              form.reset();
-            }}
-          >
-            Schedule Another
-          </Button>
-        </div>
-      );
-    }
-
-    return (
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-[400px] space-y-6"
-      >
-        <FieldSet>
-          <FieldLegend>Schedule Robot Service</FieldLegend>
-          <FieldGroup>
-            <Controller
-              name="robotId"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="apt-robotid">Robot ID</FieldLabel>
-                  <Input
-                    {...field}
-                    id="apt-robotid"
-                    placeholder="MAiRA-001"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="date"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Service Date</FieldLabel>
+              <div className="grid grid-cols-2 gap-4">
+                {/* DatePicker */}
+                <Field data-invalid={!!errors.startDate}>
+                  <FieldLabel>
+                    Start Date <span className="text-destructive">*</span>
+                  </FieldLabel>
                   <DatePicker
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Select date"
+                    value={startDate}
+                    onChange={setStartDate}
+                    placeholder="Select start date"
                     className="w-full"
                     calendarProps={{
                       disabled: { before: new Date() },
                     }}
                   />
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
+                  {errors.startDate && <FieldError errors={errors.startDate} />}
                 </Field>
-              )}
-            />
 
-            <Controller
-              name="time"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Preferred Time</FieldLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger aria-invalid={fieldState.invalid}>
-                      <SelectValue placeholder="Select time slot" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="09:00">9:00 AM</SelectItem>
-                      <SelectItem value="10:00">10:00 AM</SelectItem>
-                      <SelectItem value="11:00">11:00 AM</SelectItem>
-                      <SelectItem value="14:00">2:00 PM</SelectItem>
-                      <SelectItem value="15:00">3:00 PM</SelectItem>
-                      <SelectItem value="16:00">4:00 PM</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && (
-                    <FieldError errors={fieldState.error?.message} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="notes"
-              control={form.control}
-              render={({ field }) => (
-                <Field>
-                  <FieldLabel htmlFor="apt-notes" optional>
-                    Additional Notes
+                {/* Date Range Picker */}
+                <Field data-invalid={!!errors.deploymentPeriod}>
+                  <FieldLabel>
+                    Deployment Period{' '}
+                    <span className="text-destructive">*</span>
                   </FieldLabel>
-                  <Textarea
-                    {...field}
-                    id="apt-notes"
-                    placeholder="Any special requirements?"
+                  <DateRangePicker
+                    value={deploymentPeriod}
+                    onChange={setDeploymentPeriod}
+                    placeholder="Select date range"
+                    className="w-full"
+                    calendarProps={{
+                      disabled: { before: new Date() },
+                    }}
                   />
+                  {errors.deploymentPeriod && (
+                    <FieldError errors={errors.deploymentPeriod} />
+                  )}
                 </Field>
-              )}
-            />
+              </div>
 
-            <Button type="submit" className="w-full">
-              Book Appointment
-            </Button>
-          </FieldGroup>
-        </FieldSet>
-      </form>
+              {/* Email Input */}
+              <Field data-invalid={!!errors.operatorEmail}>
+                <FieldLabel htmlFor="operatorEmail">
+                  Operator Email <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id="operatorEmail"
+                  name="operatorEmail"
+                  type="email"
+                  placeholder="operator@neura-robotics.com"
+                  aria-invalid={!!errors.operatorEmail}
+                  required
+                />
+                <FieldDescription>
+                  Notifications will be sent to this email address.
+                </FieldDescription>
+                {errors.operatorEmail && (
+                  <FieldError errors={errors.operatorEmail} />
+                )}
+              </Field>
+
+              {/* Checkboxes */}
+              <div className="space-y-3">
+                <Field className="flex-row items-center gap-3">
+                  <Checkbox
+                    id="autoStart"
+                    checked={autoStart}
+                    onCheckedChange={(checked) =>
+                      setAutoStart(checked === true)
+                    }
+                  />
+                  <FieldLabel htmlFor="autoStart" className="cursor-pointer">
+                    Auto-start deployment on scheduled date
+                  </FieldLabel>
+                </Field>
+
+                <Field className="flex-row items-center gap-3">
+                  <Checkbox
+                    id="notifyOnComplete"
+                    checked={notifyOnComplete}
+                    onCheckedChange={(checked) =>
+                      setNotifyOnComplete(checked === true)
+                    }
+                  />
+                  <FieldLabel
+                    htmlFor="notifyOnComplete"
+                    className="cursor-pointer"
+                  >
+                    Send notification on completion
+                  </FieldLabel>
+                </Field>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex gap-3 pt-4">
+                <Button type="submit" className="flex-1">
+                  Create Deployment
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setProjectName('');
+                    setPrimaryRobot('');
+                    setFacilities([]);
+                    setProjectType('');
+                    setPriority('');
+                    setStartDate(undefined);
+                    setDeploymentPeriod(undefined);
+                    setAutoStart(false);
+                    setNotifyOnComplete(false);
+                    setErrors({});
+                  }}
+                >
+                  Reset
+                </Button>
+              </div>
+            </FieldGroup>
+          </FieldSet>
+        </form>
+
+        {/* Result Display */}
+        {submittedData && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold">Submitted Data:</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSubmittedData(null)}
+              >
+                Clear
+              </Button>
+            </div>
+            <pre className="bg-muted text-muted-foreground overflow-auto rounded-md p-4 text-xs">
+              <code>{JSON.stringify(submittedData, null, 2)}</code>
+            </pre>
+          </div>
+        )}
+      </div>
+    );
+  },
+};
+
+/* =============================================================================
+ * Story 2: React Hook Form (without Zod)
+ * ============================================================================= */
+
+export const ReactHookForm: Story = {
+  name: '2. React Hook Form',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### React Hook Form (Uncontrolled Components)
+
+This approach uses React Hook Form for optimized performance with uncontrolled components.
+
+**Strengths:**
+- Better performance (less re-renders)
+- Built-in validation rules
+- Automatic form state management
+- Easy integration with UI libraries
+- Smaller bundle size than RHF + Zod
+
+**Best Use Cases:**
+- Forms with simple validation rules
+- When bundle size is a concern
+- When you don't need TypeScript schema validation
+
+**Accessibility Features:**
+- Automatic \`aria-invalid\` management
+- Field registration with proper attributes
+- Error message associations
+- Focus management on validation errors
+        `,
+      },
+    },
+  },
+  render: function ReactHookFormExample() {
+    const [submittedData, setSubmittedData] = React.useState<Record<
+      string,
+      string | string[] | boolean | object
+    > | null>(null);
+
+    type FormValues = {
+      projectName: string;
+      description: string;
+      primaryRobot: string;
+      facilities: string[];
+      projectType: string;
+      priority: string;
+      startDate: Date | undefined;
+      deploymentPeriod: DateRange | undefined;
+      operatorEmail: string;
+      autoStart: boolean;
+      notifyOnComplete: boolean;
+    };
+
+    const {
+      register,
+      handleSubmit,
+      control,
+      reset,
+      formState: { errors, isSubmitting },
+    } = useForm<FormValues>({
+      defaultValues: {
+        projectName: '',
+        description: '',
+        primaryRobot: '',
+        facilities: [],
+        projectType: '',
+        priority: '',
+        startDate: undefined,
+        deploymentPeriod: undefined,
+        operatorEmail: '',
+        autoStart: false,
+        notifyOnComplete: false,
+      },
+    });
+
+    const onSubmit = (data: FormValues) => {
+      setSubmittedData({
+        ...data,
+        startDate: data.startDate?.toLocaleDateString() || '',
+        deploymentPeriod: {
+          from: data.deploymentPeriod?.from?.toLocaleDateString() || '',
+          to: data.deploymentPeriod?.to?.toLocaleDateString() || '',
+        },
+      });
+    };
+
+    return (
+      <div className="w-full max-w-2xl space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">React Hook Form</h2>
+          <p className="text-muted-foreground text-sm">
+            Leverages uncontrolled components for better performance. Validation
+            rules are defined inline.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <FieldSet>
+            <FieldLegend>Robot Deployment Configuration</FieldLegend>
+            <FieldGroup>
+              {/* Text Input with RHF */}
+              <Field data-invalid={!!errors.projectName}>
+                <FieldLabel htmlFor="projectName-rhf">
+                  Project Name <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id="projectName-rhf"
+                  placeholder="Warehouse Automation 2024"
+                  aria-invalid={!!errors.projectName}
+                  {...register('projectName', {
+                    required: 'Project name is required',
+                    minLength: {
+                      value: 3,
+                      message: 'Project name must be at least 3 characters',
+                    },
+                  })}
+                />
+                <FieldDescription>
+                  A unique name to identify this deployment project.
+                </FieldDescription>
+                {errors.projectName && (
+                  <FieldError errors={errors.projectName.message} />
+                )}
+              </Field>
+
+              {/* Textarea */}
+              <Field>
+                <FieldLabel htmlFor="description-rhf">
+                  Project Description
+                </FieldLabel>
+                <Textarea
+                  id="description-rhf"
+                  placeholder="Describe the goals and scope of this deployment..."
+                  className="min-h-[100px]"
+                  {...register('description')}
+                />
+                <FieldDescription>
+                  Optional. Provide context for the deployment team.
+                </FieldDescription>
+              </Field>
+
+              {/* Combobox with Controller */}
+              <Controller
+                name="primaryRobot"
+                control={control}
+                rules={{ required: 'Please select a primary robot' }}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>
+                      Primary Robot <span className="text-destructive">*</span>
+                    </FieldLabel>
+                    <Combobox
+                      items={robotOptions}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      placeholder="Select primary robot..."
+                      searchPlaceholder="Search robots..."
+                      aria-invalid={fieldState.invalid}
+                      className="w-full"
+                    />
+                    <FieldDescription>
+                      The main robot unit for this deployment.
+                    </FieldDescription>
+                    {fieldState.error && (
+                      <FieldError errors={fieldState.error.message} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              {/* MultiSelect with Controller */}
+              <Controller
+                name="facilities"
+                control={control}
+                rules={{
+                  validate: (value) =>
+                    value.length > 0 || 'Please select at least one facility',
+                }}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>
+                      Deployment Facilities{' '}
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
+                    <MultiSelect
+                      options={facilityOptions}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Select facilities..."
+                      className="w-full"
+                    />
+                    <FieldDescription>
+                      Select all facilities where robots will be deployed.
+                    </FieldDescription>
+                    {fieldState.error && (
+                      <FieldError errors={fieldState.error.message} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Radio Group with Controller */}
+                <Controller
+                  name="projectType"
+                  control={control}
+                  rules={{ required: 'Please select a project type' }}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Project Type <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="production"
+                            id="production-rhf"
+                          />
+                          <Label
+                            htmlFor="production-rhf"
+                            className="font-normal"
+                          >
+                            Production
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="testing" id="testing-rhf" />
+                          <Label htmlFor="testing-rhf" className="font-normal">
+                            Testing
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="demo" id="demo-rhf" />
+                          <Label htmlFor="demo-rhf" className="font-normal">
+                            Demo
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* Select with Controller */}
+                <Controller
+                  name="priority"
+                  control={control}
+                  rules={{ required: 'Please select a priority level' }}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Priority Level{' '}
+                        <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger aria-invalid={fieldState.invalid}>
+                          <SelectValue placeholder="Select priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="critical">Critical</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* DatePicker with Controller */}
+                <Controller
+                  name="startDate"
+                  control={control}
+                  rules={{ required: 'Please select a start date' }}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Start Date <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Select start date"
+                        className="w-full"
+                        calendarProps={{
+                          disabled: { before: new Date() },
+                        }}
+                      />
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* DateRangePicker with Controller */}
+                <Controller
+                  name="deploymentPeriod"
+                  control={control}
+                  rules={{
+                    validate: (value) => {
+                      if (!value?.from || !value?.to) {
+                        return 'Please select deployment period';
+                      }
+                      return true;
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Deployment Period{' '}
+                        <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <DateRangePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Select date range"
+                        className="w-full"
+                        calendarProps={{
+                          disabled: { before: new Date() },
+                        }}
+                      />
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              {/* Email with validation */}
+              <Field data-invalid={!!errors.operatorEmail}>
+                <FieldLabel htmlFor="operatorEmail-rhf">
+                  Operator Email <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id="operatorEmail-rhf"
+                  type="email"
+                  placeholder="operator@neura-robotics.com"
+                  aria-invalid={!!errors.operatorEmail}
+                  {...register('operatorEmail', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: 'Please enter a valid email address',
+                    },
+                  })}
+                />
+                <FieldDescription>
+                  Notifications will be sent to this email address.
+                </FieldDescription>
+                {errors.operatorEmail && (
+                  <FieldError errors={errors.operatorEmail.message} />
+                )}
+              </Field>
+
+              {/* Checkboxes */}
+              <div className="space-y-3">
+                <Field className="flex-row items-center gap-3">
+                  <Checkbox
+                    id="autoStart-rhf"
+                    {...register('autoStart')}
+                  />
+                  <FieldLabel htmlFor="autoStart-rhf" className="cursor-pointer">
+                    Auto-start deployment on scheduled date
+                  </FieldLabel>
+                </Field>
+
+                <Field className="flex-row items-center gap-3">
+                  <Checkbox
+                    id="notifyOnComplete-rhf"
+                    {...register('notifyOnComplete')}
+                  />
+                  <FieldLabel
+                    htmlFor="notifyOnComplete-rhf"
+                    className="cursor-pointer"
+                  >
+                    Send notification on completion
+                  </FieldLabel>
+                </Field>
+              </div>
+
+              {/* Submit Buttons */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Creating...' : 'Create Deployment'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => reset()}
+                >
+                  Reset
+                </Button>
+              </div>
+            </FieldGroup>
+          </FieldSet>
+        </form>
+
+        {/* Result Display */}
+        {submittedData && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold">Submitted Data:</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSubmittedData(null)}
+              >
+                Clear
+              </Button>
+            </div>
+            <pre className="bg-muted text-muted-foreground overflow-auto rounded-md p-4 text-xs">
+              <code>{JSON.stringify(submittedData, null, 2)}</code>
+            </pre>
+          </div>
+        )}
+      </div>
+    );
+  },
+};
+
+/* =============================================================================
+ * Story 3: React Hook Form + Zod
+ * ============================================================================= */
+
+// Zod Schema for type-safe validation
+const deploymentSchema = z.object({
+  projectName: z
+    .string()
+    .min(3, 'Project name must be at least 3 characters')
+    .max(50, 'Project name must be less than 50 characters'),
+  description: z.string().optional(),
+  primaryRobot: z.string().min(1, 'Please select a primary robot'),
+  facilities: z
+    .array(z.string())
+    .min(1, 'Please select at least one facility')
+    .max(5, 'You can select up to 5 facilities'),
+  projectType: z.enum(['production', 'testing', 'demo']),
+  priority: z.enum(['low', 'medium', 'high', 'critical']),
+  startDate: z.date(),
+  deploymentPeriod: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
+  operatorEmail: z
+    .string()
+    .email('Please enter a valid email address')
+    .refine((email) => email.endsWith('@neura-robotics.com'), {
+      message: 'Must be a Neura Robotics email',
+    }),
+  autoStart: z.boolean(),
+  notifyOnComplete: z.boolean(),
+});
+
+type DeploymentFormData = z.infer<typeof deploymentSchema>;
+
+export const ReactHookFormWithZod: Story = {
+  name: '3. React Hook Form + Zod',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### React Hook Form with Zod Schema Validation
+
+This approach combines React Hook Form with Zod for type-safe, schema-based validation.
+
+**Strengths:**
+- Type-safe validation schemas
+- Reusable validation logic
+- Better developer experience with TypeScript
+- Centralized validation rules
+- Runtime type checking
+- Easy to test validation logic independently
+
+**Best Use Cases:**
+- Complex forms with intricate validation rules
+- TypeScript projects requiring type safety
+- When validation logic needs to be shared/reused
+- Forms that map to backend API schemas
+
+**Accessibility Features:**
+- Full ARIA support from React Hook Form
+- Error messages properly associated
+- Focus management on validation errors
+- Screen reader announcements for errors
+
+**Schema Benefits:**
+- Single source of truth for validation
+- Type inference for form data
+- Easy to maintain and update
+- Can be shared with backend for consistency
+        `,
+      },
+    },
+  },
+  render: function ReactHookFormZodExample() {
+    const [submittedData, setSubmittedData] = React.useState<Record<
+      string,
+      string | string[] | boolean | object
+    > | null>(null);
+
+    const form = useForm<DeploymentFormData>({
+      resolver: zodResolver(deploymentSchema),
+      defaultValues: {
+        projectName: '',
+        description: '',
+        primaryRobot: '',
+        facilities: [],
+        projectType: undefined,
+        priority: undefined,
+        startDate: undefined,
+        deploymentPeriod: undefined,
+        operatorEmail: '',
+        autoStart: false,
+        notifyOnComplete: false,
+      },
+    });
+
+    const {
+      register,
+      handleSubmit,
+      control,
+      reset,
+      formState: { errors, isSubmitting },
+    } = form;
+
+    const onSubmit = (data: DeploymentFormData) => {
+      setSubmittedData({
+        ...data,
+        startDate: data.startDate.toLocaleDateString(),
+        deploymentPeriod: {
+          from: data.deploymentPeriod.from.toLocaleDateString(),
+          to: data.deploymentPeriod.to.toLocaleDateString(),
+        },
+      });
+    };
+
+    return (
+      <div className="w-full max-w-2xl space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">React Hook Form + Zod</h2>
+          <p className="text-muted-foreground text-sm">
+            Type-safe validation with centralized schema. Best for complex forms
+            and TypeScript projects.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <FieldSet>
+            <FieldLegend>Robot Deployment Configuration</FieldLegend>
+            <FieldGroup>
+              {/* Text Input */}
+              <Field data-invalid={!!errors.projectName}>
+                <FieldLabel htmlFor="projectName-zod">
+                  Project Name <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id="projectName-zod"
+                  placeholder="Warehouse Automation 2024"
+                  aria-invalid={!!errors.projectName}
+                  {...register('projectName')}
+                />
+                <FieldDescription>
+                  A unique name to identify this deployment project (3-50
+                  characters).
+                </FieldDescription>
+                {errors.projectName && (
+                  <FieldError errors={errors.projectName.message} />
+                )}
+              </Field>
+
+              {/* Textarea */}
+              <Field>
+                <FieldLabel htmlFor="description-zod">
+                  Project Description
+                </FieldLabel>
+                <Textarea
+                  id="description-zod"
+                  placeholder="Describe the goals and scope of this deployment..."
+                  className="min-h-[100px]"
+                  {...register('description')}
+                />
+                <FieldDescription>
+                  Optional. Provide context for the deployment team.
+                </FieldDescription>
+              </Field>
+
+              {/* Combobox */}
+              <Controller
+                name="primaryRobot"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>
+                      Primary Robot <span className="text-destructive">*</span>
+                    </FieldLabel>
+                    <Combobox
+                      items={robotOptions}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      placeholder="Select primary robot..."
+                      searchPlaceholder="Search robots..."
+                      aria-invalid={fieldState.invalid}
+                      className="w-full"
+                    />
+                    <FieldDescription>
+                      The main robot unit for this deployment.
+                    </FieldDescription>
+                    {fieldState.error && (
+                      <FieldError errors={fieldState.error.message} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              {/* MultiSelect */}
+              <Controller
+                name="facilities"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>
+                      Deployment Facilities{' '}
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
+                    <MultiSelect
+                      options={facilityOptions}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Select facilities..."
+                      maxCount={3}
+                      className="w-full"
+                    />
+                    <FieldDescription>
+                      Select 1-5 facilities where robots will be deployed.
+                    </FieldDescription>
+                    {fieldState.error && (
+                      <FieldError errors={fieldState.error.message} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Radio Group */}
+                <Controller
+                  name="projectType"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Project Type <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="production"
+                            id="production-zod"
+                          />
+                          <Label
+                            htmlFor="production-zod"
+                            className="font-normal"
+                          >
+                            Production
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="testing" id="testing-zod" />
+                          <Label htmlFor="testing-zod" className="font-normal">
+                            Testing
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="demo" id="demo-zod" />
+                          <Label htmlFor="demo-zod" className="font-normal">
+                            Demo
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* Select */}
+                <Controller
+                  name="priority"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Priority Level{' '}
+                        <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger aria-invalid={fieldState.invalid}>
+                          <SelectValue placeholder="Select priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="critical">Critical</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* DatePicker */}
+                <Controller
+                  name="startDate"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Start Date <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Select start date"
+                        className="w-full"
+                        calendarProps={{
+                          disabled: { before: new Date() },
+                        }}
+                      />
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* DateRangePicker */}
+                <Controller
+                  name="deploymentPeriod"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>
+                        Deployment Period{' '}
+                        <span className="text-destructive">*</span>
+                      </FieldLabel>
+                      <DateRangePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Select date range"
+                        className="w-full"
+                        calendarProps={{
+                          disabled: { before: new Date() },
+                        }}
+                      />
+                      {fieldState.error && (
+                        <FieldError errors={fieldState.error.message} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              {/* Email */}
+              <Field data-invalid={!!errors.operatorEmail}>
+                <FieldLabel htmlFor="operatorEmail-zod">
+                  Operator Email <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id="operatorEmail-zod"
+                  type="email"
+                  placeholder="operator@neura-robotics.com"
+                  aria-invalid={!!errors.operatorEmail}
+                  {...register('operatorEmail')}
+                />
+                <FieldDescription>
+                  Must be a valid @neura-robotics.com email address.
+                </FieldDescription>
+                {errors.operatorEmail && (
+                  <FieldError errors={errors.operatorEmail.message} />
+                )}
+              </Field>
+
+              {/* Checkboxes */}
+              <div className="space-y-3">
+                <Controller
+                  name="autoStart"
+                  control={control}
+                  render={({ field }) => (
+                    <Field className="flex-row items-center gap-3">
+                      <Checkbox
+                        id="autoStart-zod"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <FieldLabel
+                        htmlFor="autoStart-zod"
+                        className="cursor-pointer"
+                      >
+                        Auto-start deployment on scheduled date
+                      </FieldLabel>
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  name="notifyOnComplete"
+                  control={control}
+                  render={({ field }) => (
+                    <Field className="flex-row items-center gap-3">
+                      <Checkbox
+                        id="notifyOnComplete-zod"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <FieldLabel
+                        htmlFor="notifyOnComplete-zod"
+                        className="cursor-pointer"
+                      >
+                        Send notification on completion
+                      </FieldLabel>
+                    </Field>
+                  )}
+                />
+              </div>
+
+              {/* Submit Buttons */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Creating...' : 'Create Deployment'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => reset()}
+                >
+                  Reset
+                </Button>
+              </div>
+            </FieldGroup>
+          </FieldSet>
+        </form>
+
+        {/* Result Display */}
+        {submittedData && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold">Submitted Data:</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSubmittedData(null)}
+              >
+                Clear
+              </Button>
+            </div>
+            <pre className="bg-muted text-muted-foreground overflow-auto rounded-md p-4 text-xs">
+              <code>{JSON.stringify(submittedData, null, 2)}</code>
+            </pre>
+            <div className="bg-muted/50 rounded-md p-3 text-xs">
+              <p className="text-muted-foreground">
+                💡 <strong>Type Safety:</strong> This data is fully typed with
+                TypeScript through Zod schema inference, providing compile-time
+                type checking and autocomplete.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     );
   },
 };
