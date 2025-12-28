@@ -7,6 +7,7 @@ import {
   Bot,
   Calendar,
   CalendarDays,
+  CheckCircle2,
   Clock,
   Cpu,
   FileText,
@@ -102,6 +103,15 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/tabs/tabs';
+import {
+  Timeline,
+  TimelineItem,
+  TimelineIcon,
+  TimelineContent,
+  TimelineTitle,
+  TimelineDescription,
+  TimelineTime,
+} from '@/components/timeline/timeline';
 import {
   Pagination,
   PaginationContent,
@@ -1559,30 +1569,55 @@ function Overview() {
                       </div>
                     </TabsContent>
                     <TabsContent value="history">
-                      <div className="space-y-2">
-                        {[
-                          {
-                            time: '10:32 AM',
-                            event: 'Task completed: Palletizing',
-                          },
-                          { time: '10:15 AM', event: 'Started new task' },
-                          {
-                            time: '09:45 AM',
-                            event: 'Maintenance check passed',
-                          },
-                          { time: '08:00 AM', event: 'System startup' },
-                        ].map((log, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-3 text-sm"
-                          >
-                            <span className="text-muted-foreground w-20">
-                              {log.time}
-                            </span>
-                            <span>{log.event}</span>
-                          </div>
-                        ))}
-                      </div>
+                      <Timeline withoutIcons={false}>
+                        <TimelineItem>
+                          <TimelineIcon
+                            icon={<CheckCircle2 />}
+                            variant="success"
+                          />
+                          <TimelineContent>
+                            <TimelineTime>10:32 AM</TimelineTime>
+                            <TimelineTitle>Task completed</TimelineTitle>
+                            <TimelineDescription>
+                              Palletizing task finished successfully. 156 items
+                              processed.
+                            </TimelineDescription>
+                          </TimelineContent>
+                        </TimelineItem>
+                        <TimelineItem>
+                          <TimelineIcon icon={<Play />} variant="default" />
+                          <TimelineContent>
+                            <TimelineTime>10:15 AM</TimelineTime>
+                            <TimelineTitle>Started new task</TimelineTitle>
+                            <TimelineDescription>
+                              Beginning palletizing operation for batch #4523
+                            </TimelineDescription>
+                          </TimelineContent>
+                        </TimelineItem>
+                        <TimelineItem>
+                          <TimelineIcon icon={<Wrench />} variant="secondary" />
+                          <TimelineContent>
+                            <TimelineTime>09:45 AM</TimelineTime>
+                            <TimelineTitle>
+                              Maintenance check passed
+                            </TimelineTitle>
+                            <TimelineDescription>
+                              All systems operational. Next check scheduled for
+                              tomorrow.
+                            </TimelineDescription>
+                          </TimelineContent>
+                        </TimelineItem>
+                        <TimelineItem isLast>
+                          <TimelineIcon icon={<Zap />} variant="default" />
+                          <TimelineContent>
+                            <TimelineTime>08:00 AM</TimelineTime>
+                            <TimelineTitle>System startup</TimelineTitle>
+                            <TimelineDescription>
+                              Robot initialized and ready for operations
+                            </TimelineDescription>
+                          </TimelineContent>
+                        </TimelineItem>
+                      </Timeline>
                     </TabsContent>
                     <TabsContent value="settings">
                       <div className="space-y-4">
