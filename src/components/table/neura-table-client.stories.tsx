@@ -508,6 +508,108 @@ export const StickyColumn: Story = {
 };
 
 /**
+ * ## Sticky Header
+ *
+ * Keep the table header fixed while scrolling through rows.
+ *
+ * **⚠️ Important:** Requires a special container structure for sticky to work correctly.
+ * The container uses `grid` with child selectors to apply overflow without breaking sticky positioning.
+ *
+ * See the implementation below for the exact structure needed.
+ */
+export const StickyHeader: Story = {
+  parameters: {
+    layout: 'centered',
+  },
+  render: function StickyHeaderExample() {
+    const columns: NeuraColumnDef<Robot>[] = [
+      {
+        accessorKey: 'id',
+        header: 'Robot ID',
+        enableSorting: true,
+      },
+      { accessorKey: 'name', header: 'Name', enableSorting: true },
+      { accessorKey: 'model', header: 'Model' },
+      { accessorKey: 'application', header: 'Application' },
+      { accessorKey: 'facility', header: 'Facility', enableSorting: true },
+      {
+        accessorKey: 'uptime',
+        header: 'Uptime',
+        cell: ({ row }) => `${row.original.uptime.toFixed(1)}%`,
+        enableSorting: true,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => (
+          <Badge
+            variant={row.original.status === 'Active' ? 'default' : 'secondary'}
+          >
+            {row.original.status}
+          </Badge>
+        ),
+      },
+    ];
+
+    const { NeuraTableHeader, NeuraTableBody } = useNeuraTable({
+      data: robots,
+      columns,
+      stickyHeader: true, // Enable sticky header
+    });
+
+    return (
+      <div className="space-y-4">
+        {/* 
+          Special container structure required for sticky header:
+          - Uses grid with [&>div] selectors  
+          - Applies overflow and styling to child divs
+          - This prevents overflow from breaking sticky positioning
+          
+          Scroll INSIDE the table with your mouse wheel to see the header stick.
+        */}
+        <div className="grid w-full [&>div]:max-h-[300px] [&>div]:rounded [&>div]:border">
+          <Table>
+            <NeuraTableHeader />
+            <NeuraTableBody stripedRows />
+          </Table>
+        </div>
+
+        <details className="bg-muted/50 mt-4 rounded-lg">
+          <summary className="text-foreground hover:bg-muted/70 cursor-pointer p-3 text-sm font-semibold">
+            💡 Implementation Guide (click to expand)
+          </summary>
+          <div className="p-3 pt-0">
+            <ul className="text-muted-foreground space-y-1 text-xs">
+              <li>
+                • Set{' '}
+                <code className="text-foreground">stickyHeader: true</code> in
+                useNeuraTable
+              </li>
+              <li>• Wrap Table in special container (see code above)</li>
+              <li>
+                • Set <code className="text-foreground">scrollable: false</code>{' '}
+                on Table component
+              </li>
+              <li>
+                • Adjust{' '}
+                <code className="text-foreground">
+                  [&amp;&gt;div]:max-h-[value]
+                </code>{' '}
+                as needed
+              </li>
+              <li>
+                • Scroll happens <strong>inside the table container</strong>,
+                not the page
+              </li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    );
+  },
+};
+
+/**
  * ## With Tooltips
  *
  * Add tooltips to headers via `meta.tooltip` and to cells with custom renderers.

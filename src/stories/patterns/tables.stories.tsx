@@ -416,6 +416,251 @@ export const MultipleStickyColumns: Story = {
   ),
 };
 
+/**
+ * Table with sticky header - header remains visible while scrolling through rows.
+ * Perfect for long lists of data where you need to keep column headers visible.
+ */
+export const StickyHeader: Story = {
+  render: () => {
+    // Generate extended robot data for scrolling demo
+    const extendedRobots = [
+      ...robots,
+      {
+        id: 'MAiRA-007',
+        name: 'MAiRA Eta',
+        serialNumber: 'NR-2025-MAI-0007',
+        model: 'MAiRA',
+        application: 'Assembly',
+        facility: 'Cologne Plant',
+        uptime: '99.3%',
+        deployDate: '2024-08-12',
+        operator: 'Julia Schneider',
+        status: 'Active',
+      },
+      {
+        id: 'LARA-008',
+        name: 'LARA Theta',
+        serialNumber: 'NR-2025-LAR-0008',
+        model: 'LARA',
+        application: 'Packaging',
+        facility: 'Düsseldorf Facility',
+        uptime: '98.8%',
+        deployDate: '2024-09-01',
+        operator: 'Michael Lang',
+        status: 'Active',
+      },
+      {
+        id: 'MAV-009',
+        name: 'MAV Iota',
+        serialNumber: 'NR-2025-MAV-0009',
+        model: 'MAV',
+        application: 'Transport',
+        facility: 'Nuremberg Warehouse',
+        uptime: '97.9%',
+        deployDate: '2024-10-15',
+        operator: 'Eva Klein',
+        status: 'Active',
+      },
+      {
+        id: '4NE1-010',
+        name: '4NE1 Kappa',
+        serialNumber: 'NR-2025-4NE-0010',
+        model: '4NE1',
+        application: 'Testing',
+        facility: 'Dresden Lab',
+        uptime: '99.6%',
+        deployDate: '2024-11-20',
+        operator: 'Stefan Meyer',
+        status: 'Active',
+      },
+      {
+        id: 'MAiRA-011',
+        name: 'MAiRA Lambda',
+        serialNumber: 'NR-2025-MAI-0011',
+        model: 'MAiRA',
+        application: 'Sorting',
+        facility: 'Leipzig Center',
+        uptime: '98.2%',
+        deployDate: '2024-12-05',
+        operator: 'Nina Becker',
+        status: 'Maintenance',
+      },
+      {
+        id: 'MiPA-012',
+        name: 'MiPA Mu',
+        serialNumber: 'NR-2025-MIP-0012',
+        model: 'MiPA',
+        application: 'Guidance',
+        facility: 'Bonn Office',
+        uptime: '99.7%',
+        deployDate: '2025-01-10',
+        operator: 'Oliver Richter',
+        status: 'Active',
+      },
+    ];
+
+    return (
+      <div className="space-y-4">
+        {/* 
+          IMPORTANT: The container uses Tailwind's arbitrary variant selector [&>div]
+          This applies styles to direct child divs, which is necessary because:
+          - Applying overflow directly to a parent wrapper breaks sticky positioning
+          - The [&>div] selector targets the <div> that Storybook wraps around the Table
+          - This keeps the sticky header working correctly
+        */}
+        <div className="grid w-full [&>div]:max-h-[400px] [&>div]:overflow-auto [&>div]:rounded-lg [&>div]:border">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-background after:bg-border sticky top-0 *:whitespace-nowrap after:absolute after:inset-x-0 after:bottom-0 after:h-px after:content-['']">
+                <TableHead>Robot ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Model</TableHead>
+                <TableHead>Application</TableHead>
+                <TableHead>Facility</TableHead>
+                <TableHead>Uptime</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="overflow-hidden">
+              {extendedRobots.map((robot) => (
+                <TableRow
+                  key={robot.id}
+                  className="odd:bg-muted/50 *:whitespace-nowrap"
+                >
+                  <TableCell className="font-medium">{robot.id}</TableCell>
+                  <TableCell>{robot.name}</TableCell>
+                  <TableCell>{robot.model}</TableCell>
+                  <TableCell>{robot.application}</TableCell>
+                  <TableCell>{robot.facility}</TableCell>
+                  <TableCell>{robot.uptime}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        robot.status === 'Active' ? 'default' : 'secondary'
+                      }
+                    >
+                      {robot.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h4 className="mb-2 text-sm font-semibold">
+            💡 Implementation Guide
+          </h4>
+
+          <div className="mb-3 rounded border border-amber-500/20 bg-amber-500/10 p-2">
+            <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
+              ⚠️ Why the special syntax?
+            </p>
+            <p className="text-muted-foreground mt-1 text-xs">
+              The <code className="text-foreground">[&amp;&gt;div]</code>{' '}
+              selector is necessary because applying{' '}
+              <code className="text-foreground">overflow</code> to a parent
+              wrapper breaks <code className="text-foreground">sticky</code>{' '}
+              positioning. This Tailwind arbitrary variant targets child
+              elements directly.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <p className="text-foreground mb-1.5 text-xs font-medium">
+                1. Container with Grid + Child Selectors
+              </p>
+              <div className="bg-muted rounded p-2">
+                <code className="text-foreground block text-xs">
+                  &lt;div className="grid w-full
+                  <br />
+                  &nbsp;&nbsp;[&amp;&gt;div]:max-h-[400px]
+                  <br />
+                  &nbsp;&nbsp;[&amp;&gt;div]:overflow-auto
+                  <br />
+                  &nbsp;&nbsp;[&amp;&gt;div]:rounded-lg
+                  <br />
+                  &nbsp;&nbsp;[&amp;&gt;div]:border"&gt;
+                </code>
+              </div>
+              <p className="text-muted-foreground mt-1 text-xs">
+                Uses <code className="text-foreground">grid</code> container
+                with child selectors to apply styles without breaking sticky
+              </p>
+            </div>
+
+            <div>
+              <p className="text-foreground mb-1.5 text-xs font-medium">
+                2. Sticky Header Row
+              </p>
+              <div className="bg-muted rounded p-2">
+                <code className="text-foreground block text-xs">
+                  &lt;TableRow className="sticky top-0
+                  <br />
+                  &nbsp;&nbsp;bg-background
+                  <br />
+                  &nbsp;&nbsp;after:absolute after:inset-x-0
+                  <br />
+                  &nbsp;&nbsp;after:bottom-0 after:h-px
+                  <br />
+                  &nbsp;&nbsp;after:bg-border after:content-['']"&gt;
+                </code>
+              </div>
+              <p className="text-muted-foreground mt-1 text-xs">
+                The <code className="text-foreground">after:</code>{' '}
+                pseudo-element creates the bottom border
+              </p>
+            </div>
+
+            <div>
+              <p className="text-foreground mb-1.5 text-xs font-medium">
+                3. Cell Styling (Optional)
+              </p>
+              <ul className="text-muted-foreground space-y-1 text-xs">
+                <li>
+                  • <code className="text-foreground">*:whitespace-nowrap</code>{' '}
+                  - Prevents text wrapping in all cells
+                </li>
+                <li>
+                  • <code className="text-foreground">odd:bg-muted/50</code> -
+                  Zebra striping for rows
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-3 rounded border border-blue-500/20 bg-blue-500/10 p-2">
+            <p className="text-xs font-medium text-blue-700 dark:text-blue-400">
+              💡 Alternative (simpler but no sticky)
+            </p>
+            <p className="text-muted-foreground mt-1 text-xs">
+              If you don't need sticky header, you can use a simpler structure
+              with nested divs and{' '}
+              <code className="text-foreground">overflow-auto</code> on the
+              inner container.
+            </p>
+          </div>
+
+          <p className="text-muted-foreground mt-3 text-xs">
+            📖 Based on{' '}
+            <a
+              href="https://www.shadcnui-blocks.com/components/table"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              shadcn UI Blocks
+            </a>{' '}
+            - Check their repo for more examples
+          </p>
+        </div>
+      </div>
+    );
+  },
+};
+
 /* =============================================================================
  * Interactive Tables
  * ============================================================================= */

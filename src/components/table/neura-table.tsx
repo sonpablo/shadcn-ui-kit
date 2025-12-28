@@ -68,6 +68,28 @@ interface UseNeuraTableProps<TData> {
   /** Pagination configuration. If provided, pagination is enabled. */
   pagination?: NeuraPaginationConfig;
 
+  /**
+   * Make table header sticky. When enabled, the header stays fixed while scrolling.
+   *
+   * ⚠️ IMPORTANT: Requires special container structure to work correctly.
+   * The Table component must be wrapped in a container with these classes:
+   *
+   * @example
+   * <div className="grid w-full [&>div]:max-h-[400px] [&>div]:overflow-auto [&>div]:rounded-lg [&>div]:border">
+   *   <Table scrollable={false}>
+   *     <NeuraTableHeader />
+   *     <NeuraTableBody />
+   *     <NeuraTableFooter />
+   *   </Table>
+   * </div>
+   *
+   * Note: The `[&>div]` selector targets child divs and applies overflow/styling there,
+   * which is necessary because applying overflow directly to a parent breaks sticky positioning.
+   *
+   * @default false
+   */
+  stickyHeader?: boolean;
+
   // ─────────────────────────────────────────────────────────────
   // Server-side mode props (following TanStack Table patterns)
   // ─────────────────────────────────────────────────────────────
@@ -122,6 +144,7 @@ export function useNeuraTable<TData>({
   columns,
   data,
   pagination: paginationConfig,
+  stickyHeader = false,
   // Server-side props
   manualPagination = false,
   manualSorting = false,
@@ -201,7 +224,13 @@ export function useNeuraTable<TData>({
     return (
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
+          <TableRow
+            key={headerGroup.id}
+            className={cn(
+              stickyHeader &&
+                "bg-background after:bg-border sticky top-0 *:whitespace-nowrap after:absolute after:inset-x-0 after:bottom-0 after:h-px after:content-['']",
+            )}
+          >
             {headerGroup.headers.map((header) => {
               const meta = header.column.columnDef as NeuraColumnDef<TData>;
               const isSortable = header.column.getCanSort();
@@ -259,13 +288,14 @@ export function useNeuraTable<TData>({
     stripedRows = false,
   }: NeuraTableBodyProps<TData> = {}) {
     return (
-      <TableBody>
+      <TableBody className={cn(stickyHeader && 'overflow-hidden')}>
         {table.getRowModel().rows.map((row, rowIndex) => (
           <TableRow
             key={row.id}
             className={cn(
               onRowClick && 'cursor-pointer',
               stripedRows && rowIndex % 2 === 1 && 'bg-muted/30',
+              stickyHeader && '*:whitespace-nowrap',
             )}
             onClick={() => onRowClick?.(row)}
           >
