@@ -29,6 +29,7 @@ export * from './components/table/neura-table';
 export * from './components/tabs/tabs';
 export * from './components/textarea/textarea';
 export * from './components/theme-provider/theme-provider';
+export * from './components/timeline/timeline';
 export * from './components/tooltip/tooltip';
 
 // Utilities
