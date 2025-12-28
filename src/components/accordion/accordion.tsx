@@ -5,7 +5,6 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '../button/button';
 
 function Accordion({
   ...props
@@ -18,7 +17,7 @@ function AccordionItem({
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
   return (
-         <AccordionPrimitive.Item
+    <AccordionPrimitive.Item
       data-slot="accordion-item"
       className={cn('border-b last:border-b-0', className)}
       {...props}
