@@ -85,9 +85,9 @@ function InputTag({
   maxTags,
   allowDuplicates = false,
   separators = ['Enter', ','],
-  tagType = 'badge',
+  tagType = 'tag',
   badgeVariant = 'default',
-  tagVariant = 'default',
+  tagVariant = 'gray',
   inputProps,
   'aria-invalid': ariaInvalid,
   ...props

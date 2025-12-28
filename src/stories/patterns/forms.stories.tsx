@@ -35,6 +35,7 @@ import { DatePicker } from '../../components/date-picker/date-picker';
 import { DateRangePicker } from '../../components/date-picker/date-picker';
 import { Combobox } from '../../components/combobox/combobox';
 import { MultiSelect } from '../../components/multi-select/multi-select';
+import { InputTag } from '../../components/input-tag/input-tag';
 import type { DateRange } from 'react-day-picker';
 
 const meta: Meta = {
@@ -129,6 +130,10 @@ This approach uses native HTML5 validation attributes combined with React state 
     const [projectName, setProjectName] = React.useState('');
     const [primaryRobot, setPrimaryRobot] = React.useState('');
     const [facilities, setFacilities] = React.useState<string[]>([]);
+    const [capabilities, setCapabilities] = React.useState<string[]>([
+      'autonomous',
+      'ai-powered',
+    ]);
     const [projectType, setProjectType] = React.useState('');
     const [priority, setPriority] = React.useState('');
     const [startDate, setStartDate] = React.useState<Date | undefined>();
@@ -204,6 +209,7 @@ This approach uses native HTML5 validation attributes combined with React state 
         description,
         primaryRobot,
         facilities,
+        capabilities,
         projectType,
         priority,
         startDate: startDate?.toLocaleDateString() || '',
@@ -321,6 +327,23 @@ This approach uses native HTML5 validation attributes combined with React state 
                   Select all facilities where robots will be deployed.
                 </FieldDescription>
                 {errors.facilities && <FieldError errors={errors.facilities} />}
+              </Field>
+
+              {/* InputTag */}
+              <Field>
+                <FieldLabel>Robot Capabilities</FieldLabel>
+                <InputTag
+                  value={capabilities}
+                  onChange={setCapabilities}
+                  tagType="badge"
+                  badgeVariant="default"
+                  placeholder="Add capability..."
+                  maxTags={10}
+                />
+                <FieldDescription>
+                  Add robot capabilities or features (press Enter or comma to
+                  add).
+                </FieldDescription>
               </Field>
 
               <div className="grid grid-cols-2 gap-4">
@@ -613,6 +636,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
       description: string;
       primaryRobot: string;
       facilities: string[];
+      capabilities: string[];
       projectType: string;
       priority: string;
       startDate: Date | undefined;
@@ -636,6 +660,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
         description: '',
         primaryRobot: '',
         facilities: [],
+        capabilities: ['autonomous', 'ai-powered'],
         projectType: '',
         priority: '',
         startDate: undefined,
@@ -770,6 +795,29 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                     {fieldState.error && (
                       <FieldError errors={fieldState.error.message} />
                     )}
+                  </Field>
+                )}
+              />
+
+              {/* InputTag with Controller */}
+              <Controller
+                name="capabilities"
+                control={control}
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel>Robot Capabilities</FieldLabel>
+                    <InputTag
+                      value={field.value}
+                      onChange={field.onChange}
+                      tagType="badge"
+                      badgeVariant="default"
+                      placeholder="Add capability..."
+                      maxTags={10}
+                    />
+                    <FieldDescription>
+                      Add robot capabilities or features (press Enter or comma
+                      to add).
+                    </FieldDescription>
                   </Field>
                 )}
               />
@@ -1077,6 +1125,7 @@ const deploymentSchema = z.object({
     .array(z.string())
     .min(1, 'Please select at least one facility')
     .max(5, 'You can select up to 5 facilities'),
+  capabilities: z.array(z.string()),
   projectType: z.enum(['production', 'testing', 'demo']),
   priority: z.enum(['low', 'medium', 'high', 'critical']),
   startDate: z.date(),
@@ -1150,6 +1199,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
         description: '',
         primaryRobot: '',
         facilities: [],
+        capabilities: ['autonomous', 'ai-powered'],
         projectType: undefined,
         priority: undefined,
         startDate: undefined,
@@ -1283,6 +1333,29 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                     {fieldState.error && (
                       <FieldError errors={fieldState.error.message} />
                     )}
+                  </Field>
+                )}
+              />
+
+              {/* InputTag */}
+              <Controller
+                name="capabilities"
+                control={control}
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel>Robot Capabilities</FieldLabel>
+                    <InputTag
+                      value={field.value}
+                      onChange={field.onChange}
+                      tagType="badge"
+                      badgeVariant="default"
+                      placeholder="Add capability..."
+                      maxTags={10}
+                    />
+                    <FieldDescription>
+                      Add robot capabilities or features (press Enter or comma
+                      to add).
+                    </FieldDescription>
                   </Field>
                 )}
               />

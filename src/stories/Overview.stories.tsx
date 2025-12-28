@@ -41,6 +41,7 @@ import {
 } from '@/components/card/card';
 import { Checkbox } from '@/components/checkbox/checkbox';
 import { Input } from '@/components/input/input';
+import { InputTag } from '@/components/input-tag/input-tag';
 import { Label } from '@/components/label/label';
 import { Pill } from '@/components/pill/pill';
 import {
@@ -381,6 +382,21 @@ function Overview() {
                   <div className="space-y-2">
                     <Label htmlFor="location">Facility Location</Label>
                     <Input id="location" placeholder="Production Line A" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Robot Capabilities</Label>
+                    <InputTag
+                      value={['autonomous', 'ai-powered', 'collaborative']}
+                      onChange={() => {}}
+                      tagType="tag"
+                      tagVariant="gray"
+                      placeholder="Add capability..."
+                      maxTags={10}
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      Add robot capabilities or features (press Enter or comma
+                      to add)
+                    </p>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">

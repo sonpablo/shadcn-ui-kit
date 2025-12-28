@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { InputTag } from './input-tag';
 import { Label } from '@/components/label/label';
-import { Bot, Cpu, Camera, Gauge, Shield } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 const meta: Meta<typeof InputTag> = {
   title: 'Components/InputTag',
@@ -389,73 +389,6 @@ export const AdvancedFeatures: Story = {
             onChange={setTags3}
             separators={['Enter', ' ']}
             placeholder="Type tags separated by space..."
-          />
-        </div>
-      </div>
-    );
-  },
-};
-
-/**
- * Real-world example: Configuring robot task requirements and capabilities.
- */
-export const RobotTaskConfiguration: Story = {
-  render: function Render() {
-    const [requiredCapabilities, setRequiredCapabilities] = useState([
-      'autonomous-navigation',
-      'object-detection',
-      'collision-avoidance',
-    ]);
-    const [sensors, setSensors] = useState(['lidar', 'rgb-camera', 'imu']);
-    const [algorithms, setAlgorithms] = useState(['slam', 'path-planning']);
-
-    return (
-      <div className="w-[600px] space-y-6 rounded-lg border p-6">
-        <div className="flex items-center gap-2">
-          <Bot className="size-5" />
-          <h3 className="text-lg font-semibold">Task Configuration</h3>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Cpu className="size-4" />
-            <Label>Required Capabilities</Label>
-          </div>
-          <InputTag
-            value={requiredCapabilities}
-            onChange={setRequiredCapabilities}
-            tagVariant="default"
-            placeholder="Add capability..."
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Camera className="size-4" />
-            <Label>Active Sensors</Label>
-          </div>
-          <InputTag
-            value={sensors}
-            onChange={setSensors}
-            tagVariant="secondary"
-            maxTags={8}
-            placeholder="Add sensor..."
-          />
-          <p className="text-muted-foreground text-xs">
-            {sensors.length}/8 sensors configured
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Gauge className="size-4" />
-            <Label>Processing Algorithms</Label>
-          </div>
-          <InputTag
-            value={algorithms}
-            onChange={setAlgorithms}
-            tagVariant="outline"
-            placeholder="Add algorithm..."
           />
         </div>
       </div>
