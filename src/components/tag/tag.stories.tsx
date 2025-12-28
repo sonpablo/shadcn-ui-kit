@@ -35,10 +35,11 @@ A versatile tag component for labels, status indicators, and metadata.
 - **gray**: Neutral, draft, disabled states
 
 ## Sizes
-- **sm**: Small (12px text, 16px height)
-- **md**: Medium (12.5px text, 18px height)
-- **default**: Default (13px text, 20px height)
-- **lg**: Large (14px text, 24px height)
+- **xs**: Extra Small (11px text, 24px height) - Perfect for compact inputs
+- **sm**: Small (13px text, 28px height)
+- **md**: Medium (13px text, 32px height)
+- **default**: Default (16px text, 36px height)
+- **lg**: Large (16px text, 40px height)
 
 ## Usage
 Tags work with icons, can be interactive (asChild with button/link), and support custom styling.
@@ -54,7 +55,7 @@ Tags work with icons, can be interactive (asChild with button/link), and support
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'default', 'lg'],
+      options: ['xs', 'sm', 'md', 'default', 'lg'],
     },
     asChild: {
       control: 'boolean',
@@ -177,6 +178,7 @@ export const Sizes: Story = {
       <div>
         <h3 className="mb-2 text-sm font-semibold">All Sizes</h3>
         <div className="flex flex-wrap items-center gap-3">
+          <Tag size="xs">Extra Small</Tag>
           <Tag size="sm">Small</Tag>
           <Tag size="md">Medium</Tag>
           <Tag size="default">Default</Tag>
@@ -187,12 +189,16 @@ export const Sizes: Story = {
       <div>
         <h3 className="mb-2 text-sm font-semibold">Sizes with Icons</h3>
         <div className="flex flex-wrap items-center gap-3">
-          <Tag variant="green" size="sm">
+          <Tag variant="green" size="xs">
             <Check className="size-3" />
+            XS
+          </Tag>
+          <Tag variant="green" size="sm">
+            <Check className="size-3.5" />
             Small
           </Tag>
           <Tag variant="green" size="md">
-            <Check className="size-3.5" />
+            <Check className="size-4" />
             Medium
           </Tag>
           <Tag variant="green" size="default">
@@ -200,16 +206,16 @@ export const Sizes: Story = {
             Default
           </Tag>
           <Tag variant="green" size="lg">
-            <Check className="size-4" />
+            <Check className="size-5" />
             Large
           </Tag>
         </div>
       </div>
 
       <p className="text-muted-foreground text-xs">
-        💡 <strong>Tip:</strong> Use <code>size="sm"</code> for dense layouts,{' '}
-        <code>size="default"</code> for standard use, and <code>size="lg"</code>{' '}
-        for emphasis.
+        💡 <strong>Tip:</strong> Use <code>size="xs"</code> for compact inputs,{' '}
+        <code>size="sm"</code> for dense layouts, <code>size="default"</code>{' '}
+        for standard use, and <code>size="lg"</code> for emphasis.
       </p>
     </div>
   ),

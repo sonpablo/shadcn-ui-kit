@@ -9,6 +9,7 @@ export * from './components/command/command';
 export * from './components/dialog/dialog';
 export * from './components/dropdown-menu/dropdown-menu';
 export * from './components/input/input';
+export * from './components/input-tag/input-tag';
 export * from './components/label/label';
 export * from './components/link/link';
 export * from './components/mode-toggle/mode-toggle';

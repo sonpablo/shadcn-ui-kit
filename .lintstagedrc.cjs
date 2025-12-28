@@ -20,7 +20,7 @@ module.exports = {
   // the entire project for accurate results. Run `npm run typecheck` manually,
   // or set up CI/CD to catch type errors.
   '*.{js,jsx,ts,tsx}': [buildEslintFixCommand, buildPrettierCommand],
-  
+
   // JSON, Markdown, CSS files
   '*.{json,md,css}': [buildPrettierCommand],
 };

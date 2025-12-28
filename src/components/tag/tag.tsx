@@ -15,10 +15,12 @@ const tagVariants = cva(
         default: 'text-primary border-primary',
       },
       size: {
-        sm: 'h-7 rounded-sm gap-1 px-2 has-[>svg]:px-2',
-        md: 'h-8 rounded-sm gap-1.5 px-3 has-[>svg]:px-2.5',
-        default: 'h-9 px-4 py-2 rounded-md has-[>svg]:px-3',
-        lg: 'h-10 rounded-lg px-6 has-[>svg]:px-4',
+        xs: 'h-6 rounded-sm gap-1 px-1.5 text-xs has-[>svg]:px-1.5 [&>svg]:size-3',
+        sm: 'h-7 rounded-sm gap-1 px-2 text-sm has-[>svg]:px-2 [&>svg]:size-3.5',
+        md: 'h-8 rounded-sm gap-1.5 px-3 text-sm has-[>svg]:px-2.5 [&>svg]:size-4',
+        default:
+          'h-9 px-4 py-2 text-base rounded-md has-[>svg]:px-3 [&>svg]:size-4',
+        lg: 'h-10 rounded-lg px-6 text-base has-[>svg]:px-4 [&>svg]:size-5',
       },
     },
     defaultVariants: {
