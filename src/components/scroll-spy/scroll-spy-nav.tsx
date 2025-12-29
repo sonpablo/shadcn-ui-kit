@@ -1,11 +1,7 @@
 import { ReactNode } from 'react';
-import { useScrollSpyContext } from './scroll-spy-provider';
+import { useScrollSpyContext, type Section } from './scroll-spy-provider';
 import { cn } from '@/lib/utils';
-
-interface Section {
-  id: string;
-  label: string;
-}
+import { Button } from '../button/button';
 
 export interface ScrollSpyNavProps {
   /**
@@ -127,22 +123,22 @@ const DefaultItem = ({
   isActive: boolean;
   onNavigate: (id: string) => void;
 }) => (
-  <button
-    type="button"
+  <Button
+    variant="ghost"
     onClick={() => onNavigate(section.id)}
+    aria-current={isActive ? 'location' : undefined}
     className={cn(
-      'neura-font-label-xl flex w-full cursor-pointer items-center space-x-3 text-left transition-colors',
-      'neura-text-neutral-100 hover:text-white',
-      isActive && 'neura-font-label-xl-bold text-white',
+      'w-full justify-start space-x-3 text-left text-xl',
+      isActive && 'font-bold',
     )}
   >
     <span
       className={cn(
         'h-2 w-2 rounded-full transition-colors',
-        isActive && 'neura-bg-accent-400',
+        isActive && 'bg-primary',
       )}
       aria-hidden="true"
     />
     <span className="flex items-center gap-2">{section.label}</span>
-  </button>
+  </Button>
 );

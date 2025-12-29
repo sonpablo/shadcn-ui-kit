@@ -20,6 +20,7 @@ export * from './components/pill-radio-item/pill-radio-item';
 export * from './components/pill/pill';
 export * from './components/popover/popover';
 export * from './components/radio-group/radio-group';
+export * from './components/scroll-spy/index';
 export * from './components/separator/separator';
 export * from './components/sonner/sonner';
 export * from './components/spinner/spinner';

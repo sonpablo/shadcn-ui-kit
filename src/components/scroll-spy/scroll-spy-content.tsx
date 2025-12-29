@@ -61,7 +61,7 @@ export const ScrollSpyContent = forwardRef<
         if (typeof ref === 'function') ref(node);
         else if (ref) ref.current = node;
       }}
-      className={cn('flex-1 overflow-y-auto scroll-smooth', className)}
+      className={cn('flex-1 overflow-y-auto', className)}
       {...props}
     >
       {children}
