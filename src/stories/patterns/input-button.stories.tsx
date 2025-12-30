@@ -11,6 +11,9 @@ import {
 } from '@/components/select/select';
 import { MultiSelect } from '@/components/multi-select/multi-select';
 import { DatePicker } from '@/components/date-picker/date-picker';
+import { Combobox } from '@/components/combobox/combobox';
+import { InputTag } from '@/components/input-tag/input-tag';
+import { Textarea } from '@/components/textarea/textarea';
 
 const meta: Meta = {
   title: 'Patterns/Form Components Sizes',
@@ -29,6 +32,98 @@ const MatchBadge = () => (
 );
 
 /**
+ * Shows all input components together in their default size for visual comparison.
+ */
+export const AllInputsTogether: Story = {
+  render: function AllInputsTogetherStory() {
+    const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
+    const [inputTagValue, setInputTagValue] = useState<string[]>([]);
+
+    const multiSelectOptions = [
+      { value: 'react', label: 'React' },
+      { value: 'vue', label: 'Vue' },
+      { value: 'angular', label: 'Angular' },
+    ];
+
+    const comboboxItems = [
+      { value: 'react', label: 'React' },
+      { value: 'vue', label: 'Vue' },
+      { value: 'angular', label: 'Angular' },
+    ];
+
+    return (
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">
+          All Input Components (Default Size)
+        </h3>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Input */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Input</label>
+            <Input placeholder="Enter text..." />
+          </div>
+
+          {/* Select */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select</label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select option..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Option 1</SelectItem>
+                <SelectItem value="2">Option 2</SelectItem>
+                <SelectItem value="3">Option 3</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* MultiSelect */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">MultiSelect</label>
+            <MultiSelect
+              options={multiSelectOptions}
+              onValueChange={setMultiSelectValue}
+              defaultValue={multiSelectValue}
+              placeholder="Select multiple..."
+            />
+          </div>
+
+          {/* Combobox */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Combobox</label>
+            <Combobox items={comboboxItems} placeholder="Search..." />
+          </div>
+
+          {/* DatePicker */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">DatePicker</label>
+            <DatePicker placeholder="Pick a date..." />
+          </div>
+
+          {/* InputTag */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">InputTag</label>
+            <InputTag
+              value={inputTagValue}
+              onChange={setInputTagValue}
+              placeholder="Add tags..."
+            />
+          </div>
+
+          {/* Textarea */}
+          <div className="space-y-2 sm:col-span-2 lg:col-span-3">
+            <label className="text-sm font-medium">Textarea</label>
+            <Textarea placeholder="Enter longer text..." />
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
  * Visual comparison of all form components with their respective Button sizes.
  *
  * This story helps identify which components have matching heights.
@@ -41,10 +136,17 @@ const MatchBadge = () => (
 export const SizeComparison: Story = {
   render: function SizeComparisonStory() {
     const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
+    const [inputTagValue, setInputTagValue] = useState<string[]>([]);
 
     const multiSelectOptions = [
       { value: 'react', label: 'React' },
       { value: 'vue', label: 'Vue' },
+    ];
+
+    const comboboxItems = [
+      { value: 'react', label: 'React' },
+      { value: 'vue', label: 'Vue' },
+      { value: 'angular', label: 'Angular' },
     ];
 
     return (
@@ -307,6 +409,155 @@ export const SizeComparison: Story = {
         </div>
 
         {/* ============================================
+            COMBOBOX
+        ============================================ */}
+        <div className="space-y-4">
+          <h3 className="border-b pb-2 text-lg font-semibold">Combobox</h3>
+
+          {/* Combobox sm */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <MatchBadge />
+              <span className="text-muted-foreground text-sm">
+                Combobox sm (h-8) + Button sm (h-8)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Combobox
+                size="sm"
+                items={comboboxItems}
+                placeholder="Combobox sm"
+                className="w-48"
+              />
+              <Button size="sm">Button sm</Button>
+            </div>
+          </div>
+
+          {/* Combobox default */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <MatchBadge />
+              <span className="text-muted-foreground text-sm">
+                Combobox default (h-9) + Button default (h-9)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Combobox
+                items={comboboxItems}
+                placeholder="Combobox default"
+                className="w-48"
+              />
+              <Button>Button default</Button>
+            </div>
+          </div>
+
+          {/* Combobox lg */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <MatchBadge />
+              <span className="text-muted-foreground text-sm">
+                Combobox lg (h-10) + Button lg (h-10)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Combobox
+                size="lg"
+                items={comboboxItems}
+                placeholder="Combobox lg"
+                className="w-48"
+              />
+              <Button size="lg">Button lg</Button>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================
+            INPUT-TAG
+        ============================================ */}
+        <div className="space-y-4">
+          <h3 className="border-b pb-2 text-lg font-semibold">InputTag</h3>
+
+          {/* InputTag sm */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <MatchBadge />
+              <span className="text-muted-foreground text-sm">
+                InputTag sm (h-8) + Button sm (h-8)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <InputTag
+                size="sm"
+                value={inputTagValue}
+                onChange={setInputTagValue}
+                placeholder="InputTag sm"
+                className="w-48"
+              />
+              <Button size="sm">Button sm</Button>
+            </div>
+          </div>
+
+          {/* InputTag default */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <MatchBadge />
+              <span className="text-muted-foreground text-sm">
+                InputTag default (h-9) + Button default (h-9)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <InputTag
+                value={inputTagValue}
+                onChange={setInputTagValue}
+                placeholder="InputTag default"
+                className="w-48"
+              />
+              <Button>Button default</Button>
+            </div>
+          </div>
+
+          {/* InputTag lg */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <MatchBadge />
+              <span className="text-muted-foreground text-sm">
+                InputTag lg (h-10) + Button lg (h-10)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <InputTag
+                size="lg"
+                value={inputTagValue}
+                onChange={setInputTagValue}
+                placeholder="InputTag lg"
+                className="w-48"
+              />
+              <Button size="lg">Button lg</Button>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================
+            TEXTAREA
+        ============================================ */}
+        <div className="space-y-4">
+          <h3 className="border-b pb-2 text-lg font-semibold">Textarea</h3>
+
+          {/* Textarea default */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground text-sm">
+                Textarea (no size variants, uses field-sizing-content)
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <Textarea placeholder="Textarea default" className="w-48" />
+              <Button>Button default</Button>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================
             SUMMARY
         ============================================ */}
         <div className="bg-muted/30 rounded-lg border p-4">
@@ -327,6 +578,20 @@ export const SizeComparison: Story = {
             <div className="flex items-center gap-2">
               <span className="font-medium">DatePicker:</span>
               <span className="text-muted-foreground">sm, default, lg ✓</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium">Combobox:</span>
+              <span className="text-muted-foreground">sm, default, lg ✓</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium">InputTag:</span>
+              <span className="text-muted-foreground">sm, default, lg ✓</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium">Textarea:</span>
+              <span className="text-muted-foreground">
+                no size variants (uses field-sizing-content)
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="font-medium">Button:</span>

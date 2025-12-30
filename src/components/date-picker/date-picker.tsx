@@ -109,7 +109,7 @@ function DatePicker({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-[280px] justify-start text-left font-normal focus-visible:ring-[3px]!',
+            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-[280px] justify-start bg-transparent text-left font-normal focus-visible:ring-[3px]!',
             className,
           )}
         >
@@ -179,7 +179,7 @@ function DatePickerWithPresets({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-[280px] justify-start text-left font-normal focus-visible:ring-[3px]!',
+            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-[280px] justify-start bg-transparent text-left font-normal focus-visible:ring-[3px]!',
             className,
           )}
         >
@@ -275,7 +275,7 @@ function DateRangePicker({
           disabled={disabled}
           data-empty={!value?.from}
           className={cn(
-            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-[300px] justify-start text-left font-normal focus-visible:ring-[3px]!',
+            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-[300px] justify-start bg-transparent text-left font-normal focus-visible:ring-[3px]!',
             className,
           )}
         >
@@ -354,7 +354,7 @@ function DatePickerButton({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-48 justify-between font-normal focus-visible:ring-[3px]!',
+            'data-[empty=true]:text-muted-foreground focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-48 justify-between bg-transparent font-normal focus-visible:ring-[3px]!',
             className,
           )}
         >

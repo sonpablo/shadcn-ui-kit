@@ -7,6 +7,7 @@ export * from './components/calendar/calendar';
 export * from './components/combobox/combobox';
 export * from './components/command/command';
 export * from './components/dialog/dialog';
+export * from './components/dropdown-filters/index';
 export * from './components/dropdown-menu/dropdown-menu';
 export * from './components/input/input';
 export * from './components/input-tag/input-tag';

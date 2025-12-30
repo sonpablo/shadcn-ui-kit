@@ -81,7 +81,7 @@ export function Combobox({
           aria-invalid={ariaInvalid}
           disabled={disabled}
           className={cn(
-            'w-full justify-between',
+            'focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! w-full justify-between bg-transparent focus-visible:ring-[3px]!',
             sizeClasses[size],
             !currentValue && 'text-muted-foreground',
             className,

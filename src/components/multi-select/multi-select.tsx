@@ -27,6 +27,8 @@ import {
   CommandSeparator,
 } from '@/components/command/command';
 
+// Based on: https://shadcn-multi-select-component.vercel.app/
+
 /**
  * Animation types and configurations
  */
@@ -496,7 +498,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       switch (size) {
         case 'sm':
           return {
-            trigger: 'min-h-8 p-0.5',
+            trigger: singleLine ? 'h-8 py-0.5 px-1' : 'min-h-8 p-0.5',
             placeholder: 'text-xs',
             badge: 'px-1 py-0.5 text-xs',
             badgeIcon: 'mr-1 h-3 w-3',
@@ -507,7 +509,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
           };
         case 'lg':
           return {
-            trigger: 'min-h-10 p-1.5',
+            trigger: singleLine ? 'h-10 py-1 px-2' : 'min-h-10 p-1.5',
             placeholder: 'text-sm',
             badge: '',
             badgeIcon: 'mr-2 h-4 w-4',
@@ -518,7 +520,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
           };
         default: // 'default'
           return {
-            trigger: 'min-h-9 p-1',
+            trigger: singleLine ? 'h-9 py-1 px-1.5' : 'min-h-9 p-1',
             placeholder: 'text-sm',
             badge: '',
             badgeIcon: 'mr-2 h-4 w-4',
@@ -856,7 +858,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 getAllOptions().length
               } options selected. ${placeholder}`}
               className={cn(
-                'focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 flex h-auto items-center justify-between rounded-md border bg-inherit hover:!bg-inherit focus-visible:!ring-[3px] [&_svg]:pointer-events-auto',
+                'focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 flex items-center justify-between rounded-md border bg-inherit hover:!bg-inherit focus-visible:!ring-[3px] [&_svg]:pointer-events-auto',
+                !singleLine && 'h-auto',
                 sizeClasses.trigger,
                 autoSize ? 'w-auto' : 'w-full',
                 // Responsive overrides (only when not explicitly sized)
@@ -875,25 +878,18 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
               }}
             >
               {selectedValues.length > 0 ? (
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full items-center justify-between overflow-hidden">
                   <div
                     className={cn(
                       'flex items-center',
                       size === 'sm' ? 'gap-0.5' : 'gap-1',
                       singleLine
-                        ? 'multiselect-singleline-scroll overflow-x-auto'
+                        ? 'multiselect-singleline-scroll overflow-x-auto overflow-y-hidden'
                         : 'flex-wrap',
                       responsiveSettings.compactMode &&
                         size === 'default' &&
                         'gap-0.5',
                     )}
-                    style={
-                      singleLine
-                        ? {
-                            paddingBottom: '4px',
-                          }
-                        : {}
-                    }
                   >
                     {selectedValues
                       .slice(0, responsiveSettings.maxCount)
@@ -1003,7 +999,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           responsiveSettings.compactMode &&
                             size === 'default' &&
                             'px-1.5 py-0.5 text-xs',
-                          singleLine && 'flex-shrink-0 whitespace-nowrap',
+                          singleLine && 'shrink-0 whitespace-nowrap',
                           '[&>svg]:pointer-events-auto',
                         )}
                         style={{
