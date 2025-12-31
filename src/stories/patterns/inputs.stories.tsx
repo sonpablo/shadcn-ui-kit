@@ -492,7 +492,7 @@ export const SizeComparison: Story = {
                 value={inputTagValue}
                 onChange={setInputTagValue}
                 placeholder="InputTag sm"
-                className="w-48"
+                className="w-80"
               />
               <Button size="sm">Button sm</Button>
             </div>
@@ -511,7 +511,7 @@ export const SizeComparison: Story = {
                 value={inputTagValue}
                 onChange={setInputTagValue}
                 placeholder="InputTag default"
-                className="w-48"
+                className="w-80"
               />
               <Button>Button default</Button>
             </div>
@@ -531,7 +531,7 @@ export const SizeComparison: Story = {
                 value={inputTagValue}
                 onChange={setInputTagValue}
                 placeholder="InputTag lg"
-                className="w-48"
+                className="w-80"
               />
               <Button size="lg">Button lg</Button>
             </div>

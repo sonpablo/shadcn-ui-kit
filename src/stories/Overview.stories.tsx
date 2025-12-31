@@ -65,7 +65,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/table/table';
-import { Tag } from '@/components/tag/tag';
 import { Textarea } from '@/components/textarea/textarea';
 import {
   Tooltip,
@@ -399,8 +398,7 @@ function Overview() {
                     <InputTag
                       value={['autonomous', 'ai-powered', 'collaborative']}
                       onChange={() => {}}
-                      tagType="tag"
-                      tagVariant="gray"
+                      badgeVariant="secondary"
                       placeholder="Add capability..."
                       maxTags={10}
                     />
@@ -641,13 +639,16 @@ function Overview() {
                                 Syncing...
                               </span>
                             ) : (
-                              <Tag
+                              <Badge
                                 variant={
-                                  robot.status === 'Active' ? 'green' : 'yellow'
+                                  robot.status === 'Active'
+                                    ? 'success'
+                                    : 'warning'
                                 }
+                                size="sm"
                               >
                                 {robot.status}
-                              </Tag>
+                              </Badge>
                             )}
                           </TableCell>
                           <TableCell className="text-right">
@@ -1853,7 +1854,7 @@ function Overview() {
                   Everything you need to build
                 </h2>
                 <p className="text-muted-foreground mt-2">
-                  A comprehensive collection of 36+ components
+                  A comprehensive collection of 35+ components
                 </p>
               </div>
 
@@ -1889,7 +1890,6 @@ function Overview() {
                   'Switch',
                   'Table',
                   'Tabs',
-                  'Tag',
                   'Textarea',
                   'Tooltip',
                 ].map((component) => (

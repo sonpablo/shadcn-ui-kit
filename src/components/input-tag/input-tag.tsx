@@ -7,20 +7,19 @@ import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/badge/badge';
-import { Tag } from '@/components/tag/tag';
 
 const inputTagWrapperVariants = cva(
   [
-    'border-input dark:bg-input/30 flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-md border bg-transparent shadow-xs transition-[color,box-shadow]',
+    'border-input dark:bg-input/30 flex min-h-8 w-full flex-wrap items-center gap-1.5 rounded-md border bg-transparent shadow-xs transition-[color,box-shadow]',
     'focus-within:border-ring focus-within:ring-ring/30 dark:focus-within:ring-ring/50 focus-within:ring-[3px]',
     'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
   ],
   {
     variants: {
       size: {
-        sm: 'min-h-8 px-2 py-1',
-        default: 'min-h-9 px-2.5 py-1.5',
-        lg: 'min-h-10 px-3 py-2',
+        sm: 'min-h-8 px-2 py-0.5',
+        default: 'min-h-9 px-2.5 py-1',
+        lg: 'min-h-10 px-3 py-1',
       },
     },
     defaultVariants: {
@@ -61,16 +60,21 @@ export interface InputTagProps
   disabled?: boolean;
   /** Maximum number of tags allowed */
   maxTags?: number;
+  /** Text to show when max tags limit is reached (replaces placeholder) */
+  maxTagsReachedText?: string;
   /** Allow duplicate tags */
   allowDuplicates?: boolean;
   /** Separator keys (default: ['Enter', ',']) */
   separators?: string[];
-  /** Type of visual component to render tags (default: 'badge') */
-  tagType?: 'badge' | 'tag';
-  /** Variant for badges (when tagType='badge') */
-  badgeVariant?: 'default' | 'secondary' | 'destructive' | 'outline';
-  /** Variant for tags (when tagType='tag') */
-  tagVariant?: 'green' | 'red' | 'yellow' | 'gray' | 'default';
+  /** Badge variant for styling tags (default: 'secondary') */
+  badgeVariant?:
+    | 'default'
+    | 'secondary'
+    | 'destructive'
+    | 'success'
+    | 'warning';
+  /** Badge size (default: 'sm') */
+  badgeSize?: 'sm' | 'default';
   /** Input element props */
   inputProps?: Omit<React.ComponentProps<'input'>, 'value' | 'onChange'>;
 }
@@ -83,11 +87,11 @@ function InputTag({
   placeholder = 'Type and press Enter...',
   disabled = false,
   maxTags,
+  maxTagsReachedText,
   allowDuplicates = false,
   separators = ['Enter', ','],
-  tagType = 'tag',
-  badgeVariant = 'default',
-  tagVariant = 'gray',
+  badgeVariant = 'secondary',
+  badgeSize = 'sm',
   inputProps,
   'aria-invalid': ariaInvalid,
   ...props
@@ -177,6 +181,8 @@ function InputTag({
   };
 
   const isMaxTagsReached = maxTags ? value.length >= maxTags : false;
+  const displayPlaceholder =
+    isMaxTagsReached && maxTagsReachedText ? maxTagsReachedText : placeholder;
 
   return (
     <div
@@ -211,25 +217,13 @@ function InputTag({
           </button>
         );
 
-        if (tagType === 'tag') {
-          return (
-            <Tag
-              key={`${tag}-${index}`}
-              variant={tagVariant}
-              size="xs"
-              data-slot="input-tag-item"
-              className="gap-1 pr-1"
-            >
-              <span className="max-w-[200px] truncate">{tag}</span>
-              {removeButton}
-            </Tag>
-          );
-        }
-
         return (
           <Badge
             key={`${tag}-${index}`}
             variant={badgeVariant}
+            size={badgeSize}
+            shape="square"
+            appearance="outline"
             data-slot="input-tag-item"
             className="gap-1 pr-1"
           >
@@ -247,9 +241,9 @@ function InputTag({
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
         disabled={disabled || isMaxTagsReached}
-        placeholder={isMaxTagsReached ? 'Max tags reached' : placeholder}
+        placeholder={displayPlaceholder}
         data-slot="input-tag-input"
-        aria-label="Add tag"
+        aria-label={displayPlaceholder}
         className={cn(inputTagInputVariants({ size }))}
         {...inputProps}
       />

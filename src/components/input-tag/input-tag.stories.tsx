@@ -23,20 +23,15 @@ const meta: Meta<typeof InputTag> = {
       options: ['sm', 'default', 'lg'],
       description: 'Size of the input tag component',
     },
-    tagType: {
-      control: 'select',
-      options: ['badge', 'tag'],
-      description: 'Type of visual component to render (badge or tag)',
-    },
     badgeVariant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'outline'],
-      description: 'Visual style when using badge type',
+      options: ['default', 'secondary', 'destructive', 'success', 'warning'],
+      description: 'Badge variant for styling tags (default: secondary)',
     },
-    tagVariant: {
+    badgeSize: {
       control: 'select',
-      options: ['green', 'red', 'yellow', 'gray', 'default'],
-      description: 'Visual style when using tag type (tags always use xs size)',
+      options: ['sm', 'default'],
+      description: 'Badge size (default: sm)',
     },
     disabled: {
       control: 'boolean',
@@ -45,6 +40,11 @@ const meta: Meta<typeof InputTag> = {
     maxTags: {
       control: 'number',
       description: 'Maximum number of tags allowed',
+    },
+    maxTagsReachedText: {
+      control: 'text',
+      description:
+        'Text to show when max tags limit is reached (replaces placeholder)',
     },
     allowDuplicates: {
       control: 'boolean',
@@ -141,31 +141,29 @@ export const BadgeVsTag: Story = {
     return (
       <div className="w-[600px] space-y-6">
         <div className="space-y-2">
-          <Label>Badge Type (Compact, Rounded)</Label>
+          <Label>Default Size (Small, Square)</Label>
           <InputTag
-            tagType="badge"
             badgeVariant="default"
             value={badgeTags}
             onChange={setBadgeTags}
             placeholder="Add capability with badge..."
           />
           <p className="text-muted-foreground text-xs">
-            Perfect for: Tags, labels, metadata, compact lists
+            Perfect for: Tags, labels, metadata, compact lists (size: sm)
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label>Tag Type (Prominent, Bordered)</Label>
+          <Label>Larger Size (Default, Square)</Label>
           <InputTag
-            tagType="tag"
-            tagVariant="default"
+            badgeSize="default"
+            badgeVariant="default"
             value={tagTags}
             onChange={setTagTags}
-            placeholder="Add feature with tag..."
+            placeholder="Add feature with larger badge..."
           />
           <p className="text-muted-foreground text-xs">
-            Perfect for: Features, categories, prominent visual markers (always
-            sm size)
+            Perfect for: Features, categories, prominent visual markers
           </p>
         </div>
       </div>
@@ -196,7 +194,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Default Badge</Label>
             <InputTag
-              tagType="badge"
+              badgeSize="default"
               badgeVariant="default"
               value={tags1}
               onChange={setTags1}
@@ -206,7 +204,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Secondary Badge</Label>
             <InputTag
-              tagType="badge"
+              badgeSize="default"
               badgeVariant="secondary"
               value={tags2}
               onChange={setTags2}
@@ -216,7 +214,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Destructive Badge (errors/warnings)</Label>
             <InputTag
-              tagType="badge"
+              badgeSize="default"
               badgeVariant="destructive"
               value={tags3}
               onChange={setTags3}
@@ -224,10 +222,10 @@ export const Variants: Story = {
             />
           </div>
           <div className="space-y-2">
-            <Label>Outline Badge</Label>
+            <Label>Success Badge</Label>
             <InputTag
-              tagType="badge"
-              badgeVariant="outline"
+              badgeSize="default"
+              badgeVariant="success"
               value={tags4}
               onChange={setTags4}
               placeholder="Add tag..."
@@ -241,8 +239,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Green Tag (success/active)</Label>
             <InputTag
-              tagType="tag"
-              tagVariant="green"
+              badgeVariant="success"
               value={tags5}
               onChange={setTags5}
               placeholder="Add tag..."
@@ -251,8 +248,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Red Tag (error/critical)</Label>
             <InputTag
-              tagType="tag"
-              tagVariant="red"
+              badgeVariant="destructive"
               value={tags6}
               onChange={setTags6}
               placeholder="Add tag..."
@@ -261,8 +257,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Yellow Tag (warning/pending)</Label>
             <InputTag
-              tagType="tag"
-              tagVariant="yellow"
+              badgeVariant="warning"
               value={tags7}
               onChange={setTags7}
               placeholder="Add tag..."
@@ -271,8 +266,7 @@ export const Variants: Story = {
           <div className="space-y-2">
             <Label>Gray Tag (inactive/disabled)</Label>
             <InputTag
-              tagType="tag"
-              tagVariant="gray"
+              badgeVariant="secondary"
               value={tags8}
               onChange={setTags8}
               placeholder="Add tag..."
@@ -307,7 +301,7 @@ export const States: Story = {
           <Label>Error State (Invalid Configuration)</Label>
           <InputTag
             aria-invalid
-            tagVariant="destructive"
+            badgeVariant="destructive"
             value={tags2}
             onChange={setTags2}
             placeholder="Add valid tag..."
@@ -326,21 +320,42 @@ export const States: Story = {
  */
 export const MaxTags: Story = {
   render: function Render() {
-    const [tags, setTags] = useState(['vision', 'lidar', 'imu']);
+    const [tags1, setTags1] = useState(['vision', 'lidar', 'imu']);
+    const [tags2, setTags2] = useState(['feature-1', 'feature-2', 'feature-3']);
 
     return (
-      <div className="w-[500px] space-y-2">
-        <Label htmlFor="max-sensors">Active Sensors (Max 5)</Label>
-        <InputTag
-          id="max-sensors"
-          value={tags}
-          onChange={setTags}
-          maxTags={5}
-          placeholder="Add sensor..."
-        />
-        <p className="text-muted-foreground text-xs">
-          {tags.length}/5 sensors configured
-        </p>
+      <div className="w-[500px] space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="max-sensors">Active Sensors (Max 5)</Label>
+          <InputTag
+            id="max-sensors"
+            value={tags1}
+            onChange={setTags1}
+            maxTags={5}
+            placeholder="Add sensor..."
+          />
+          <p className="text-muted-foreground text-xs">
+            {tags1.length}/5 sensors configured
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="max-features">
+            Robot Features (Max 3, with custom message)
+          </Label>
+          <InputTag
+            id="max-features"
+            value={tags2}
+            onChange={setTags2}
+            maxTags={3}
+            maxTagsReachedText="Maximum limit reached"
+            placeholder="Add feature..."
+          />
+          <p className="text-muted-foreground text-xs">
+            {tags2.length}/3 features added. Try adding a 4th to see the custom
+            message.
+          </p>
+        </div>
       </div>
     );
   },
@@ -426,19 +441,18 @@ export const CompleteShowcase: Story = {
             <div className="space-y-2">
               <Label>System Tags (Badges)</Label>
               <InputTag
-                tagType="badge"
+                badgeSize="default"
                 value={systemTags}
                 onChange={setSystemTags}
                 placeholder="Add system tag..."
                 size="sm"
-                badgeVariant="outline"
               />
             </div>
 
             <div className="space-y-2">
               <Label>Robot Capabilities (Badges)</Label>
               <InputTag
-                tagType="badge"
+                badgeSize="default"
                 value={capabilities}
                 onChange={setCapabilities}
                 placeholder="Add capability..."
@@ -449,11 +463,10 @@ export const CompleteShowcase: Story = {
             <div className="space-y-2">
               <Label>Active Warnings (Tags with Color)</Label>
               <InputTag
-                tagType="tag"
+                badgeVariant="destructive"
                 value={warnings}
                 onChange={setWarnings}
                 placeholder="Add warning..."
-                tagVariant="red"
                 maxTags={5}
               />
             </div>
@@ -461,12 +474,11 @@ export const CompleteShowcase: Story = {
             <div className="space-y-2">
               <Label>Loaded Modules - Max 10 (Tags)</Label>
               <InputTag
-                tagType="tag"
+                badgeVariant="success"
                 value={modules}
                 onChange={setModules}
                 placeholder="Add module..."
                 size="lg"
-                tagVariant="green"
                 maxTags={10}
               />
               <p className="text-muted-foreground text-xs">
@@ -497,42 +509,100 @@ export const CompleteShowcase: Story = {
 };
 
 /**
- * Accessibility features: ARIA labels, keyboard navigation, and screen reader support.
+ * Accessibility and i18n support: Use inputProps to customize ARIA labels for screen readers
+ * and internationalization. The component has no hardcoded strings, making it fully i18n-ready.
  */
 export const Accessibility: Story = {
   render: function Render() {
-    const [tags, setTags] = useState(['accessible', 'keyboard-friendly']);
+    const [tagsEnglish, setTagsEnglish] = useState([
+      'accessible',
+      'keyboard-friendly',
+    ]);
+    const [tagsSpanish, setTagsSpanish] = useState(['autónomo', 'inteligente']);
+    const [tagsFrench, setTagsFrench] = useState(['robotique', 'intelligent']);
 
     return (
       <div className="w-[600px] space-y-6">
         <div className="space-y-4 rounded-lg border p-6">
-          <h3 className="font-semibold">Accessibility Features</h3>
+          <h3 className="font-semibold">i18n Support (No Hardcoded Strings)</h3>
 
           <div className="space-y-2">
-            <Label htmlFor="a11y-tags">Accessible Robot Features</Label>
+            <Label htmlFor="tags-en">English (max 3 tags)</Label>
             <InputTag
-              id="a11y-tags"
-              value={tags}
-              onChange={setTags}
+              id="tags-en"
+              value={tagsEnglish}
+              onChange={setTagsEnglish}
               placeholder="Add feature..."
-              aria-label="Robot accessibility features input"
+              maxTags={3}
+              maxTagsReachedText="Maximum of 3 tags reached"
+              inputProps={{
+                'aria-label': 'Robot features input',
+                'aria-describedby': 'hint-en',
+              }}
             />
-            <p className="text-muted-foreground text-xs" id="a11y-hint">
-              Add tags describing robot accessibility features
+            <p className="text-muted-foreground text-xs" id="hint-en">
+              Type and press Enter to add tags ({tagsEnglish.length}/3)
             </p>
           </div>
 
-          <div className="bg-muted space-y-2 rounded-md p-4 text-sm">
-            <p className="font-medium">Built-in Accessibility:</p>
-            <ul className="list-inside list-disc space-y-1 text-xs">
-              <li>Proper ARIA labels for screen readers</li>
-              <li>Full keyboard navigation support</li>
-              <li>Each tag removal button has descriptive label</li>
-              <li>Focus management and visual indicators</li>
-              <li>Disabled states properly announced</li>
-              <li>Error states with aria-invalid</li>
-            </ul>
+          <div className="space-y-2">
+            <Label htmlFor="tags-es">Español (máx 3 etiquetas)</Label>
+            <InputTag
+              id="tags-es"
+              value={tagsSpanish}
+              onChange={setTagsSpanish}
+              placeholder="Agregar característica..."
+              maxTags={3}
+              maxTagsReachedText="Máximo de 3 etiquetas alcanzado"
+              inputProps={{
+                'aria-label': 'Campo de características del robot',
+                'aria-describedby': 'hint-es',
+              }}
+            />
+            <p className="text-muted-foreground text-xs" id="hint-es">
+              Escribe y presiona Enter para agregar etiquetas (
+              {tagsSpanish.length}/3)
+            </p>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="tags-fr">Français (max 3 tags)</Label>
+            <InputTag
+              id="tags-fr"
+              value={tagsFrench}
+              onChange={setTagsFrench}
+              placeholder="Ajouter une fonctionnalité..."
+              maxTags={3}
+              maxTagsReachedText="Maximum de 3 tags atteint"
+              inputProps={{
+                'aria-label': 'Champ de fonctionnalités du robot',
+                'aria-describedby': 'hint-fr',
+              }}
+            />
+            <p className="text-muted-foreground text-xs" id="hint-fr">
+              Tapez et appuyez sur Entrée pour ajouter des tags (
+              {tagsFrench.length}/3)
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-muted space-y-2 rounded-md p-4 text-sm">
+          <p className="font-medium">Built-in Accessibility & i18n:</p>
+          <ul className="list-inside list-disc space-y-1 text-xs">
+            <li>
+              Proper ARIA labels for screen readers (customizable via
+              inputProps)
+            </li>
+            <li>Full keyboard navigation support (Enter, Comma, Backspace)</li>
+            <li>Each tag removal button has descriptive label</li>
+            <li>Focus management and visual indicators</li>
+            <li>Disabled states properly announced</li>
+            <li>Error states with aria-invalid support</li>
+            <li>
+              No hardcoded strings - fully i18n compatible (placeholder,
+              maxTagsReachedText, aria-labels)
+            </li>
+          </ul>
         </div>
 
         <div className="space-y-2">
@@ -541,6 +611,9 @@ export const Accessibility: Story = {
             value={[]}
             onChange={() => {}}
             placeholder="Type, press Enter, use Backspace..."
+            inputProps={{
+              'aria-label': 'Test keyboard navigation',
+            }}
           />
           <p className="text-muted-foreground text-xs">
             Test: Tab to focus, type tag, Enter to add, Backspace to remove

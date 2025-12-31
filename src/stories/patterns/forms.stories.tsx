@@ -335,7 +335,7 @@ This approach uses native HTML5 validation attributes combined with React state 
                 <InputTag
                   value={capabilities}
                   onChange={setCapabilities}
-                  tagType="badge"
+                  badgeSize="default"
                   badgeVariant="default"
                   placeholder="Add capability..."
                   maxTags={10}
@@ -809,7 +809,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                     <InputTag
                       value={field.value}
                       onChange={field.onChange}
-                      tagType="badge"
+                      badgeSize="default"
                       badgeVariant="default"
                       placeholder="Add capability..."
                       maxTags={10}
@@ -1347,7 +1347,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                     <InputTag
                       value={field.value}
                       onChange={field.onChange}
-                      tagType="badge"
+                      badgeSize="default"
                       badgeVariant="default"
                       placeholder="Add capability..."
                       maxTags={10}
