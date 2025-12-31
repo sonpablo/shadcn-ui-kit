@@ -7,6 +7,13 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+// Context to share variant from TabsList to TabsTrigger
+type TabsVariant = 'line' | 'pills';
+
+const TabsVariantContext = React.createContext<TabsVariant | undefined>(
+  undefined,
+);
+
 function Tabs({
   className,
   ...props
@@ -23,14 +30,13 @@ function Tabs({
 const tabsListVariants = cva('inline-flex items-center justify-center', {
   variants: {
     variant: {
-      underline:
-        'h-auto w-full gap-0 border-b border-border bg-transparent p-0',
+      line: 'h-auto w-full gap-0 border-b border-border bg-transparent p-0',
       pills:
         'bg-muted text-muted-foreground h-9 w-fit gap-1 rounded-lg p-[3px]',
     },
   },
   defaultVariants: {
-    variant: 'underline',
+    variant: 'line',
   },
 });
 
@@ -39,13 +45,20 @@ interface TabsListProps
     VariantProps<typeof tabsListVariants> {}
 
 function TabsList({ className, variant, ...props }: TabsListProps) {
+  const resolvedVariant = variant || 'line';
+
   return (
-    <TabsPrimitive.List
-      data-slot="tabs-list"
-      data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
-      {...props}
-    />
+    <TabsVariantContext.Provider value={resolvedVariant}>
+      <TabsPrimitive.List
+        data-slot="tabs-list"
+        data-variant={resolvedVariant}
+        className={cn(
+          tabsListVariants({ variant: resolvedVariant }),
+          className,
+        )}
+        {...props}
+      />
+    </TabsVariantContext.Provider>
   );
 }
 
@@ -54,7 +67,7 @@ const tabsTriggerVariants = cva(
   {
     variants: {
       variant: {
-        underline: [
+        line: [
           'relative px-4 py-3 rounded-none border-b-2 border-transparent bg-transparent',
           'text-muted-foreground hover:text-foreground',
           'data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:font-semibold',
@@ -70,7 +83,7 @@ const tabsTriggerVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'underline',
+      variant: 'line',
     },
   },
 );
@@ -80,10 +93,17 @@ interface TabsTriggerProps
     VariantProps<typeof tabsTriggerVariants> {}
 
 function TabsTrigger({ className, variant, ...props }: TabsTriggerProps) {
+  // Get variant from context if not explicitly provided
+  const contextVariant = React.useContext(TabsVariantContext);
+  const resolvedVariant = variant || contextVariant || 'line';
+
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
-      className={cn(tabsTriggerVariants({ variant }), className)}
+      className={cn(
+        tabsTriggerVariants({ variant: resolvedVariant }),
+        className,
+      )}
       {...props}
     />
   );

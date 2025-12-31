@@ -57,15 +57,9 @@ export const Pills: Story = {
   render: () => (
     <Tabs defaultValue="overview" className="w-[500px]">
       <TabsList variant="pills">
-        <TabsTrigger variant="pills" value="overview">
-          Overview
-        </TabsTrigger>
-        <TabsTrigger variant="pills" value="analytics">
-          Analytics
-        </TabsTrigger>
-        <TabsTrigger variant="pills" value="reports">
-          Reports
-        </TabsTrigger>
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsTrigger value="reports">Reports</TabsTrigger>
       </TabsList>
       <TabsContent value="overview">
         <Card>
@@ -325,16 +319,16 @@ export const VariantComparison: Story = {
       <div>
         <h3 className="mb-4 text-sm font-medium">Underline Style (Default)</h3>
         <Tabs defaultValue="tab1" className="w-[400px]">
-          <TabsList variant="underline">
-            <TabsTrigger variant="underline" value="tab1">
+          <TabsList variant="line">
+            <TabsTrigger value="tab1">
               <Settings className="size-4" />
               Tab 1
             </TabsTrigger>
-            <TabsTrigger variant="underline" value="tab2">
+            <TabsTrigger value="tab2">
               <User className="size-4" />
               Tab 2
             </TabsTrigger>
-            <TabsTrigger variant="underline" value="tab3">
+            <TabsTrigger value="tab3">
               <Bell className="size-4" />
               Tab 3
             </TabsTrigger>
@@ -351,15 +345,15 @@ export const VariantComparison: Story = {
         <h3 className="mb-4 text-sm font-medium">Pills Style</h3>
         <Tabs defaultValue="tab1" className="w-[400px]">
           <TabsList variant="pills">
-            <TabsTrigger variant="pills" value="tab1">
+            <TabsTrigger value="tab1">
               <Settings className="size-4" />
               Tab 1
             </TabsTrigger>
-            <TabsTrigger variant="pills" value="tab2">
+            <TabsTrigger value="tab2">
               <User className="size-4" />
               Tab 2
             </TabsTrigger>
-            <TabsTrigger variant="pills" value="tab3">
+            <TabsTrigger value="tab3">
               <Bell className="size-4" />
               Tab 3
             </TabsTrigger>
