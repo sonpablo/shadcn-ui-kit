@@ -79,15 +79,32 @@ export interface NeuraBreadcrumbProps {
    */
   ariaLabel?: string;
   /**
-   * Screen reader text for the collapsed items dropdown trigger.
-   * @default "Show {n} more pages"
+   * Customizable literals for i18n support.
+   * All properties are optional - if not provided, component uses no hardcoded text.
    */
-  collapsedItemsLabel?: string;
+  literals?: NeuraBreadcrumbLiterals;
   /**
    * ID of an element that describes the breadcrumb navigation.
    * Sets aria-describedby on the nav element.
    */
   ariaDescribedBy?: string;
+}
+
+/**
+ * Customizable literals for i18n support.
+ * All properties are optional.
+ */
+export interface NeuraBreadcrumbLiterals {
+  /**
+   * Screen reader text for the collapsed items dropdown trigger.
+   * Example: "Show 3 more pages"
+   */
+  collapsedItemsLabel?: string;
+  /**
+   * Aria label for the dropdown menu containing hidden pages.
+   * Example: "Hidden pages"
+   */
+  hiddenPagesAriaLabel?: string;
 }
 
 /**
@@ -102,7 +119,7 @@ function NeuraBreadcrumb({
   className,
   showIcons = true,
   ariaLabel = 'Breadcrumb',
-  collapsedItemsLabel,
+  literals,
   ariaDescribedBy,
 }: NeuraBreadcrumbProps) {
   // If no items, render nothing
@@ -182,21 +199,22 @@ function NeuraBreadcrumb({
   );
 
   const renderCollapsedDropdown = () => {
-    const srLabel =
-      collapsedItemsLabel ||
-      `Show ${collapsedItems.length} more page${collapsedItems.length > 1 ? 's' : ''}`;
-
     return (
       <BreadcrumbItem key="collapsed">
         <DropdownMenu>
           <DropdownMenuTrigger
             className="flex items-center gap-1"
-            aria-label={srLabel}
+            aria-label={literals?.collapsedItemsLabel}
           >
             <BreadcrumbEllipsis className="size-4" />
-            <span className="sr-only">{srLabel}</span>
+            {literals?.collapsedItemsLabel && (
+              <span className="sr-only">{literals.collapsedItemsLabel}</span>
+            )}
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" aria-label="Hidden pages">
+          <DropdownMenuContent
+            align="start"
+            aria-label={literals?.hiddenPagesAriaLabel}
+          >
             {collapsedItems.map((item) => {
               const linkProps = {
                 [linkProp]: item.to,

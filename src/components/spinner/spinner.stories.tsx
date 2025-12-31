@@ -24,8 +24,44 @@ type Story = StoryObj<typeof meta>;
  * ## Default Spinner
  *
  * The default spinner with standard size (16px).
+ * Includes an aria-label for accessibility.
  */
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    ariaLabel: 'Loading',
+  },
+};
+
+/**
+ * ## Internationalization (i18n)
+ *
+ * The `ariaLabel` prop allows you to provide accessible labels in any language.
+ * If not provided, no aria-label will be rendered (icon-only).
+ */
+export const Internationalization: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-4">
+        <Spinner ariaLabel="Loading" />
+        <span className="text-sm">English: ariaLabel="Loading"</span>
+      </div>
+      <div className="flex items-center gap-4">
+        <Spinner ariaLabel="Cargando" />
+        <span className="text-sm">Español: ariaLabel="Cargando"</span>
+      </div>
+      <div className="flex items-center gap-4">
+        <Spinner ariaLabel="Chargement" />
+        <span className="text-sm">Français: ariaLabel="Chargement"</span>
+      </div>
+      <div className="flex items-center gap-4">
+        <Spinner />
+        <span className="text-muted-foreground text-sm">
+          No ariaLabel (icon-only for screen readers)
+        </span>
+      </div>
+    </div>
+  ),
+};
 
 /**
  * ## Sizes

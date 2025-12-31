@@ -241,6 +241,18 @@ const robotStatusOptions = [
   { label: 'MAV-001 (Offline)', value: 'mav-001', disabled: true },
 ];
 
+// Standard literals for consistent i18n across stories
+const standardLiterals = {
+  searchPlaceholder: 'Search robots...',
+  searchAriaLabel: 'Search through robot options',
+  emptyMessage: 'No robots found.',
+  clearAllAriaLabel: 'Clear all selected robots',
+  selectAllAriaLabel: 'Select all robots',
+  selectAllText: 'Select All',
+  clearButtonText: 'Clear',
+  closeButtonText: 'Close',
+};
+
 // Wrapper component for controlled state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MultiSelectWrapper = (props: any) => {
@@ -266,6 +278,7 @@ export const Default: Story = {
     placeholder: 'Select robots',
     defaultValue: ['maira-001'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
   parameters: {
     docs: {
@@ -371,6 +384,7 @@ export const Grouped: Story = {
     placeholder: 'Select robots by fleet',
     defaultValue: ['maira-001', 'lara-001'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
   parameters: {
     docs: {
@@ -401,43 +415,17 @@ export const WithIcons: Story = {
     placeholder: 'Select capabilities',
     defaultValue: ['navigation', 'camera'],
     onValueChange: () => {},
+    literals: {
+      ...standardLiterals,
+      searchPlaceholder: 'Search capabilities...',
+      emptyMessage: 'No capabilities found.',
+    },
   },
   parameters: {
     docs: {
       description: {
         story:
           'Each option includes an icon component. Icons are rendered automatically and styled to match the theme.',
-      },
-    },
-  },
-};
-
-/**
- * ## Secondary Variant
- *
- * Subtle styling variant perfect for secondary actions, sidebars, and supplementary data.
- * Uses muted colors to reduce visual weight.
- *
- * **Use cases:**
- * - Sidebar filters and settings
- * - Optional form fields
- * - Supplementary data selection
- * - Lower hierarchy actions
- */
-export const Secondary: Story = {
-  render: (args) => <MultiSelectWrapper {...args} />,
-  args: {
-    options: robotOptions,
-    placeholder: 'Select robots',
-    variant: 'secondary',
-    defaultValue: ['maira-001', 'maira-002'],
-    onValueChange: () => {},
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Secondary variant with subtle background colors. Great for de-emphasizing less important selections.',
       },
     },
   },
@@ -465,6 +453,7 @@ export const Destructive: Story = {
     variant: 'destructive',
     defaultValue: ['4ne1-002'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
   parameters: {
     docs: {
@@ -492,6 +481,7 @@ export const WithAnimations: Story = {
       duration: 0.3,
     },
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
@@ -506,6 +496,7 @@ export const MaxCount: Story = {
     maxCount: 2,
     defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
@@ -520,6 +511,7 @@ export const SingleLine: Story = {
     singleLine: true,
     defaultValue: ['maira-001', 'maira-002', 'lara-001', 'lara-003', 'mav-001'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
@@ -534,6 +526,7 @@ export const Disabled: Story = {
     disabled: true,
     defaultValue: ['maira-001', 'maira-002'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
@@ -547,11 +540,15 @@ export const DisabledOptions: Story = {
     placeholder: 'Some robots are offline',
     defaultValue: ['maira-001'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
 /**
- * Multi-select without search functionality
+ * ## Without Search
+ *
+ * Multi-select without search functionality. Best for small option sets (< 10 items).
+ * Notice that search-related literals are omitted since they're not needed.
  */
 export const NoSearch: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
@@ -561,11 +558,23 @@ export const NoSearch: Story = {
     searchable: false,
     defaultValue: ['maira-001'],
     onValueChange: () => {},
+    literals: {
+      // No searchPlaceholder or searchAriaLabel needed
+      emptyMessage: 'No robots found.',
+      clearAllAriaLabel: 'Clear all selected robots',
+      selectAllAriaLabel: 'Select all robots',
+      selectAllText: 'Select All',
+      clearButtonText: 'Clear',
+      closeButtonText: 'Close',
+    },
   },
 };
 
 /**
- * Multi-select without "Select All" option
+ * ## Without Select All
+ *
+ * Multi-select without "Select All" functionality. Useful when you want users to deliberately
+ * select each option individually. Notice that select-all-related literals are omitted.
  */
 export const NoSelectAll: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
@@ -574,6 +583,48 @@ export const NoSelectAll: Story = {
     placeholder: 'No select all option',
     hideSelectAll: true,
     onValueChange: () => {},
+    literals: {
+      searchPlaceholder: 'Search robots...',
+      searchAriaLabel: 'Search through robot options',
+      emptyMessage: 'No robots found.',
+      clearAllAriaLabel: 'Clear all selected robots',
+      // No selectAllAriaLabel or selectAllText needed
+      clearButtonText: 'Clear',
+      closeButtonText: 'Close',
+    },
+  },
+};
+
+/**
+ * ## Without Literals (Icon-Only)
+ *
+ * Multi-select with NO literals provided. This demonstrates the minimal i18n mode where
+ * the component renders without any text labels - only icons and visual indicators.
+ *
+ * **When to use:**
+ * - Icon-only interfaces
+ * - When you need complete control over accessibility via custom ARIA attributes
+ * - Minimalist designs where text is not desired
+ *
+ * **Note:** Without literals, search input, empty state, select all, and footer buttons
+ * will not render or will render without text. Only the core selection UI remains.
+ */
+export const WithoutLiterals: Story = {
+  render: (args) => <MultiSelectWrapper {...args} />,
+  args: {
+    options: robotOptions,
+    placeholder: 'Select robots',
+    defaultValue: ['maira-001', 'maira-002'],
+    onValueChange: () => {},
+    // No literals provided - completely minimal
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'No literals are provided. The search input, empty state, select all, and footer buttons will not render. This is the most minimal mode, ideal for icon-only interfaces or when you need full control over i18n.',
+      },
+    },
   },
 };
 
@@ -606,23 +657,30 @@ export const Responsive: Story = {
       },
     },
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
 /**
- * Empty state with custom message
+ * ## Custom Empty State
+ *
+ * Customize the empty state message when no options match the search.
+ * You can provide custom React nodes with any styling you want.
  */
 export const CustomEmptyState: Story = {
   render: (args) => <MultiSelectWrapper {...args} />,
   args: {
     options: robotOptions,
-    placeholder: 'Search for frameworks',
-    emptyIndicator: (
-      <div className="text-muted-foreground py-6 text-center">
-        <p className="text-sm">No frameworks found</p>
-        <p className="mt-1 text-xs">Try a different search term</p>
-      </div>
-    ),
+    placeholder: 'Search for robots',
+    literals: {
+      ...standardLiterals,
+      emptyMessage: (
+        <div className="text-muted-foreground py-6 text-center">
+          <p className="text-sm">No robot found</p>
+          <p className="mt-1 text-xs">Try a different search term</p>
+        </div>
+      ),
+    },
     onValueChange: () => {},
   },
 };
@@ -642,6 +700,7 @@ export const Inverted: Story = {
     variant: 'inverted',
     defaultValue: ['maira-001', 'maira-002'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
   parameters: {
     backgrounds: { default: 'dark' },
@@ -692,6 +751,7 @@ export const CustomStyling: Story = {
     placeholder: 'Select robot model',
     defaultValue: ['maira', 'lara'],
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };
 
@@ -740,32 +800,36 @@ export const AllAnimations = {
 };
 
 /**
- * Layout comparison: Single Line vs Multi Line
+ * ## Layout Comparison: Single Line vs Multi Line
+ *
+ * This story demonstrates the key difference between `singleLine={true}` and `singleLine={false}`.
+ * Both have many badges selected to show the overflow behavior.
  */
 const LayoutComparisonComponent = () => {
-  const [singleLineSelected, setSingleLineSelected] = useState<string[]>([
-    'atlas-01',
-    'atlas-02',
-    'titan-x1',
-    'titan-x2',
-    'scout-a',
-  ]);
-  const [multiLineSelected, setMultiLineSelected] = useState<string[]>([
-    'atlas-01',
-    'atlas-02',
-    'titan-x1',
-    'titan-x2',
-    'scout-a',
-  ]);
+  const manySelectedBadges = [
+    'maira-001',
+    'maira-002',
+    'lara-001',
+    'lara-003',
+    'mav-001',
+    'mipa-001',
+    '4ne1-001',
+    '4ne1-002',
+  ];
+
+  const [singleLineSelected, setSingleLineSelected] =
+    useState<string[]>(manySelectedBadges);
+  const [multiLineSelected, setMultiLineSelected] =
+    useState<string[]>(manySelectedBadges);
 
   return (
     <div className="space-y-8">
-      <div>
+      <div className="w-[400px]">
         <div className="mb-2 text-sm font-medium">
           Single Line (horizontal scroll)
         </div>
         <div className="text-muted-foreground mb-3 text-xs">
-          Badges scroll horizontally when container width is exceeded
+          Badges remain on ONE line and scroll horizontally. Height is fixed.
         </div>
         <MultiSelect
           options={robotOptions}
@@ -773,13 +837,14 @@ const LayoutComparisonComponent = () => {
           placeholder="Single line layout"
           singleLine={true}
           defaultValue={singleLineSelected}
+          literals={standardLiterals}
         />
       </div>
 
-      <div>
+      <div className="w-[400px]">
         <div className="mb-2 text-sm font-medium">Multi Line (default)</div>
         <div className="text-muted-foreground mb-3 text-xs">
-          Badges wrap to multiple lines as needed
+          Badges wrap to MULTIPLE lines. Height grows automatically.
         </div>
         <MultiSelect
           options={robotOptions}
@@ -787,6 +852,7 @@ const LayoutComparisonComponent = () => {
           placeholder="Multi line layout"
           singleLine={false}
           defaultValue={multiLineSelected}
+          literals={standardLiterals}
         />
       </div>
     </div>
@@ -797,6 +863,12 @@ export const LayoutComparison = {
   render: () => <LayoutComparisonComponent />,
   parameters: {
     layout: 'padded',
+    docs: {
+      description: {
+        story:
+          'Clear comparison between single-line (horizontal scroll, fixed height) and multi-line (wrapping badges, growing height). Both have 8 badges selected to demonstrate the overflow behavior.',
+      },
+    },
   },
 };
 
@@ -1090,5 +1162,6 @@ export const Playground: Story = {
       optionHoverAnimation: 'highlight',
     },
     onValueChange: () => {},
+    literals: standardLiterals,
   },
 };

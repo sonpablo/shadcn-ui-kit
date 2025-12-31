@@ -46,6 +46,29 @@ export interface AnimationConfig {
 }
 
 /**
+ * Customizable literals for i18n support.
+ * All properties are optional - only render text/aria-labels if provided.
+ */
+export interface MultiSelectLiterals {
+  /** Placeholder text for the search input */
+  searchPlaceholder?: string;
+  /** Aria label for the search input (for screen readers) */
+  searchAriaLabel?: string;
+  /** Empty state message when no options match search */
+  emptyMessage?: React.ReactNode;
+  /** Aria label for the clear all button */
+  clearAllAriaLabel?: string;
+  /** Aria label for the select all checkbox */
+  selectAllAriaLabel?: string;
+  /** Text for the select all option */
+  selectAllText?: string;
+  /** Text for the clear button in footer */
+  clearButtonText?: string;
+  /** Text for the close button in footer */
+  closeButtonText?: string;
+}
+
+/**
  * Variants for the multi-select component to handle different styles.
  * Uses class-variance-authority (cva) to define different styles based on "variant" prop.
  */
@@ -194,10 +217,11 @@ interface MultiSelectProps
   searchable?: boolean;
 
   /**
-   * Custom empty state message when no options match search.
-   * Optional, defaults to "No results found."
+   * Customizable text labels and aria-labels for i18n support.
+   * All labels are optional - if not provided, text won't be rendered.
+   * This allows full control for internationalization.
    */
-  emptyIndicator?: React.ReactNode;
+  literals?: MultiSelectLiterals;
 
   /**
    * If true, allows the component to grow and shrink with its content.
@@ -330,7 +354,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       className,
       hideSelectAll = false,
       searchable = true,
-      emptyIndicator,
+      literals,
       autoSize = false,
       singleLine = false,
       popoverClassName,
@@ -1043,7 +1067,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           handleClear();
                         }
                       }}
-                      aria-label={`Clear all ${selectedValues.length} selected options`}
+                      aria-label={literals?.clearAllAriaLabel}
                       className="text-muted-foreground hover:text-foreground focus:ring-ring mx-2 flex h-4 w-4 cursor-pointer items-center justify-center rounded-sm focus:ring-2 focus:ring-offset-1 focus:outline-none"
                     >
                       <XIcon className={sizeClasses.clearIcon} />
@@ -1107,11 +1131,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
             <Command>
               {searchable && (
                 <CommandInput
-                  placeholder="Search options..."
+                  placeholder={literals?.searchPlaceholder}
                   onKeyDown={handleInputKeyDown}
                   value={searchValue}
                   onValueChange={setSearchValue}
-                  aria-label="Search through available options"
+                  aria-label={literals?.searchAriaLabel}
                   aria-describedby={`${multiSelectId}-search-help`}
                 />
               )}
@@ -1127,10 +1151,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   'overscroll-behavior-y-contain',
                 )}
               >
-                <CommandEmpty>
-                  {emptyIndicator || 'No results found.'}
-                </CommandEmpty>{' '}
-                {!hideSelectAll && !searchValue && (
+                {literals?.emptyMessage && (
+                  <CommandEmpty>{literals.emptyMessage}</CommandEmpty>
+                )}
+                {!hideSelectAll && !searchValue && literals?.selectAllText && (
                   <CommandGroup>
                     <CommandItem
                       key="all"
@@ -1140,9 +1164,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         selectedValues.length ===
                         getAllOptions().filter((opt) => !opt.disabled).length
                       }
-                      aria-label={`Select all ${
-                        getAllOptions().length
-                      } options`}
+                      aria-label={literals?.selectAllAriaLabel}
                       className="cursor-pointer"
                     >
                       <div
@@ -1158,13 +1180,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       >
                         <CheckIcon className="h-4 w-4" />
                       </div>
-                      <span>
-                        (Select All
-                        {getAllOptions().length > 20
-                          ? ` - ${getAllOptions().length} options`
-                          : ''}
-                        )
-                      </span>
+                      <span>{literals.selectAllText}</span>
                     </CommandItem>
                   </CommandGroup>
                 )}
@@ -1259,30 +1275,37 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   </CommandGroup>
                 )}
                 <CommandSeparator />
-                <CommandGroup>
-                  <div className="flex items-center justify-between">
-                    {selectedValues.length > 0 && (
-                      <>
+                {(literals?.clearButtonText || literals?.closeButtonText) && (
+                  <CommandGroup>
+                    <div className="flex items-center justify-between">
+                      {selectedValues.length > 0 &&
+                        literals?.clearButtonText && (
+                          <>
+                            <CommandItem
+                              onSelect={handleClear}
+                              className="flex-1 cursor-pointer justify-center"
+                            >
+                              {literals.clearButtonText}
+                            </CommandItem>
+                            {literals?.closeButtonText && (
+                              <Separator
+                                orientation="vertical"
+                                className="flex h-full min-h-6"
+                              />
+                            )}
+                          </>
+                        )}
+                      {literals?.closeButtonText && (
                         <CommandItem
-                          onSelect={handleClear}
-                          className="flex-1 cursor-pointer justify-center"
+                          onSelect={() => setIsPopoverOpen(false)}
+                          className="max-w-full flex-1 cursor-pointer justify-center"
                         >
-                          Clear
+                          {literals.closeButtonText}
                         </CommandItem>
-                        <Separator
-                          orientation="vertical"
-                          className="flex h-full min-h-6"
-                        />
-                      </>
-                    )}
-                    <CommandItem
-                      onSelect={() => setIsPopoverOpen(false)}
-                      className="max-w-full flex-1 cursor-pointer justify-center"
-                    >
-                      Close
-                    </CommandItem>
-                  </div>
-                </CommandGroup>
+                      )}
+                    </div>
+                  </CommandGroup>
+                )}
               </CommandList>
             </Command>
           </PopoverContent>
