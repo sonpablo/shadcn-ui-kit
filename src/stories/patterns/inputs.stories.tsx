@@ -16,7 +16,7 @@ import { InputTag } from '@/components/input-tag/input-tag';
 import { Textarea } from '@/components/textarea/textarea';
 
 const meta: Meta = {
-  title: 'Patterns/Form Components Sizes',
+  title: 'Patterns/Form Components',
   parameters: {
     layout: 'padded',
   },
@@ -311,7 +311,7 @@ export const SizeComparison: Story = {
                 onValueChange={setMultiSelectValue}
                 defaultValue={multiSelectValue}
                 placeholder="MultiSelect sm"
-                className="w-48"
+                autoSize={true}
               />
               <Button size="sm">Button sm</Button>
             </div>
@@ -331,7 +331,7 @@ export const SizeComparison: Story = {
                 onValueChange={setMultiSelectValue}
                 defaultValue={multiSelectValue}
                 placeholder="MultiSelect default"
-                className="w-48"
+                autoSize={true}
               />
               <Button>Button default</Button>
             </div>
@@ -352,8 +352,9 @@ export const SizeComparison: Story = {
                 onValueChange={setMultiSelectValue}
                 defaultValue={multiSelectValue}
                 placeholder="MultiSelect lg"
-                className="w-48"
+                autoSize={true}
               />
+
               <Button size="lg">Button lg</Button>
             </div>
           </div>

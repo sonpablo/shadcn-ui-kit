@@ -858,7 +858,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 getAllOptions().length
               } options selected. ${placeholder}`}
               className={cn(
-                'focus-visible:!border-ring focus-visible:!ring-ring/30 dark:focus-visible:!ring-ring/50 flex items-center justify-between rounded-md border bg-inherit hover:!bg-inherit focus-visible:!ring-[3px] [&_svg]:pointer-events-auto',
+                'focus-visible:border-ring! focus-visible:ring-ring/30! dark:focus-visible:ring-ring/50! dark:bg-input/30 dark:hover:bg-input/30 flex items-center justify-between rounded-md border bg-transparent hover:bg-transparent focus-visible:ring-[3px]! [&_svg]:pointer-events-auto',
                 !singleLine && 'h-auto',
                 sizeClasses.trigger,
                 autoSize ? 'w-auto' : 'w-full',
@@ -924,7 +924,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                                 'px-1.5 py-0.5 text-xs',
                               screenSize === 'mobile' &&
                                 'max-w-[120px] truncate',
-                              singleLine && 'flex-shrink-0 whitespace-nowrap',
+                              singleLine && 'shrink-0 whitespace-nowrap',
                               '[&>svg]:pointer-events-auto',
                             )}
                             style={{
