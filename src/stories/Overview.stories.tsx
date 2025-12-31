@@ -128,6 +128,7 @@ import {
   DatePicker,
   DateRangePicker,
 } from '@/components/date-picker/date-picker';
+import { ReadMore } from '@/components/read-more/index';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -1698,6 +1699,73 @@ function Overview() {
                 </CardContent>
               </Card>
 
+              {/* --- Robot Documentation --- */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="size-5" />
+                    Robot Documentation
+                  </CardTitle>
+                  <CardDescription>
+                    Expandable content for detailed specifications.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="mb-2 font-semibold">MAiRA Overview</h4>
+                      <ReadMore>
+                        <ReadMore.Text maxLength={150}>
+                          The MAiRA robot is Neura Robotics' flagship cognitive
+                          robot designed for advanced manufacturing
+                          applications. Featuring AI-powered decision making,
+                          multi-sensor fusion, and adaptive learning
+                          capabilities, MAiRA can handle complex assembly tasks,
+                          quality inspection, and collaborative operations with
+                          minimal programming. Its intuitive interface and
+                          safety features make it ideal for Industry 4.0
+                          environments.
+                        </ReadMore.Text>
+                        <ReadMore.Button className="text-primary font-medium">
+                          Read more
+                        </ReadMore.Button>
+                      </ReadMore>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <h4 className="mb-2 font-semibold">
+                        Technical Specifications
+                      </h4>
+                      <ReadMore defaultExpanded>
+                        <ReadMore.Text maxLines={3} className="text-sm">
+                          Payload capacity: 5-15kg depending on configuration •
+                          Reach: 850-1400mm • Repeatability: ±0.02mm • Max
+                          speed: 2.5 m/s • Power consumption: 350W average •
+                          Operating temperature: 5-45°C • Protection rating:
+                          IP54 • Sensors: Force/torque, vision, proximity •
+                          Communication: EtherCAT, Profinet, OPC UA •
+                          Programming: Visual interface, Python, ROS
+                        </ReadMore.Text>
+                        <ReadMore.Button
+                          whenExpanded
+                          className="text-muted-foreground mt-2 text-sm"
+                        >
+                          Show less
+                        </ReadMore.Button>
+                        <ReadMore.Button
+                          whenCollapsed
+                          className="text-primary mt-2 text-sm font-medium"
+                        >
+                          Show details
+                        </ReadMore.Button>
+                      </ReadMore>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* --- Support Request Form --- */}
               <Card className="lg:col-span-2">
                 <CardHeader>
@@ -1785,7 +1853,7 @@ function Overview() {
                   Everything you need to build
                 </h2>
                 <p className="text-muted-foreground mt-2">
-                  A comprehensive collection of 35+ components
+                  A comprehensive collection of 36+ components
                 </p>
               </div>
 
@@ -1813,6 +1881,7 @@ function Overview() {
                   'Pill',
                   'Popover',
                   'RadioGroup',
+                  'ReadMore',
                   'Select',
                   'Separator',
                   'Sonner',
