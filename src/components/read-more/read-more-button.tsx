@@ -46,7 +46,7 @@ export function ReadMoreButton({
       onClick={handleClick}
       aria-expanded={isExpanded}
       className={cn(
-        'focus-visible:ring-ring/30 dark:focus-visible:ring-ring/50 inline-flex cursor-pointer items-center text-sm transition-colors hover:underline focus-visible:ring-2 focus-visible:outline-none',
+        'text-primary focus-visible:ring-ring/30 dark:focus-visible:ring-ring/50 inline-flex cursor-pointer items-center text-sm font-medium transition-colors hover:underline focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}

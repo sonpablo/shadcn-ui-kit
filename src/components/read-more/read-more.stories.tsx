@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ReadMore } from './index';
 import { Button } from '@/components/button/button';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@/components/card/card';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const meta: Meta<typeof ReadMore> = {
@@ -27,30 +33,71 @@ export const Default: Story = {
   render: () => (
     <ReadMore>
       <ReadMore.Text maxLength={100}>{longText}</ReadMore.Text>
-      <ReadMore.Button className="text-primary font-medium">
-        Read more
-      </ReadMore.Button>
+      <ReadMore.Button>Read more</ReadMore.Button>
     </ReadMore>
   ),
 };
 
 /**
- * Line-based truncation using CSS line-clamp.
- * Limits the text to 3 visible lines.
+ * Line-based truncation with smooth animation.
+ * Limits the text to 3 visible lines and animates the expansion/collapse.
  */
 export const MaxLines: Story = {
   render: () => (
-    <div className="max-w-2xl">
-      <ReadMore>
-        <ReadMore.Text maxLines={3} className="text-base leading-relaxed">
-          {longText}
-        </ReadMore.Text>
-        <ReadMore.Button className="text-primary font-medium">
-          Show more
-        </ReadMore.Button>
-      </ReadMore>
-    </div>
+    <ReadMore>
+      <ReadMore.Text maxLines={3}>{longText}</ReadMore.Text>
+      <ReadMore.Button>Show more</ReadMore.Button>
+    </ReadMore>
   ),
+};
+
+/**
+ * ## Animated Expansion
+ *
+ * Showcases the smooth height animation when expanding/collapsing.
+ * Notice the 0.3s ease-in-out transition between states.
+ */
+export const AnimatedExpansion: Story = {
+  render: () => {
+    const veryLongText = `Our advanced robot fleet management system represents the cutting edge of industrial automation technology. Designed from the ground up with scalability and reliability in mind, this comprehensive platform enables seamless coordination of multiple autonomous robots across diverse operational environments.
+
+The system features real-time monitoring capabilities that provide instant visibility into robot status, location, battery levels, and task completion rates. Advanced AI algorithms continuously analyze performance data to optimize task allocation, predict maintenance needs, and identify opportunities for efficiency improvements.
+
+Integration with existing enterprise systems is streamlined through our robust API framework, supporting REST, GraphQL, and WebSocket protocols. This flexibility ensures compatibility with your current infrastructure while maintaining the security and compliance standards required in modern industrial settings.
+
+Our intuitive dashboard provides actionable insights through customizable widgets and real-time analytics, empowering operations managers to make data-driven decisions quickly and confidently.`;
+
+    return (
+      <div className="max-w-3xl space-y-6">
+        <div className="border-l-primary border-l-4 pl-4">
+          <h4 className="mb-3 text-lg font-semibold">
+            Robot Fleet Management System
+          </h4>
+          <ReadMore>
+            <ReadMore.Text maxLines={4} className="leading-relaxed">
+              {veryLongText}
+            </ReadMore.Text>
+            <div className="mt-3 flex gap-2">
+              <ReadMore.Button
+                whenCollapsed
+                className="text-primary font-medium"
+              >
+                <ChevronDown className="size-4" />
+                Read full description
+              </ReadMore.Button>
+              <ReadMore.Button
+                whenExpanded
+                className="text-muted-foreground font-medium"
+              >
+                <ChevronUp className="size-4" />
+                Show less
+              </ReadMore.Button>
+            </div>
+          </ReadMore>
+        </div>
+      </div>
+    );
+  },
 };
 
 /**
@@ -70,32 +117,6 @@ export const CustomStyling: Story = {
         <ReadMore.Button className="text-primary hover:text-primary/80 font-semibold">
           Continue reading →
         </ReadMore.Button>
-      </ReadMore>
-    </div>
-  ),
-};
-
-/**
- * Shows separate buttons for expand and collapse actions.
- * Uses `whenCollapsed` and `whenExpanded` props.
- */
-export const WithCollapseButton: Story = {
-  render: () => (
-    <div className="max-w-2xl space-y-2">
-      <ReadMore>
-        <ReadMore.Text maxLines={2} className="text-base">
-          {longText}
-        </ReadMore.Text>
-        <div className="flex gap-2">
-          <ReadMore.Button whenCollapsed className="text-primary font-medium">
-            <ChevronDown className="mr-1 inline size-4" />
-            Expand
-          </ReadMore.Button>
-          <ReadMore.Button whenExpanded className="text-primary font-medium">
-            <ChevronUp className="mr-1 inline size-4" />
-            Collapse
-          </ReadMore.Button>
-        </div>
       </ReadMore>
     </div>
   ),
@@ -128,22 +149,17 @@ export const WithButtonComponent: Story = {
  */
 export const InCard: Story = {
   render: () => (
-    <div className="bg-card text-card-foreground max-w-md rounded-lg border p-6 shadow-sm">
-      <h3 className="mb-2 text-xl font-semibold">
-        Advanced Robot Fleet Management
-      </h3>
-      <ReadMore>
-        <ReadMore.Text
-          maxLines={3}
-          className="text-muted-foreground mb-3 text-sm leading-relaxed"
-        >
-          {longText}
-        </ReadMore.Text>
-        <ReadMore.Button className="text-primary text-sm font-medium">
-          Learn more
-        </ReadMore.Button>
-      </ReadMore>
-    </div>
+    <Card className="max-w-md">
+      <CardHeader>
+        <CardTitle>Advanced Robot Fleet Management</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ReadMore>
+          <ReadMore.Text maxLines={3}>{longText}</ReadMore.Text>
+          <ReadMore.Button>Learn more</ReadMore.Button>
+        </ReadMore>
+      </CardContent>
+    </Card>
   ),
 };
 
@@ -216,9 +232,7 @@ export const WithoutEllipsis: Story = {
       <ReadMore.Text maxLength={100} showEllipsis={false}>
         {longText}
       </ReadMore.Text>
-      <ReadMore.Button className="text-primary ml-1 font-medium">
-        [more]
-      </ReadMore.Button>
+      <ReadMore.Button>[more]</ReadMore.Button>
     </ReadMore>
   ),
 };
