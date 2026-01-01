@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 import { Badge } from './badge';
 import { Check, X, AlertCircle, Star, Zap, Crown } from 'lucide-react';
 
@@ -551,6 +552,227 @@ export const AsChild: Story = {
   ),
   parameters: {
     layout: 'padded',
+  },
+};
+
+/**
+ * ## Selectable Badges Pattern
+ *
+ * Badges can be used with hidden checkboxes/radios to create selectable filters or options.
+ * This pattern maintains accessibility while providing a polished UI.
+ *
+ * **Key Features:**
+ * - Uses real `<input>` elements for accessibility
+ * - Outline appearance for unselected, solid for selected
+ * - Keyboard navigation works natively (Space/Enter)
+ * - Screen reader friendly
+ *
+ * **Common use cases:**
+ * - Filters (multiple selection)
+ * - Categories or tags selection
+ * - Form options (single selection)
+ * - Settings toggles
+ */
+const SelectableBadgesDemo = () => {
+  // Multiple selection (checkboxes)
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(['active']);
+  const toggleFilter = (filter: string) => {
+    setSelectedFilters((prev) =>
+      prev.includes(filter)
+        ? prev.filter((f) => f !== filter)
+        : [...prev, filter],
+    );
+  };
+
+  // Single selection (radio)
+  const [selectedPriority, setSelectedPriority] = useState('medium');
+
+  // Robot types (multiple)
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const toggleType = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+    );
+  };
+
+  return (
+    <div className="space-y-8 p-8">
+      {/* Multiple Selection - Status Filters */}
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">
+          Multiple Selection (Checkboxes)
+        </h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          Select multiple status filters. Outline = unselected, Solid =
+          selected.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { id: 'active', label: 'Active', variant: 'success' as const },
+            { id: 'idle', label: 'Idle', variant: 'secondary' as const },
+            {
+              id: 'maintenance',
+              label: 'Maintenance',
+              variant: 'warning' as const,
+            },
+            { id: 'error', label: 'Error', variant: 'destructive' as const },
+          ].map((filter) => {
+            const isSelected = selectedFilters.includes(filter.id);
+            return (
+              <label key={filter.id} className="inline-flex cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="peer sr-only"
+                  checked={isSelected}
+                  onChange={() => toggleFilter(filter.id)}
+                />
+                <Badge
+                  variant={filter.variant}
+                  appearance={isSelected ? undefined : 'outline'}
+                  className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                >
+                  {isSelected && <Check className="size-3" />}
+                  {filter.label}
+                </Badge>
+              </label>
+            );
+          })}
+        </div>
+        <p className="text-muted-foreground mt-3 text-xs">
+          Selected: {selectedFilters.join(', ') || 'none'}
+        </p>
+      </div>
+
+      {/* Single Selection - Priority */}
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">Single Selection (Radio)</h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          Select one priority level. Only one can be selected at a time.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { id: 'low', label: 'Low', variant: 'secondary' as const },
+            { id: 'medium', label: 'Medium', variant: 'default' as const },
+            { id: 'high', label: 'High', variant: 'warning' as const },
+            {
+              id: 'critical',
+              label: 'Critical',
+              variant: 'destructive' as const,
+            },
+          ].map((priority) => {
+            const isSelected = selectedPriority === priority.id;
+            return (
+              <label key={priority.id} className="inline-flex cursor-pointer">
+                <input
+                  type="radio"
+                  name="priority"
+                  className="peer sr-only"
+                  checked={isSelected}
+                  onChange={() => setSelectedPriority(priority.id)}
+                />
+                <Badge
+                  variant={priority.variant}
+                  appearance={isSelected ? undefined : 'outline'}
+                  className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                >
+                  {isSelected && <Check className="size-3" />}
+                  {priority.label}
+                </Badge>
+              </label>
+            );
+          })}
+        </div>
+        <p className="text-muted-foreground mt-3 text-xs">
+          Selected: {selectedPriority}
+        </p>
+      </div>
+
+      {/* Practical Example - Robot Type Filter */}
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">
+          Practical Example: Robot Type Filter
+        </h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          Real-world use case: filtering robots by type with different sizes and
+          shapes.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { id: 'cobot', label: 'Cobot', icon: Star },
+            { id: 'agv', label: 'AGV', icon: Zap },
+            { id: 'drone', label: 'Drone', icon: Crown },
+            { id: 'arm', label: 'Robotic Arm', icon: AlertCircle },
+          ].map((type) => {
+            const isSelected = selectedTypes.includes(type.id);
+            const Icon = type.icon;
+            return (
+              <label key={type.id} className="inline-flex cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="peer sr-only"
+                  checked={isSelected}
+                  onChange={() => toggleType(type.id)}
+                />
+                <Badge
+                  variant="default"
+                  size="md"
+                  shape="pill"
+                  appearance={isSelected ? undefined : 'outline'}
+                  className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                >
+                  <Icon className="size-3.5" />
+                  {type.label}
+                </Badge>
+              </label>
+            );
+          })}
+        </div>
+        <p className="text-muted-foreground mt-3 text-xs">
+          Selected types: {selectedTypes.join(', ') || 'none'}
+        </p>
+      </div>
+
+      {/* Disabled State */}
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">Disabled State</h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          Disabled badges are not interactive and have reduced opacity.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: 'Available', disabled: false },
+            { label: 'Disabled (unchecked)', disabled: true },
+            { label: 'Disabled (checked)', disabled: true, checked: true },
+          ].map((item, idx) => (
+            <label
+              key={idx}
+              className={`inline-flex ${item.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+            >
+              <input
+                type="checkbox"
+                className="peer sr-only"
+                disabled={item.disabled}
+                defaultChecked={item.checked}
+              />
+              <Badge
+                appearance={item.checked ? undefined : 'outline'}
+                className={`transition-all ${!item.disabled && 'peer-focus-visible:ring-ring peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1'}`}
+              >
+                {item.checked && <Check className="size-3" />}
+                {item.label}
+              </Badge>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const SelectableBadges = {
+  render: () => <SelectableBadgesDemo />,
+  parameters: {
+    layout: 'fullscreen',
   },
 };
 

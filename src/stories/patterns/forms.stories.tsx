@@ -5,19 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 // Components
+import { Badge } from '../../components/badge/badge';
 import { Button } from '../../components/button/button';
 import { Input } from '../../components/input/input';
 import { Textarea } from '../../components/textarea/textarea';
 import { Checkbox } from '../../components/checkbox/checkbox';
 import { Switch } from '../../components/switch/switch';
 import { Label } from '../../components/label/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/select/select';
 import {
   RadioGroup,
   RadioGroupItem,
@@ -37,6 +31,7 @@ import { Combobox } from '../../components/combobox/combobox';
 import { MultiSelect } from '../../components/multi-select/multi-select';
 import { InputTag } from '../../components/input-tag/input-tag';
 import type { DateRange } from 'react-day-picker';
+import { Check } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Patterns/Forms',
@@ -134,6 +129,9 @@ This approach uses native HTML5 validation attributes combined with React state 
       'autonomous',
       'ai-powered',
     ]);
+    const [robotFeatures, setRobotFeatures] = React.useState<string[]>([
+      'collision-detection',
+    ]);
     const [projectType, setProjectType] = React.useState('');
     const [priority, setPriority] = React.useState('');
     const [startDate, setStartDate] = React.useState<Date | undefined>();
@@ -210,6 +208,7 @@ This approach uses native HTML5 validation attributes combined with React state 
         primaryRobot,
         facilities,
         capabilities,
+        robotFeatures,
         projectType,
         priority,
         startDate: startDate?.toLocaleDateString() || '',
@@ -346,6 +345,56 @@ This approach uses native HTML5 validation attributes combined with React state 
                 </FieldDescription>
               </Field>
 
+              {/* Selectable Badges - Multiple Selection (Pill Shape) */}
+              <Field>
+                <FieldLabel>Robot Features</FieldLabel>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: 'collision-detection', label: 'Collision Detection' },
+                    { id: 'voice-control', label: 'Voice Control' },
+                    { id: 'remote-access', label: 'Remote Access' },
+                    {
+                      id: 'predictive-maintenance',
+                      label: 'Predictive Maintenance',
+                    },
+                  ].map((feature) => {
+                    const isSelected = robotFeatures.includes(feature.id);
+                    return (
+                      <label
+                        key={feature.id}
+                        className="inline-flex cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="peer sr-only"
+                          checked={isSelected}
+                          onChange={() => {
+                            setRobotFeatures((prev) =>
+                              prev.includes(feature.id)
+                                ? prev.filter((f) => f !== feature.id)
+                                : [...prev, feature.id],
+                            );
+                          }}
+                        />
+                        <Badge
+                          variant="default"
+                          appearance={isSelected ? undefined : 'outline'}
+                          shape="pill"
+                          size="md"
+                          className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                        >
+                          {isSelected && <Check className="size-3.5" />}
+                          {feature.label}
+                        </Badge>
+                      </label>
+                    );
+                  })}
+                </div>
+                <FieldDescription>
+                  Select optional features for your robot deployment.
+                </FieldDescription>
+              </Field>
+
               <div className="grid grid-cols-2 gap-4">
                 {/* Radio Group */}
                 <Field data-invalid={!!errors.projectType}>
@@ -381,25 +430,61 @@ This approach uses native HTML5 validation attributes combined with React state 
                   )}
                 </Field>
 
-                {/* Select Dropdown */}
+                {/* Selectable Badges - Single Selection (Square Shape) */}
                 <Field data-invalid={!!errors.priority}>
-                  <FieldLabel htmlFor="priority">
+                  <FieldLabel>
                     Priority Level <span className="text-destructive">*</span>
                   </FieldLabel>
-                  <Select value={priority} onValueChange={setPriority}>
-                    <SelectTrigger
-                      id="priority"
-                      aria-invalid={!!errors.priority}
-                    >
-                      <SelectValue placeholder="Select priority" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Low</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="critical">Critical</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      {
+                        id: 'low',
+                        label: 'Low',
+                        variant: 'secondary' as const,
+                      },
+                      {
+                        id: 'medium',
+                        label: 'Medium',
+                        variant: 'default' as const,
+                      },
+                      {
+                        id: 'high',
+                        label: 'High',
+                        variant: 'warning' as const,
+                      },
+                      {
+                        id: 'critical',
+                        label: 'Critical',
+                        variant: 'destructive' as const,
+                      },
+                    ].map((priorityOption) => {
+                      const isSelected = priority === priorityOption.id;
+                      return (
+                        <label
+                          key={priorityOption.id}
+                          className="inline-flex cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="priority"
+                            className="peer sr-only"
+                            checked={isSelected}
+                            onChange={() => setPriority(priorityOption.id)}
+                          />
+                          <Badge
+                            variant={priorityOption.variant}
+                            appearance={isSelected ? undefined : 'outline'}
+                            shape="square"
+                            size="md"
+                            className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                          >
+                            {isSelected && <Check className="size-3.5" />}
+                            {priorityOption.label}
+                          </Badge>
+                        </label>
+                      );
+                    })}
+                  </div>
                   {errors.priority && <FieldError errors={errors.priority} />}
                 </Field>
               </div>
@@ -637,6 +722,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
       primaryRobot: string;
       facilities: string[];
       capabilities: string[];
+      robotFeatures: string[];
       projectType: string;
       priority: string;
       startDate: Date | undefined;
@@ -661,6 +747,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
         primaryRobot: '',
         facilities: [],
         capabilities: ['autonomous', 'ai-powered'],
+        robotFeatures: ['collision-detection'],
         projectType: '',
         priority: '',
         startDate: undefined,
@@ -822,6 +909,66 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                 )}
               />
 
+              {/* Selectable Badges - Multiple Selection (Pill Shape) */}
+              <Controller
+                name="robotFeatures"
+                control={control}
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel>Robot Features</FieldLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        {
+                          id: 'collision-detection',
+                          label: 'Collision Detection',
+                        },
+                        { id: 'voice-control', label: 'Voice Control' },
+                        { id: 'remote-access', label: 'Remote Access' },
+                        {
+                          id: 'predictive-maintenance',
+                          label: 'Predictive Maintenance',
+                        },
+                      ].map((feature) => {
+                        const isSelected = field.value.includes(feature.id);
+                        return (
+                          <label
+                            key={feature.id}
+                            className="inline-flex cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              className="peer sr-only"
+                              checked={isSelected}
+                              onChange={() => {
+                                const newValue = isSelected
+                                  ? field.value.filter(
+                                      (f: string) => f !== feature.id,
+                                    )
+                                  : [...field.value, feature.id];
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <Badge
+                              variant="default"
+                              appearance={isSelected ? undefined : 'outline'}
+                              shape="pill"
+                              size="md"
+                              className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                            >
+                              {isSelected && <Check className="size-3.5" />}
+                              {feature.label}
+                            </Badge>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <FieldDescription>
+                      Select optional features for your robot deployment.
+                    </FieldDescription>
+                  </Field>
+                )}
+              />
+
               <div className="grid grid-cols-2 gap-4">
                 {/* Radio Group with Controller */}
                 <Controller
@@ -869,7 +1016,7 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                   )}
                 />
 
-                {/* Select with Controller */}
+                {/* Selectable Badges - Single Selection (Square Shape) */}
                 <Controller
                   name="priority"
                   control={control}
@@ -880,20 +1027,58 @@ This approach uses React Hook Form for optimized performance with uncontrolled c
                         Priority Level{' '}
                         <span className="text-destructive">*</span>
                       </FieldLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger aria-invalid={fieldState.invalid}>
-                          <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                          <SelectItem value="critical">Critical</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          {
+                            id: 'low',
+                            label: 'Low',
+                            variant: 'secondary' as const,
+                          },
+                          {
+                            id: 'medium',
+                            label: 'Medium',
+                            variant: 'default' as const,
+                          },
+                          {
+                            id: 'high',
+                            label: 'High',
+                            variant: 'warning' as const,
+                          },
+                          {
+                            id: 'critical',
+                            label: 'Critical',
+                            variant: 'destructive' as const,
+                          },
+                        ].map((priorityOption) => {
+                          const isSelected = field.value === priorityOption.id;
+                          return (
+                            <label
+                              key={priorityOption.id}
+                              className="inline-flex cursor-pointer"
+                            >
+                              <input
+                                type="radio"
+                                name="priority-rhf"
+                                className="peer sr-only"
+                                checked={isSelected}
+                                onChange={() =>
+                                  field.onChange(priorityOption.id)
+                                }
+                              />
+                              <Badge
+                                variant={priorityOption.variant}
+                                appearance={isSelected ? undefined : 'outline'}
+                                shape="square"
+                                size="md"
+                                className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                              >
+                                {isSelected && <Check className="size-3.5" />}
+                                {priorityOption.label}
+                              </Badge>
+                            </label>
+                          );
+                        })}
+                      </div>
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
                       )}
@@ -1126,6 +1311,7 @@ const deploymentSchema = z.object({
     .min(1, 'Please select at least one facility')
     .max(5, 'You can select up to 5 facilities'),
   capabilities: z.array(z.string()),
+  robotFeatures: z.array(z.string()),
   projectType: z.enum(['production', 'testing', 'demo']),
   priority: z.enum(['low', 'medium', 'high', 'critical']),
   startDate: z.date(),
@@ -1200,6 +1386,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
         primaryRobot: '',
         facilities: [],
         capabilities: ['autonomous', 'ai-powered'],
+        robotFeatures: ['collision-detection'],
         projectType: undefined,
         priority: undefined,
         startDate: undefined,
@@ -1360,6 +1547,66 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                 )}
               />
 
+              {/* Selectable Badges - Multiple Selection (Pill Shape) */}
+              <Controller
+                name="robotFeatures"
+                control={control}
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel>Robot Features</FieldLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        {
+                          id: 'collision-detection',
+                          label: 'Collision Detection',
+                        },
+                        { id: 'voice-control', label: 'Voice Control' },
+                        { id: 'remote-access', label: 'Remote Access' },
+                        {
+                          id: 'predictive-maintenance',
+                          label: 'Predictive Maintenance',
+                        },
+                      ].map((feature) => {
+                        const isSelected = field.value.includes(feature.id);
+                        return (
+                          <label
+                            key={feature.id}
+                            className="inline-flex cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              className="peer sr-only"
+                              checked={isSelected}
+                              onChange={() => {
+                                const newValue = isSelected
+                                  ? field.value.filter(
+                                      (f: string) => f !== feature.id,
+                                    )
+                                  : [...field.value, feature.id];
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <Badge
+                              variant="default"
+                              appearance={isSelected ? undefined : 'outline'}
+                              shape="pill"
+                              size="md"
+                              className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                            >
+                              {isSelected && <Check className="size-3.5" />}
+                              {feature.label}
+                            </Badge>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <FieldDescription>
+                      Select optional features for your robot deployment.
+                    </FieldDescription>
+                  </Field>
+                )}
+              />
+
               <div className="grid grid-cols-2 gap-4">
                 {/* Radio Group */}
                 <Controller
@@ -1406,7 +1653,7 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                   )}
                 />
 
-                {/* Select */}
+                {/* Selectable Badges - Single Selection (Square Shape) */}
                 <Controller
                   name="priority"
                   control={control}
@@ -1416,20 +1663,58 @@ This approach combines React Hook Form with Zod for type-safe, schema-based vali
                         Priority Level{' '}
                         <span className="text-destructive">*</span>
                       </FieldLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger aria-invalid={fieldState.invalid}>
-                          <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                          <SelectItem value="critical">Critical</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          {
+                            id: 'low',
+                            label: 'Low',
+                            variant: 'secondary' as const,
+                          },
+                          {
+                            id: 'medium',
+                            label: 'Medium',
+                            variant: 'default' as const,
+                          },
+                          {
+                            id: 'high',
+                            label: 'High',
+                            variant: 'warning' as const,
+                          },
+                          {
+                            id: 'critical',
+                            label: 'Critical',
+                            variant: 'destructive' as const,
+                          },
+                        ].map((priorityOption) => {
+                          const isSelected = field.value === priorityOption.id;
+                          return (
+                            <label
+                              key={priorityOption.id}
+                              className="inline-flex cursor-pointer"
+                            >
+                              <input
+                                type="radio"
+                                name="priority-zod"
+                                className="peer sr-only"
+                                checked={isSelected}
+                                onChange={() =>
+                                  field.onChange(priorityOption.id)
+                                }
+                              />
+                              <Badge
+                                variant={priorityOption.variant}
+                                appearance={isSelected ? undefined : 'outline'}
+                                shape="square"
+                                size="md"
+                                className="peer-focus-visible:ring-ring transition-all peer-focus-visible:ring-1 peer-focus-visible:ring-offset-1"
+                              >
+                                {isSelected && <Check className="size-3.5" />}
+                                {priorityOption.label}
+                              </Badge>
+                            </label>
+                          );
+                        })}
+                      </div>
                       {fieldState.error && (
                         <FieldError errors={fieldState.error.message} />
                       )}
