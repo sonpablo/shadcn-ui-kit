@@ -40,6 +40,11 @@ const { ... } = useNeuraTable({
   onSortingChange: (s) => fetchData({ sort: s[0]?.id }),
 });
 \`\`\`
+
+## Table Props
+
+- **\`scrollable\`** (default: \`true\`): Enable horizontal scroll container
+- **\`bordered\`** (default: \`true\`): Add border and rounded corners
         `,
       },
     },

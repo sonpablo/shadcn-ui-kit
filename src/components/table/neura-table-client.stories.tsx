@@ -70,6 +70,11 @@ function MyTable() {
 }
 \`\`\`
 
+## Table Props
+
+- **\`scrollable\`** (default: \`true\`): Enable horizontal scroll container
+- **\`bordered\`** (default: \`true\`): Add border and rounded corners
+
 ## What you get
 
 - \`table\`: TanStack Table instance for advanced operations

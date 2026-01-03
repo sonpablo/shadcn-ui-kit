@@ -109,11 +109,214 @@ const meta = {
   title: 'Patterns/Tables',
   parameters: {
     layout: 'padded',
+    docs: {
+      description: {
+        component: `
+Collection of table patterns and examples using the Table component.
+
+## Table Props
+
+- **\`scrollable\`** (default: \`true\`): Enable horizontal scroll container
+- **\`bordered\`** (default: \`true\`): Add border and rounded corners to table
+
+## Default Styling
+
+By default, all tables have a border with rounded corners. This provides a clean, contained look.
+To remove the border, set \`bordered={false}\`.
+
+## Examples
+
+This pattern collection demonstrates:
+- Sticky columns (left, right, multiple)
+- Sticky headers
+- Selectable rows
+- Pagination
+- Sortable columns
+- Custom backgrounds
+- Border variations
+        `,
+      },
+    },
   },
 } satisfies Meta;
 
 export default meta;
 type Story = StoryObj;
+
+/* =============================================================================
+ * Border Variations
+ * ============================================================================= */
+
+/**
+ * Table border variations - demonstrates the `bordered` prop
+ *
+ * By default, tables have a border with rounded corners (`bordered={true}`).
+ * You can remove it with `bordered={false}` for a borderless look.
+ */
+export const BorderVariations: Story = {
+  render: () => (
+    <div className="space-y-8">
+      {/* Default - With Border */}
+      <div>
+        <h3 className="mb-2 text-sm font-semibold">
+          Default (bordered={'{'}true{'}'})
+        </h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          Clean, contained look with rounded corners. This is the default
+          styling.
+        </p>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Robot ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Model</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {robots.slice(0, 3).map((robot) => (
+              <TableRow key={robot.id}>
+                <TableCell className="font-medium">{robot.id}</TableCell>
+                <TableCell>{robot.name}</TableCell>
+                <TableCell>{robot.model}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      robot.status === 'Active' ? 'default' : 'secondary'
+                    }
+                  >
+                    {robot.status}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Without Border */}
+      <div>
+        <h3 className="mb-2 text-sm font-semibold">
+          Without Border (bordered={'{'}false{'}'})
+        </h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          Borderless table for seamless integration with surrounding content.
+        </p>
+        <Table bordered={false}>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Robot ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Model</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {robots.slice(0, 3).map((robot) => (
+              <TableRow key={robot.id}>
+                <TableCell className="font-medium">{robot.id}</TableCell>
+                <TableCell>{robot.name}</TableCell>
+                <TableCell>{robot.model}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      robot.status === 'Active' ? 'default' : 'secondary'
+                    }
+                  >
+                    {robot.status}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Custom Border with className */}
+      <div>
+        <h3 className="mb-2 text-sm font-semibold">
+          Custom Border (className override)
+        </h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          You can override the default border with custom styles using{' '}
+          <code>className</code>.
+        </p>
+        <Table className="border-primary rounded-xl border-2">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Robot ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Model</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {robots.slice(0, 3).map((robot) => (
+              <TableRow key={robot.id}>
+                <TableCell className="font-medium">{robot.id}</TableCell>
+                <TableCell>{robot.name}</TableCell>
+                <TableCell>{robot.model}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      robot.status === 'Active' ? 'default' : 'secondary'
+                    }
+                  >
+                    {robot.status}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* In Card Context */}
+      <div>
+        <h3 className="mb-2 text-sm font-semibold">In Card/Container</h3>
+        <p className="text-muted-foreground mb-4 text-sm">
+          When placing tables inside cards or containers, use{' '}
+          <code>
+            bordered={'{'}false{'}'}
+          </code>{' '}
+          to avoid double borders.
+        </p>
+        <div className="bg-card rounded-lg border p-4">
+          <h4 className="mb-4 font-semibold">Robot Fleet Overview</h4>
+          <Table bordered={false}>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Robot ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Model</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {robots.slice(0, 3).map((robot) => (
+                <TableRow key={robot.id}>
+                  <TableCell className="font-medium">{robot.id}</TableCell>
+                  <TableCell>{robot.name}</TableCell>
+                  <TableCell>{robot.model}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        robot.status === 'Active' ? 'default' : 'secondary'
+                      }
+                    >
+                      {robot.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </div>
+  ),
+};
 
 /* =============================================================================
  * Sticky Columns
@@ -125,7 +328,7 @@ type Story = StoryObj;
 export const StickyLeftColumn: Story = {
   render: () => (
     <TooltipProvider>
-      <div className="max-w-2xl rounded-lg border">
+      <div className="max-w-2xl">
         <Table>
           <TableHeader>
             <TableRow>
@@ -246,7 +449,7 @@ export const StickyWithCustomBackground: Story = {
 export const StickyRightColumn: Story = {
   render: () => (
     <TooltipProvider>
-      <div className="max-w-2xl rounded-lg border">
+      <div className="max-w-2xl">
         <Table>
           <TableHeader>
             <TableRow>
@@ -329,7 +532,7 @@ export const StickyRightColumn: Story = {
 export const MultipleStickyColumns: Story = {
   render: () => (
     <TooltipProvider>
-      <div className="max-w-xl rounded-lg border">
+      <div className="max-w-xl">
         <Table>
           <TableHeader>
             <TableRow>
@@ -508,7 +711,7 @@ export const StickyHeader: Story = {
           - The [&>div] selector targets the <div> that Storybook wraps around the Table
           - This keeps the sticky header working correctly
         */}
-        <div className="grid w-full [&>div]:max-h-[400px] [&>div]:overflow-auto [&>div]:rounded-lg [&>div]:border">
+        <div className="grid w-full [&>div]:max-h-[400px] [&>div]:overflow-auto">
           <Table>
             <TableHeader>
               <TableRow className="bg-background after:bg-border sticky top-0 *:whitespace-nowrap after:absolute after:inset-x-0 after:bottom-0 after:h-px after:content-['']">
@@ -578,11 +781,7 @@ export const StickyHeader: Story = {
                   <br />
                   &nbsp;&nbsp;[&amp;&gt;div]:max-h-[400px]
                   <br />
-                  &nbsp;&nbsp;[&amp;&gt;div]:overflow-auto
-                  <br />
-                  &nbsp;&nbsp;[&amp;&gt;div]:rounded-lg
-                  <br />
-                  &nbsp;&nbsp;[&amp;&gt;div]:border"&gt;
+                  &nbsp;&nbsp;[&amp;&gt;div]:overflow-auto"&gt;
                 </code>
               </div>
               <p className="text-muted-foreground mt-1 text-xs">

@@ -11,13 +11,24 @@ export type SortDirection = 'asc' | 'desc' | null;
 interface TableProps extends React.ComponentProps<'table'> {
   /** Enable horizontal scroll container. Default: true */
   scrollable?: boolean;
+  /** Add border and rounded corners to table. Default: true */
+  bordered?: boolean;
 }
 
-function Table({ className, scrollable = true, ...props }: TableProps) {
+function Table({
+  className,
+  scrollable = true,
+  bordered = true,
+  ...props
+}: TableProps) {
   const table = (
     <table
       data-slot="table"
-      className={cn('w-full caption-bottom text-sm', className)}
+      className={cn(
+        'w-full caption-bottom text-sm',
+        !scrollable && bordered && 'border-separate rounded-lg border',
+        className,
+      )}
       {...props}
     />
   );
@@ -27,7 +38,10 @@ function Table({ className, scrollable = true, ...props }: TableProps) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className={cn(
+        'relative w-full overflow-x-auto',
+        bordered && 'rounded-lg border',
+      )}
     >
       {table}
     </div>
